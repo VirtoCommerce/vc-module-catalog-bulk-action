@@ -1,8 +1,9 @@
-﻿using Microsoft.Practices.Unity;
-using VirtoCommerce.Platform.Core.Modularity;
-
-namespace VirtoCommerce.CatalogBulkActionsModule.Web
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Web
 {
+    using Microsoft.Practices.Unity;
+
+    using VirtoCommerce.Platform.Core.Modularity;
+
     public class Module : ModuleBase
     {
         // private readonly string _connectionString = ConfigurationHelper.GetConnectionStringValue("VirtoCommerce.CatalogBulkActionsModule") ?? ConfigurationHelper.GetConnectionStringValue("VirtoCommerce");

@@ -1,7 +1,7 @@
-using Xunit;
-
 namespace VirtoCommerce.CatalogBulkActionsModule.Tests
 {
+    using Xunit;
+
     public class Test
     {
         public Test()
