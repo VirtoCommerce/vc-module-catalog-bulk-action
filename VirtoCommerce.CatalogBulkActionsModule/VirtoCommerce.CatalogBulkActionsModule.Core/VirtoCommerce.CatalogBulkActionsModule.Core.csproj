@@ -34,8 +34,12 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,13 +54,45 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
+    <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
+    <Compile Include="Converters\OutlineConverter.cs" />
+    <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PropertyAttributeConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\PropertyValidationRuleConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\AssetBase.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CategoryLink.cs" />
+    <Compile Include="Models\EditorialReview.cs" />
+    <Compile Include="Models\ResponseGroup.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ListEntry.cs" />
+    <Compile Include="Models\ListEntryCategory.cs" />
+    <Compile Include="Models\ListEntryLink.cs" />
+    <Compile Include="Models\ListEntryProduct.cs" />
+    <Compile Include="Models\ListEntrySearchCriteria.cs" />
+    <Compile Include="Models\ListEntrySearchResult.cs" />
+    <Compile Include="Models\MoveInfo.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductAssociation.cs" />
+    <Compile Include="Models\Property.cs" />
+    <Compile Include="Models\PropertyAttribute.cs" />
+    <Compile Include="Models\PropertyValidationRule.cs" />
+    <Compile Include="Models\PropertyValue.cs" />
+    <Compile Include="Models\SearchCriteria.cs" />
     <Compile Include="ModuleConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IListEntryMover.cs" />
+    <Compile Include="Services\IListEntrySearchService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

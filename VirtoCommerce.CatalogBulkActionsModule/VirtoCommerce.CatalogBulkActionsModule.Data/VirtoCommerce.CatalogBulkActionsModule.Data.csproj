@@ -56,6 +56,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -73,13 +76,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\BulkUpdateActionDefinitionBuilderExtensions.cs" />
+    <Compile Include="Extensions\BulkUpdatePushNotificationExtensions.cs" />
+    <Compile Include="Models\Actions\BulkActionCancellationRequest.cs" />
+    <Compile Include="Models\Actions\BulkUpdateActionContext.cs" />
+    <Compile Include="Models\Actions\BulkUpdateActionDefinition.cs" />
+    <Compile Include="Models\Actions\BulkUpdateActionResult.cs" />
+    <Compile Include="Models\Actions\BulkUpdateProgressInfo.cs" />
+    <Compile Include="Models\Actions\BulkUpdatePushNotification.cs" />
+    <Compile Include="Models\Actions\ChangeCategory\ChangeCategoryActionContext.cs" />
+    <Compile Include="Models\Actions\ChangeCategory\ChangeCategoryBulkUpdateAction.cs" />
+    <Compile Include="Models\Actions\IBulkUpdateAction.cs" />
+    <Compile Include="Models\Actions\IBulkUpdateActionData.cs" />
+    <Compile Include="Models\Actions\IBulkUpdateActionFactory.cs" />
+    <Compile Include="Models\Actions\IPagedDataSource.cs" />
+    <Compile Include="Models\Actions\IPagedDataSourceFactory.cs" />
+    <Compile Include="Models\Actions\ListEntryDataQuery.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\BulkUpdatePropertyManager.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\IBulkUpdatePropertyManager.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\UpdatePropertiesActionContext.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\UpdatePropertiesActionData.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\UpdatePropertiesBulkUpdateAction.cs" />
+    <Compile Include="Models\Actions\UpdateProperties\UpdatePropertiesResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\BulkUpdateActionDefinitionBuilder.cs" />
+    <Compile Include="Services\BulkUpdateActionExecutor.cs" />
+    <Compile Include="Services\BulkUpdateActionFactory.cs" />
+    <Compile Include="Services\BulkUpdateActionRegistrar.cs" />
+    <Compile Include="Services\BulkUpdateDataSourceFactory.cs" />
+    <Compile Include="Services\BulkUpdatePredefinedPermissions.cs" />
+    <Compile Include="Services\CategoryMover.cs" />
+    <Compile Include="Services\IBulkUpdateActionExecutor.cs" />
+    <Compile Include="Services\IBulkUpdateActionRegistrar.cs" />
+    <Compile Include="Services\ListEntryPagedDataSource.cs" />
+    <Compile Include="Services\ListEntryProductPagedDataSource.cs" />
+    <Compile Include="Services\ListEntrySearchService.cs" />
+    <Compile Include="Services\ProductMover.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Models\" />
     <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.CatalogBulkActionsModule.Core\VirtoCommerce.CatalogBulkActionsModule.Core.csproj">
