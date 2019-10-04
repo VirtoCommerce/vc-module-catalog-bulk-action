@@ -28,6 +28,11 @@ angular.module(moduleName, [])
     ])
     .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.toolbarService',
         function ($rootScope, mainMenuService, widgetService, $state, toolbarService) {
+            function isItemsChecked(blade) {
+                var gridApi = blade.$scope.gridApi;
+                return gridApi && _.any(gridApi.selection.getSelectedRows());
+            }
+
             //Register module in main menu
             var menuItem = {
                 path: 'browse/virtoCommerce.catalogBulkActionsModule',
@@ -42,10 +47,10 @@ angular.module(moduleName, [])
             toolbarService.register({
                 name: "Bulk Actions", icon: 'fa fa-cubes',
                 executeMethod: function (blade) {
-                    console.log('test: ' + this.name + this.icon + blade);
+                    //console.log('test: ' + this.name + this.icon + blade);
                 },
-                canExecuteMethod: function () { return true; },
-                index: 20
+                canExecuteMethod: isItemsChecked,
+                index: 20,
             }, 'virtoCommerce.catalogModule.categoriesItemsListController');
         }
 ]);
