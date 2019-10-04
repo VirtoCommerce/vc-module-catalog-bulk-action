@@ -145,8 +145,21 @@
   <ItemGroup>
     <Content Include="module.manifest" />
     <Content Include="Content\css\virto-commerce.catalog-bulk-actions-module.css" />
+    <Content Include="Scripts\blades\action-change-category.js" />
+    <Content Include="Scripts\blades\action-change-category.tpl.html" />
+    <Content Include="Scripts\blades\action-edit-properties.js" />
+    <Content Include="Scripts\blades\action-edit-properties.tpl.html" />
+    <Content Include="Scripts\blades\action-list.js" />
+    <Content Include="Scripts\blades\action-list.tpl.html" />
+    <Content Include="Scripts\blades\bulk-action-progress.js" />
+    <Content Include="Scripts\blades\bulk-action-progress.tpl.html" />
+    <Content Include="Scripts\blades\bulk-action-registrar.js" />
     <Content Include="Scripts\blades\hello-world.js" />
     <Content Include="Scripts\blades\hello-world.html" />
+    <Content Include="Scripts\blades\step-edit-properties.js" />
+    <Content Include="Scripts\blades\step-edit-properties.tpl.html" />
+    <Content Include="Scripts\blades\step-select-properties.js" />
+    <Content Include="Scripts\blades\step-select-properties.tpl.html" />
     <Content Include="Scripts\module.js" />
     <Content Include="Scripts\resources\virto-commerce.catalog-bulk-actions-module-api.js" />
   </ItemGroup>
