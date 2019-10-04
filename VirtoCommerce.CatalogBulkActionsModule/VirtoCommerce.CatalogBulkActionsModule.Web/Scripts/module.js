@@ -26,8 +26,8 @@ angular.module(moduleName, [])
                 });
         }
     ])
-    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state',
-        function ($rootScope, mainMenuService, widgetService, $state) {
+    .run(['$rootScope', 'platformWebApp.mainMenuService', 'platformWebApp.widgetService', '$state', 'platformWebApp.toolbarService',
+        function ($rootScope, mainMenuService, widgetService, $state, toolbarService) {
             //Register module in main menu
             var menuItem = {
                 path: 'browse/virtoCommerce.catalogBulkActionsModule',
@@ -38,5 +38,14 @@ angular.module(moduleName, [])
                 permission: 'virtoCommerce.catalogBulkActionsModule.WebPermission'
             };
             mainMenuService.addMenuItem(menuItem);
+
+            toolbarService.register({
+                name: "Bulk Actions", icon: 'fa fa-cubes',
+                executeMethod: function (blade) {
+                    console.log('test: ' + this.name + this.icon + blade);
+                },
+                canExecuteMethod: function () { return true; },
+                index: 20
+            }, 'virtoCommerce.catalogModule.categoriesItemsListController');
         }
-    ]);
+]);
