@@ -1,10 +1,19 @@
 angular.module('virtoCommerce.catalogModule')
-    .controller('virtoCommerce.catalogModule.actionListController', ['$scope', 'platformWebApp.bladeNavigationService', 'virtoCommerce.catalogModule.catalogBulkActionService', 'virtoCommerce.catalogModule.bulkActions', function ($scope, bladeNavigationService, bulkActionServiceRegistrar, bulkActions) {
+    .controller('virtoCommerce.catalogModule.actionListController', [
+        '$scope',
+        'platformWebApp.bladeNavigationService',
+        'virtoCommerce.catalogModule.catalogBulkActionService',
+        'virtoCommerce.catalogBulkActionsModule.webApi',
+        function (
+            $scope,
+            bladeNavigationService,
+            bulkActionServiceRegistrar,
+            webApi) {
         var blade = $scope.blade;
         $scope.selectedNodeId = null;
 
         function initializeBlade() {
-            bulkActions.getActions(function (data) {
+            webApi.getActions(function (data) {
                 if (data) {
                     blade.actions = _.each(data, function (action) { blade.initializeAction(action); });
                 }

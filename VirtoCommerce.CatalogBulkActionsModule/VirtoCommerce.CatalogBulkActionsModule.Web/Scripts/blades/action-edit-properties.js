@@ -1,5 +1,17 @@
 angular.module('virtoCommerce.catalogModule')
-    .controller('virtoCommerce.catalogModule.editPropertiesActionController', ['$scope', '$translate', 'platformWebApp.bladeNavigationService', '$localStorage', 'virtoCommerce.catalogModule.bulkActions', function ($scope, $translate, bladeNavigationService, $localStorage, bulkActions) {
+    .controller('virtoCommerce.catalogModule.editPropertiesActionController', [
+        '$scope',
+        '$translate',
+        'platformWebApp.bladeNavigationService',
+        '$localStorage',
+        'virtoCommerce.catalogBulkActionsModule.webApi',
+        function (
+            $scope,
+            $translate,
+            bladeNavigationService,
+            $localStorage,
+            webApi)
+        {
         var blade = $scope.blade;
         blade.canStartProcess = false;
         blade.isLoading = true;
@@ -13,7 +25,7 @@ angular.module('virtoCommerce.catalogModule')
         }, blade.actionDataContext);
 
         function initializeBlade() {
-            bulkActions.getActionData(blade.actionDataContext,
+            webApi.getActionData(blade.actionDataContext,
                 function(data) {
                     blade.properties = data.properties;
                     blade.propertyTotal = data.properties.length;
@@ -42,7 +54,7 @@ angular.module('virtoCommerce.catalogModule')
                 id: 'actionProgress',
                 title: 'catalog.blades.action-progress.title',
                 controller: 'virtoCommerce.catalogModule.bulkActionProgressController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/bulk/bulk-action-progress.tpl.html',
+                template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/bulk-action-progress.tpl.html',
                 actionDataContext: blade.actionDataContext,
                 onCompleted: function () {
                     blade.isProcessing = false;
@@ -56,7 +68,7 @@ angular.module('virtoCommerce.catalogModule')
             var newBlade = {
                 id: 'propertiesSelector',
                 controller: 'virtoCommerce.catalogModule.propertiesSelectorController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/bulk/step-select-properties.tpl.html',
+                template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/step-select-properties.tpl.html',
                 properties: blade.properties,
                 includedProperties : blade.includedProperties,
                 onSelected: function (includedProperties) {
@@ -74,7 +86,7 @@ angular.module('virtoCommerce.catalogModule')
             var newBlade = {
                 id: 'propertiesEditor',
                 controller: 'virtoCommerce.catalogModule.editPropertiesActionStepController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/bulk/step-edit-properties.tpl.html',
+                template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/step-edit-properties.tpl.html',
                 properties: blade.includedProperties,
                 propGroups: [{ title: 'catalog.properties.product', type: 'Product' }, { title: 'catalog.properties.variation', type: 'Variation' }],
                 onSelected: function (editedProperties) {

@@ -19,7 +19,7 @@ angular.module('virtoCommerce.catalogModule')
             id: 'actionProgress',
             title: 'catalog.blades.action-progress.title',
             controller: 'virtoCommerce.catalogModule.bulkActionProgressController',
-            template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/bulk/bulk-action-progress.tpl.html',
+            template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/bulk-action-progress.tpl.html',
             actionDataContext: blade.actionDataContext,
             onCompleted: function () {
                 blade.isProcessing = false;
@@ -52,7 +52,7 @@ angular.module('virtoCommerce.catalogModule')
             var newBlade = {
                 id: "CatalogItemsSelect",
                 controller: 'virtoCommerce.catalogModule.catalogItemSelectController',
-                template: 'Modules/$(VirtoCommerce.Catalog)/Scripts/blades/common/catalog-items-select.tpl.html',
+                template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/common/catalog-items-select.tpl.html',
                 title: 'catalog.selectors.blades.titles.select-categories',
                 options: options,
                 breadcrumbs: [],
