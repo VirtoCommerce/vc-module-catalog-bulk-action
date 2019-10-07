@@ -154,6 +154,7 @@
     <Content Include="Scripts\blades\bulk-action-progress.js" />
     <Content Include="Scripts\blades\bulk-action-progress.tpl.html" />
     <Content Include="Scripts\blades\bulk-action-registrar.js" />
+    <Content Include="Scripts\blades\common\templates\ok-cancel.tpl.html" />
     <Content Include="Scripts\blades\hello-world.js" />
     <Content Include="Scripts\blades\hello-world.html" />
     <Content Include="Scripts\blades\step-edit-properties.js" />
