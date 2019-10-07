@@ -8,7 +8,7 @@
     </dependencies>
 
     <title>VirtoCommerce.CatalogBulkActionsModule</title>
-    <description>Enter your module description here.</description>
+    <description>Bulk operations module</description>
     <authors>
         <author>Burashov T.S.</author>
     </authors>
