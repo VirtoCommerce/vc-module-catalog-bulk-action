@@ -1,28 +1,24 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
     using Omu.ValueInjecter;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
 
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class PropertyAttributeConverter
     {
-        public static webModel.PropertyAttribute ToWebModel(this moduleModel.PropertyAttribute attribute)
+        public static VC.PropertyAttribute ToCoreModel(this PropertyAttribute attribute)
         {
-            var retVal = new webModel.PropertyAttribute();
-            retVal.Id = attribute.Id;
-            retVal.Name = attribute.Name;
-            retVal.Value = attribute.Value;
-
-
-            return retVal;
+            var result = new VC.PropertyAttribute();
+            result.InjectFrom(attribute);
+            return result;
         }
 
-        public static moduleModel.PropertyAttribute ToCoreModel(this webModel.PropertyAttribute attribute)
+        public static PropertyAttribute ToWebModel(this VC.PropertyAttribute attribute)
         {
-            var retVal = new moduleModel.PropertyAttribute();
-            retVal.InjectFrom(attribute);
-            return retVal;
+            var result = new PropertyAttribute { Id = attribute.Id, Name = attribute.Name, Value = attribute.Value };
+            return result;
         }
     }
 }

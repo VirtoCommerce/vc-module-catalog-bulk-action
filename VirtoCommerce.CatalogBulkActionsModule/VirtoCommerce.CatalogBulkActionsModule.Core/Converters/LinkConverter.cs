@@ -1,27 +1,28 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
     using Omu.ValueInjecter;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class LinkConverter
     {
-        public static webModel.CategoryLink ToWebModel(this moduleModel.CategoryLink link)
+        public static VC.CategoryLink ToCoreModel(this CategoryLink link)
         {
-            var retVal = new webModel.CategoryLink();
-
-            retVal.CatalogId = link.CatalogId;
-            retVal.CategoryId = link.CategoryId;
-            retVal.Priority = link.Priority;
-
-            return retVal;
+            var result = new VC.CategoryLink();
+            result.InjectFrom(link);
+            return result;
         }
 
-        public static moduleModel.CategoryLink ToCoreModel(this webModel.CategoryLink link)
+        public static CategoryLink ToWebModel(this VC.CategoryLink link)
         {
-            var retVal = new moduleModel.CategoryLink();
-            retVal.InjectFrom(link);
-            return retVal;
+            var result = new CategoryLink
+                             {
+                                 CatalogId = link.CatalogId, CategoryId = link.CategoryId, Priority = link.Priority
+                             };
+
+            return result;
         }
     }
 }

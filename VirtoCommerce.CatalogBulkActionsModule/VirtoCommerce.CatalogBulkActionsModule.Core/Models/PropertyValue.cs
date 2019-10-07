@@ -12,20 +12,17 @@
     public class PropertyValue : Entity
     {
         /// <summary>
-        /// Gets or sets the name of the property that this value belongs to.
+        /// Gets or sets the value of this dictionary value in default language.
         /// </summary>
         /// <value>
-        /// The name of the property.
+        /// The alias.
         /// </value>
-        public string PropertyName { get; set; }
+        public string Alias { get; set; }
 
         /// <summary>
-        /// Gets or sets the id of the property that this value belongs to.
+        /// Gets or sets a value indicating whether is inherited.
         /// </summary>
-        /// <value>
-        /// The  property id.
-        /// </value>
-        public string PropertyId { get; set; }
+        public bool IsInherited { get; set; }
 
         /// <summary>
         /// Gets or sets the language of this property value.
@@ -36,29 +33,25 @@
         public string LanguageCode { get; set; }
 
         /// <summary>
-        /// Gets or sets the value of this dictionary value in default language.
+        /// Gets or sets the id of the property that this value belongs to.
         /// </summary>
         /// <value>
-        /// The alias.
+        /// The  property id.
         /// </value>
-        public string Alias { get; set; }
+        public string PropertyId { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of the value.
+        /// Gets or sets a value indicating whether property multivalue.
         /// </summary>
-        /// <value>
-        /// The type of the value.
-        /// </value>
-        [JsonConverter(typeof(StringEnumConverter))]
-        public PropertyValueType ValueType { get; set; }
+        public bool PropertyMultivalue { get; set; }
 
         /// <summary>
-        /// Gets or sets the value id in case this value is for property which supports dictionary values.
+        /// Gets or sets the name of the property that this value belongs to.
         /// </summary>
         /// <value>
-        /// The value identifier.
+        /// The name of the property.
         /// </value>
-        public string ValueId { get; set; }
+        public string PropertyName { get; set; }
 
         /// <summary>
         /// Gets or sets the actual value.
@@ -69,10 +62,20 @@
         public object Value { get; set; }
 
         /// <summary>
-        /// System flag used to mark that object was inherited from other
+        /// Gets or sets the value id in case this value is for property which supports dictionary values.
         /// </summary>
-        public bool IsInherited { get; set; }
+        /// <value>
+        /// The value identifier.
+        /// </value>
+        public string ValueId { get; set; }
 
-        public bool PropertyMultivalue { get; set; }
+        /// <summary>
+        /// Gets or sets the type of the value.
+        /// </summary>
+        /// <value>
+        /// The type of the value.
+        /// </value>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PropertyValueType ValueType { get; set; }
     }
 }

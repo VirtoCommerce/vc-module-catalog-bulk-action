@@ -2,29 +2,41 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Omu.ValueInjecter;
+
     using VirtoCommerce.Domain.Commerce.Model;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class OutlineConverter
     {
-        public static moduleModel.Outline ToWebModel(this moduleModel.Outline outline)
+        public static VC.Outline ToWebModel(this VC.Outline outline)
         {
-            var result = new moduleModel.Outline();
-            result.Items = new List<moduleModel.OutlineItem>();
-            foreach (var outlineItem in outline.Items)
+            var result = new VC.Outline { Items = new List<VC.OutlineItem>() };
+
+            foreach (var item in outline.Items)
             {
-                var newOutlineItem = new moduleModel.OutlineItem();
-                newOutlineItem.Id = outlineItem.Id;
-                newOutlineItem.HasVirtualParent = outlineItem.HasVirtualParent;
-                newOutlineItem.SeoObjectType = outlineItem.SeoObjectType;
-                if (outlineItem.SeoInfos != null)
+                var newItem = new VC.OutlineItem
+                                  {
+                                      Id = item.Id,
+                                      HasVirtualParent = item.HasVirtualParent,
+                                      SeoObjectType = item.SeoObjectType
+                                  };
+
+                if (item.SeoInfos != null)
                 {
-                    newOutlineItem.SeoInfos = outlineItem.SeoInfos.Select(x => new SeoInfo { IsActive = x.IsActive, LanguageCode = x.LanguageCode, SemanticUrl = x.SemanticUrl, StoreId = x.StoreId }).ToList();
+                    newItem.SeoInfos = item.SeoInfos.Select(
+                        seoInfo => new SeoInfo
+                                       {
+                                           IsActive = seoInfo.IsActive,
+                                           LanguageCode = seoInfo.LanguageCode,
+                                           SemanticUrl = seoInfo.SemanticUrl,
+                                           StoreId = seoInfo.StoreId
+                                       }).ToList();
                 }
-                result.Items.Add(newOutlineItem);
+
+                result.Items.Add(newItem);
             }
+
             return result;
         }
     }

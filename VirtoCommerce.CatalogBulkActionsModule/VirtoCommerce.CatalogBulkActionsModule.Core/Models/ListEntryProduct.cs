@@ -8,8 +8,13 @@
     public class ListEntryProduct : ListEntry
     {
         public const string TypeName = "product";
-        public string ProductType { get; set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListEntryProduct"/> class.
+        /// </summary>
+        /// <param name="product">
+        /// The product.
+        /// </param>
         public ListEntryProduct(Product product)
             : base(TypeName, product)
         {
@@ -22,18 +27,23 @@
 
             if (!string.IsNullOrEmpty(product.Outline))
             {
-                Outline = product.Outline.Split('/').Select(x => x).ToArray();
+                Outline = product.Outline.Split('/').Select(segment => segment).ToArray();
             }
 
             if (!string.IsNullOrEmpty(product.Path))
             {
-                Path = product.Path.Split('/').Select(x => x).ToArray();
+                Path = product.Path.Split('/').Select(segment => segment).ToArray();
             }
 
             if (product.Links != null)
             {
-                Links = product.Links.Select(x => new ListEntryLink(x)).ToArray();
+                Links = product.Links.Select(link => new ListEntryLink(link)).ToArray();
             }
         }
+
+        /// <summary>
+        /// Gets or sets the product type.
+        /// </summary>
+        public string ProductType { get; set; }
     }
 }

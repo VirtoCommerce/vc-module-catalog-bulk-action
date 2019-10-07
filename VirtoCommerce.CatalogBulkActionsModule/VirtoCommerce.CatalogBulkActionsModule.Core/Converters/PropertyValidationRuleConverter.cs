@@ -1,34 +1,37 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class PropertyValidationRuleConverter
     {
-        public static webModel.PropertyValidationRule ToWebModel(this moduleModel.PropertyValidationRule validationRule)
+        public static VC.PropertyValidationRule ToCoreModel(this PropertyValidationRule validationRule)
         {
-            var retVal = new webModel.PropertyValidationRule();
-
-            retVal.Id = validationRule.Id;
-            retVal.IsUnique = validationRule.IsUnique;
-            retVal.CharCountMin = validationRule.CharCountMin;
-            retVal.CharCountMax = validationRule.CharCountMax;
-            retVal.RegExp = validationRule.RegExp;
+            var retVal = new VC.PropertyValidationRule
+                             {
+                                 Id = validationRule.Id,
+                                 IsUnique = validationRule.IsUnique,
+                                 CharCountMin = validationRule.CharCountMin,
+                                 CharCountMax = validationRule.CharCountMax,
+                                 RegExp = validationRule.RegExp
+                             };
 
             return retVal;
         }
 
-        public static moduleModel.PropertyValidationRule ToCoreModel(this webModel.PropertyValidationRule validationRule)
+        public static PropertyValidationRule ToWebModel(this VC.PropertyValidationRule validationRule)
         {
-            var retVal = new moduleModel.PropertyValidationRule();
+            var result = new PropertyValidationRule
+                             {
+                                 Id = validationRule.Id,
+                                 IsUnique = validationRule.IsUnique,
+                                 CharCountMin = validationRule.CharCountMin,
+                                 CharCountMax = validationRule.CharCountMax,
+                                 RegExp = validationRule.RegExp
+                             };
 
-            retVal.Id = validationRule.Id;
-            retVal.IsUnique = validationRule.IsUnique;
-            retVal.CharCountMin = validationRule.CharCountMin;
-            retVal.CharCountMax = validationRule.CharCountMax;
-            retVal.RegExp = validationRule.RegExp;
-
-            return retVal;
+            return result;
         }
     }
 }

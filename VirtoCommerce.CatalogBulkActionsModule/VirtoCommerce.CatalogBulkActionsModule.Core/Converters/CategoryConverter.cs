@@ -2,55 +2,99 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Omu.ValueInjecter;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class CategoryConverter
     {
-        public static webModel.Category ToWebModel(this moduleModel.Category category, IBlobUrlResolver blobUrlResolver = null, bool convertProps = true)
+        public static VC.Category ToModuleModel(this Category category)
         {
-            var retVal = AbstractTypeFactory<webModel.Category>.TryCreateInstance().FromModel(category);
-            //Do not use omu.InjectFrom for performance reasons
-            retVal.Id = category.Id;
-            retVal.IsActive = category.IsActive;
-            retVal.IsVirtual = category.IsVirtual;
-            retVal.Name = category.Name;
-            retVal.ParentId = category.ParentId;
-            retVal.Path = category.Path;
-            retVal.TaxType = category.TaxType;
-            retVal.CatalogId = category.CatalogId;
-            retVal.Code = category.Code;
-            retVal.CreatedBy = category.CreatedBy;
-            retVal.CreatedDate = category.CreatedDate;
-            retVal.ModifiedBy = category.ModifiedBy;
-            retVal.ModifiedDate = category.ModifiedDate;
-            retVal.Priority = category.Priority;
+            var result = category.ToModel(AbstractTypeFactory<VC.Category>.TryCreateInstance());
 
-            retVal.SeoInfos = category.SeoInfos;
+            result.InjectFrom(category);
+            result.SeoInfos = category.SeoInfos;
+
+            if (category.Links != null)
+            {
+                result.Links = category.Links.Select(link => link.ToCoreModel()).ToList();
+            }
+
+            if (category.Properties != null)
+            {
+                result.PropertyValues = new List<VC.PropertyValue>();
+                foreach (var property in category.Properties)
+                {
+                    foreach (var propValue in property.Values ?? Enumerable.Empty<PropertyValue>())
+                    {
+                        propValue.ValueType = property.ValueType;
+
+                        // need populate required fields
+                        propValue.PropertyId = property.Id;
+                        propValue.PropertyName = property.Name;
+                        result.PropertyValues.Add(propValue.ToCoreModel());
+                    }
+                }
+            }
+
+            if (category.Images != null)
+            {
+                result.Images = category.Images.Select(x => x.ToCoreModel()).ToList();
+            }
+
+            return result;
+        }
+
+        public static Category ToWebModel(
+            this VC.Category category,
+            IBlobUrlResolver blobUrlResolver = null,
+            bool convertProps = true)
+        {
+            var result = AbstractTypeFactory<Category>.TryCreateInstance().FromModel(category);
+
+            // do not use omu.InjectFrom for performance reasons
+            result.Id = category.Id;
+            result.IsActive = category.IsActive;
+            result.IsVirtual = category.IsVirtual;
+            result.Name = category.Name;
+            result.ParentId = category.ParentId;
+            result.Path = category.Path;
+            result.TaxType = category.TaxType;
+            result.CatalogId = category.CatalogId;
+            result.Code = category.Code;
+            result.CreatedBy = category.CreatedBy;
+            result.CreatedDate = category.CreatedDate;
+            result.ModifiedBy = category.ModifiedBy;
+            result.ModifiedDate = category.ModifiedDate;
+            result.Priority = category.Priority;
+            result.SeoInfos = category.SeoInfos;
+
             if (!category.Outlines.IsNullOrEmpty())
             {
-                //Minimize outline size
-                retVal.Outlines = category.Outlines.Select(x => x.ToWebModel()).ToList();
+                // minimize outline size
+                result.Outlines = category.Outlines.Select(x => x.ToWebModel()).ToList();
             }
 
-            //Init outline and path
+            // init outline and path
             if (category.Parents != null)
             {
-                retVal.Outline = string.Join("/", category.Parents.Select(x => x.Id));
-                retVal.Path = string.Join("/", category.Parents.Select(x => x.Name));
+                result.Outline = string.Join("/", category.Parents.Select(parent => parent.Id));
+                result.Path = string.Join("/", category.Parents.Select(parent => parent.Name));
             }
 
-            //For virtual category links not needed
+            // for virtual category links not needed
             if (!category.IsVirtual && category.Links != null)
             {
-                retVal.Links = category.Links.Select(x => x.ToWebModel()).ToList();
+                result.Links = category.Links.Select(link => link.ToWebModel()).ToList();
             }
 
-            //Need add property for each meta info
-            retVal.Properties = new List<webModel.Property>();
+            // need add property for each meta info
+            result.Properties = new List<Property>();
             if (convertProps)
             {
                 if (!category.Properties.IsNullOrEmpty())
@@ -58,85 +102,50 @@
                     foreach (var property in category.Properties)
                     {
                         var webModelProperty = property.ToWebModel();
-                        webModelProperty.Values = new List<webModel.PropertyValue>();
+                        webModelProperty.Values = new List<PropertyValue>();
                         webModelProperty.IsManageable = true;
-                        webModelProperty.IsReadOnly = property.Type != moduleModel.PropertyType.Category;
-                        retVal.Properties.Add(webModelProperty);
+                        webModelProperty.IsReadOnly = property.Type != VC.PropertyType.Category;
+                        result.Properties.Add(webModelProperty);
                     }
                 }
 
-                //Populate property values
+                // populate property values
                 if (category.PropertyValues != null)
                 {
                     var sort = false;
-                    foreach (var propValue in category.PropertyValues.Select(x => x.ToWebModel()))
+                    foreach (var propertyValue in category.PropertyValues.Select(value => value.ToWebModel()))
                     {
-                        var property = retVal.Properties.FirstOrDefault(x => x.Id == propValue.PropertyId);
+                        var property = result.Properties.FirstOrDefault(p => p.Id == propertyValue.PropertyId);
                         if (property == null)
                         {
-                            property = retVal.Properties.FirstOrDefault(x => x.Name.EqualsInvariant(propValue.PropertyName));
+                            property = result.Properties.FirstOrDefault(
+                                p => p.Name.EqualsInvariant(propertyValue.PropertyName));
                         }
 
                         if (property == null)
                         {
-                            //Need add dummy property for each value without property
-                            property = new webModel.Property(propValue, category.CatalogId, moduleModel.PropertyType.Category);
-                            retVal.Properties.Add(property);
+                            // need add dummy property for each value without property
+                            property = new Property(propertyValue, category.CatalogId, VC.PropertyType.Category);
+                            result.Properties.Add(property);
                             sort = true;
                         }
 
-                        property.Values.Add(propValue);
+                        property.Values.Add(propertyValue);
                     }
 
                     if (sort)
                     {
-                        retVal.Properties = retVal.Properties.OrderBy(x => x.Name).ToList();
+                        result.Properties = result.Properties.OrderBy(property => property.Name).ToList();
                     }
                 }
             }
 
             if (category.Images != null)
             {
-                retVal.Images = category.Images.Select(x => x.ToWebModel(blobUrlResolver)).ToList();
+                result.Images = category.Images.Select(image => image.ToWebModel(blobUrlResolver)).ToList();
             }
 
-            return retVal;
-        }
-
-        public static moduleModel.Category ToModuleModel(this webModel.Category category)
-        {
-            var retVal = category.ToModel(AbstractTypeFactory<moduleModel.Category>.TryCreateInstance());
-
-            retVal.InjectFrom(category);
-            retVal.SeoInfos = category.SeoInfos;
-
-            if (category.Links != null)
-            {
-                retVal.Links = category.Links.Select(x => x.ToCoreModel()).ToList();
-            }
-
-            if (category.Properties != null)
-            {
-                retVal.PropertyValues = new List<moduleModel.PropertyValue>();
-                foreach (var property in category.Properties)
-                {
-                    foreach (var propValue in property.Values ?? Enumerable.Empty<webModel.PropertyValue>())
-                    {
-                        propValue.ValueType = property.ValueType;
-                        //Need populate required fields
-                        propValue.PropertyId = property.Id;
-                        propValue.PropertyName = property.Name;
-                        retVal.PropertyValues.Add(propValue.ToCoreModel());
-                    }
-                }
-            }
-
-            if (category.Images != null)
-            {
-                retVal.Images = category.Images.Select(x => x.ToCoreModel()).ToList();
-            }
-
-            return retVal;
+            return result;
         }
     }
 }

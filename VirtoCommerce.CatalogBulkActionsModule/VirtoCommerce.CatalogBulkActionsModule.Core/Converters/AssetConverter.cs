@@ -1,68 +1,77 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
     using System.Web;
+
     using Omu.ValueInjecter;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
-    using coreModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class AssetConverter
     {
-        public static webModel.Image ToWebModel(this coreModel.Image image, IBlobUrlResolver blobUrlResolver)
+        public static VC.Image ToCoreModel(this Image image)
         {
-            var retVal = new webModel.Image();
-            //Do not use omu.InjectFrom for performance reasons 
-            retVal.Group = image.Group;
-            retVal.Id = image.Id;
-            retVal.LanguageCode = image.LanguageCode;
-            retVal.Name = image.Name;
-            retVal.IsInherited = image.IsInherited;
-            retVal.SortOrder = image.SortOrder;
+            var result = new VC.Image();
+            result.InjectFrom(image);
+            result.Url = image.RelativeUrl;
+            return result;
+        }
+
+        public static VC.Asset ToCoreModel(this Asset asset)
+        {
+            var result = new VC.Asset();
+            result.InjectFrom(asset);
+            result.Url = asset.RelativeUrl;
+            return result;
+        }
+
+        public static Image ToWebModel(this VC.Image image, IBlobUrlResolver blobUrlResolver)
+        {
+            // do not use omu.InjectFrom for performance reasons
+            var result = new Image
+                             {
+                                 Group = image.Group,
+                                 Id = image.Id,
+                                 LanguageCode = image.LanguageCode,
+                                 Name = image.Name,
+                                 IsInherited = image.IsInherited,
+                                 SortOrder = image.SortOrder
+                             };
 
             if (blobUrlResolver != null)
             {
-                retVal.Url = blobUrlResolver.GetAbsoluteUrl(image.Url);
+                result.Url = blobUrlResolver.GetAbsoluteUrl(image.Url);
             }
-            retVal.RelativeUrl = image.Url;
-            return retVal;
+
+            result.RelativeUrl = image.Url;
+            return result;
         }
 
-        public static webModel.Asset ToWebModel(this coreModel.Asset asset, IBlobUrlResolver blobUrlResolver)
+        public static Asset ToWebModel(this VC.Asset asset, IBlobUrlResolver blobUrlResolver)
         {
-            var retVal = new webModel.Asset();
-            retVal.InjectFrom(asset);
+            var result = new Asset();
+            result.InjectFrom(asset);
             if (asset.Name == null)
             {
-                retVal.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
+                result.Name = HttpUtility.UrlDecode(System.IO.Path.GetFileName(asset.Url));
             }
+
             if (asset.MimeType == null)
             {
-                retVal.MimeType = MimeTypeResolver.ResolveContentType(asset.Name);
+                result.MimeType = MimeTypeResolver.ResolveContentType(asset.Name);
             }
+
             if (blobUrlResolver != null)
             {
-                retVal.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
+                result.Url = blobUrlResolver.GetAbsoluteUrl(asset.Url);
             }
-            retVal.RelativeUrl = asset.Url;
-            retVal.ReadableSize = retVal.Size.ToHumanReadableSize();
-            return retVal;
-        }
 
-        public static coreModel.Image ToCoreModel(this webModel.Image image)
-        {
-            var retVal = new coreModel.Image();
-            retVal.InjectFrom(image);
-            retVal.Url = image.RelativeUrl;
-            return retVal;
-        }
-
-        public static coreModel.Asset ToCoreModel(this webModel.Asset asset)
-        {
-            var retVal = new coreModel.Asset();
-            retVal.InjectFrom(asset);
-            retVal.Url = asset.RelativeUrl;
-            return retVal;
+            result.RelativeUrl = asset.Url;
+            result.ReadableSize = result.Size.ToHumanReadableSize();
+            return result;
         }
     }
 }

@@ -1,37 +1,38 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
-    using System.Web;
-    using Omu.ValueInjecter;
     using System.Linq;
-    using VirtoCommerce.Platform.Core.Assets;
+
+    using Omu.ValueInjecter;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Common;
-    using coreModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class SearchCriteriaConverter
     {
-        public static coreModel.SearchCriteria ToCoreModel(this webModel.SearchCriteria criteria)
+        public static VC.SearchCriteria ToCoreModel(this SearchCriteria criteria)
         {
-            var retVal = new coreModel.SearchCriteria();
+            var result = new VC.SearchCriteria();
 
-            retVal.InjectFrom(criteria);
+            result.InjectFrom(criteria);
 
-            retVal.ResponseGroup = criteria.ResponseGroup;
-            retVal.CategoryIds = criteria.CategoryIds;
-            retVal.CatalogIds = criteria.CatalogIds;
-            retVal.PricelistIds = criteria.PricelistIds;
-            retVal.Terms = criteria.Terms;
-            retVal.Facets = criteria.Facets;
-            retVal.ProductTypes = criteria.ProductTypes;
-            retVal.VendorIds = criteria.VendorIds;
+            result.ResponseGroup = criteria.ResponseGroup;
+            result.CategoryIds = criteria.CategoryIds;
+            result.CatalogIds = criteria.CatalogIds;
+            result.PricelistIds = criteria.PricelistIds;
+            result.Terms = criteria.Terms;
+            result.Facets = criteria.Facets;
+            result.ProductTypes = criteria.ProductTypes;
+            result.VendorIds = criteria.VendorIds;
 
             if (!criteria.PropertyValues.IsNullOrEmpty())
             {
-                retVal.PropertyValues = criteria.PropertyValues.Select(x => x.ToCoreModel()).ToArray();
+                result.PropertyValues = criteria.PropertyValues.Select(propertyValue => propertyValue.ToCoreModel())
+                    .ToArray();
             }
 
-            return retVal;
-
+            return result;
         }
     }
 }

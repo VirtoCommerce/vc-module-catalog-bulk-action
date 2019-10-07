@@ -7,17 +7,6 @@
     /// </summary>
     public class AssetBase : Entity
     {
-        public string RelativeUrl { get; set; }
-        public string Url { get; set; }
-
-        /// <summary>
-        /// Gets or sets the asset type identifier.
-        /// </summary>
-        /// <value>
-        /// The type identifier.
-        /// </value>
-        public string TypeId { get; set; }
-
         /// <summary>
         /// Gets or sets the asset group name.
         /// </summary>
@@ -27,12 +16,9 @@
         public string Group { get; set; }
 
         /// <summary>
-        /// Gets or sets the asset name.
+        /// Gets or sets a value indicating whether is inherited.
         /// </summary>
-        /// <value>
-        /// The name.
-        /// </value>
-        public string Name { get; set; }
+        public bool IsInherited { get; set; }
 
         /// <summary>
         /// Gets or sets the asset language.
@@ -43,8 +29,29 @@
         public string LanguageCode { get; set; }
 
         /// <summary>
-        /// System flag used to mark that object was inherited from other
+        /// Gets or sets the asset name.
         /// </summary>
-        public bool IsInherited { get; set; }
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the relative url.
+        /// </summary>
+        public string RelativeUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the asset type identifier.
+        /// </summary>
+        /// <value>
+        /// The type identifier.
+        /// </value>
+        public string TypeId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the url.
+        /// </summary>
+        public string Url { get; set; }
     }
 }

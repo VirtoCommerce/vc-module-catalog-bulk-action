@@ -3,14 +3,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using Omu.ValueInjecter;
-    using coreModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class PropertyConverter
     {
-        public static webModel.Property ToWebModel(this coreModel.Property property)
+        public static Property ToWebModel(this VC.Property property)
         {
-            var retVal = new webModel.Property
+            var result = new Property
             {
                 Id = property.Id,
                 Name = property.Name,
@@ -22,43 +24,44 @@
                 Dictionary = property.Dictionary,
                 ValueType = property.ValueType
             };
-            retVal.Type = property.Type;
-            retVal.Multilanguage = property.Multilanguage;
-            retVal.IsInherited = property.IsInherited;
-            retVal.Hidden = property.Hidden;
+            result.Type = property.Type;
+            result.Multilanguage = property.Multilanguage;
+            result.IsInherited = property.IsInherited;
+            result.Hidden = property.Hidden;
+            result.ValueType = property.ValueType;
+            result.Type = property.Type;
+            result.Attributes = property.Attributes?.Select(x => x.ToWebModel()).ToList();
+            result.DisplayNames = property.DisplayNames;
+            result.ValidationRule = property.ValidationRules?.FirstOrDefault()?.ToWebModel();
 
-            retVal.ValueType = property.ValueType;
-            retVal.Type = property.Type;
-
-            retVal.Attributes = property.Attributes?.Select(x => x.ToWebModel()).ToList();
-            retVal.DisplayNames = property.DisplayNames;
-
-            retVal.ValidationRule = property.ValidationRules?.FirstOrDefault()?.ToWebModel();
-
-            return retVal;
+            return result;
         }
 
-        public static coreModel.Property ToCoreModel(this webModel.Property property)
+        public static VC.Property ToCoreModel(this Property property)
         {
-            var retVal = new coreModel.Property();
+            var result = new VC.Property();
 
-            retVal.InjectFrom(property);
-            retVal.ValueType = (coreModel.PropertyValueType)(int)property.ValueType;
-            retVal.Type = (coreModel.PropertyType)(int)property.Type;
-            retVal.DisplayNames = property.DisplayNames;
-            retVal.Hidden = property.Hidden;
+            result.InjectFrom(property);
+            result.ValueType = property.ValueType;
+            result.Type = property.Type;
+            result.DisplayNames = property.DisplayNames;
+            result.Hidden = property.Hidden;
 
             if (property.Attributes != null)
             {
-                retVal.Attributes = property.Attributes.Select(x => x.ToCoreModel()).ToList();
+                result.Attributes = property.Attributes.Select(x => x.ToCoreModel()).ToList();
             }
+
             if (property.ValidationRule != null)
             {
-                retVal.ValidationRules = new List<coreModel.PropertyValidationRule>() { property.ValidationRule.ToCoreModel() };
+                result.ValidationRules = new List<VC.PropertyValidationRule> { property.ValidationRule.ToCoreModel() };
             }
-            else retVal.ValidationRules = new List<coreModel.PropertyValidationRule>();
+            else
+            {
+                result.ValidationRules = new List<VC.PropertyValidationRule>();
+            }
 
-            return retVal;
+            return result;
         }
     }
 }

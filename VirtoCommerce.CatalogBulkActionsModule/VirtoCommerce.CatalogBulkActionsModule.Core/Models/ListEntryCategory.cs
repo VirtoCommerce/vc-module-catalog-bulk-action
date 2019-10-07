@@ -20,17 +20,17 @@
 
             if (!string.IsNullOrEmpty(category.Outline))
             {
-                Outline = category.Outline.Split('/').Select(x => x).ToArray();
+                Outline = category.Outline.Split('/').Select(segment => segment).ToArray();
             }
 
             if (!string.IsNullOrEmpty(category.Path))
             {
-                Path = category.Path.Split('/').Select(x => x).ToArray();
+                Path = category.Path.Split('/').Select(segment => segment).ToArray();
             }
 
             if (category.Links != null)
             {
-                Links = category.Links.Select(x => new ListEntryLink(x)).ToArray();
+                Links = category.Links.Select(link => new ListEntryLink(link)).ToArray();
             }
         }
     }

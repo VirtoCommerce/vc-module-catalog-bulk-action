@@ -7,9 +7,19 @@
     /// </summary>
     public class MoveInfo
     {
+        /// <summary>
+        /// Gets or sets the catalog.
+        /// </summary>
         public string Catalog { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
         public string Category { get; set; }
 
+        /// <summary>
+        /// Gets or sets the list entries.
+        /// </summary>
         public ICollection<ListEntry> ListEntries { get; set; }
     }
 }

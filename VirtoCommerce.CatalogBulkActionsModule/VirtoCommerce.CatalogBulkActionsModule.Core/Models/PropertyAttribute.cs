@@ -3,12 +3,23 @@
     using VirtoCommerce.Platform.Core.Common;
 
     /// <summary>
-    /// Additional metainformation for a Property
+    /// Additional meta information for a Property
     /// </summary>
     public class PropertyAttribute : Entity
     {
-        public Property Property { get; set; }
-        public string Value { get; set; }
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property.
+        /// </summary>
+        public Property Property { get; set; }
+
+        /// <summary>
+        /// Gets or sets the value.
+        /// </summary>
+        public string Value { get; set; }
     }
 }

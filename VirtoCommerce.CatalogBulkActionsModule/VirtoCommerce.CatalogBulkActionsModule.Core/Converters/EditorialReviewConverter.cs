@@ -1,30 +1,32 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
     using Omu.ValueInjecter;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class EditorialReviewConverter
     {
-        public static webModel.EditorialReview ToWebModel(this moduleModel.EditorialReview review)
+        public static VC.EditorialReview ToCoreModel(this EditorialReview review)
         {
-            var retVal = new webModel.EditorialReview();
-
-            retVal.Content = review.Content;
-            retVal.Id = review.Id;
-            retVal.IsInherited = review.IsInherited;
-            retVal.LanguageCode = review.LanguageCode;
-            retVal.ReviewType = review.ReviewType;
-
-
-            return retVal;
+            var result = new VC.EditorialReview();
+            result.InjectFrom(review);
+            return result;
         }
 
-        public static moduleModel.EditorialReview ToCoreModel(this webModel.EditorialReview review)
+        public static EditorialReview ToWebModel(this VC.EditorialReview review)
         {
-            var retVal = new moduleModel.EditorialReview();
-            retVal.InjectFrom(review);
-            return retVal;
+            var result = new EditorialReview
+                             {
+                                 Content = review.Content,
+                                 Id = review.Id,
+                                 IsInherited = review.IsInherited,
+                                 LanguageCode = review.LanguageCode,
+                                 ReviewType = review.ReviewType
+                             };
+
+            return result;
         }
     }
 }

@@ -2,8 +2,10 @@
 {
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
 
+    using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
+
     public interface IListEntrySearchService
     {
-        ListEntrySearchResult Search(Domain.Catalog.Model.SearchCriteria criteria);
+        ListEntrySearchResult Search(SearchCriteria criteria);
     }
 }

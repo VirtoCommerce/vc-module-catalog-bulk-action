@@ -1,52 +1,59 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Converters
 {
     using Omu.ValueInjecter;
+
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
-    using moduleModel = VirtoCommerce.Domain.Catalog.Model;
-    using webModel = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class AssociationConverter
     {
-        public static webModel.ProductAssociation ToWebModel(this moduleModel.ProductAssociation association, IBlobUrlResolver blobUrlResolver)
+        public static VC.ProductAssociation ToCoreModel(this ProductAssociation association)
         {
-            var retVal = new webModel.ProductAssociation();
-            //Do not use omu.InjectFrom for performance reasons 
+            var result = new VC.ProductAssociation();
+            result.InjectFrom(association);
+            result.Tags = association.Tags;
+            return result;
+        }
 
-            retVal.AssociatedObjectId = association.AssociatedObjectId;
-            retVal.AssociatedObjectType = association.AssociatedObjectType;
-            retVal.Quantity = association.Quantity;
-            retVal.Tags = association.Tags;
-            retVal.Type = association.Type;
-            retVal.Priority = association.Priority;
-            retVal.Tags = association.Tags;
+        public static ProductAssociation ToWebModel(
+            this VC.ProductAssociation association,
+            IBlobUrlResolver blobUrlResolver)
+        {
+            // do not use omu.InjectFrom for performance reasons
+            var result = new ProductAssociation
+                             {
+                                 AssociatedObjectId = association.AssociatedObjectId,
+                                 AssociatedObjectType = association.AssociatedObjectType,
+                                 Quantity = association.Quantity,
+                                 Tags = association.Tags,
+                                 Type = association.Type,
+                                 Priority = association.Priority
+                             };
+
+            result.Tags = association.Tags;
 
             if (association.AssociatedObject != null)
             {
-                var product = association.AssociatedObject as moduleModel.CatalogProduct;
-                var category = association.AssociatedObject as moduleModel.Category;
+                var product = association.AssociatedObject as VC.CatalogProduct;
+                var category = association.AssociatedObject as VC.Category;
                 if (product != null)
                 {
                     var associatedProduct = product.ToWebModel(blobUrlResolver);
-                    retVal.AssociatedObjectImg = associatedProduct.ImgSrc;
-                    retVal.AssociatedObjectName = associatedProduct.Name;
+                    result.AssociatedObjectImg = associatedProduct.ImgSrc;
+                    result.AssociatedObjectName = associatedProduct.Name;
                 }
+
                 if (category != null)
                 {
                     var associatedCategory = category.ToWebModel(blobUrlResolver);
-                    retVal.AssociatedObjectImg = associatedCategory.ImgSrc;
-                    retVal.AssociatedObjectName = associatedCategory.Name;
+                    result.AssociatedObjectImg = associatedCategory.ImgSrc;
+                    result.AssociatedObjectName = associatedCategory.Name;
                 }
             }
 
-            return retVal;
-        }
-
-        public static moduleModel.ProductAssociation ToCoreModel(this webModel.ProductAssociation association)
-        {
-            var retVal = new moduleModel.ProductAssociation();
-            retVal.InjectFrom(association);
-            retVal.Tags = association.Tags;
-            return retVal;
+            return result;
         }
     }
 }

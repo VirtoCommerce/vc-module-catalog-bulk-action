@@ -6,16 +6,26 @@
     public class CategoryLink
     {
         /// <summary>
-        /// Product order position in virtual catalog
-        /// </summary>
-        public int Priority { get; set; }
-        /// <summary>
-        /// Gets or sets the source item id.
+        /// Gets or sets the target catalog identifier.
         /// </summary>
         /// <value>
-        /// The source item identifier.
+        /// The catalog identifier.
         /// </value>
-        public string SourceItemId { get; set; }
+        public string CatalogId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the target category identifier.
+        /// </summary>
+        /// <value>
+        /// The category identifier.
+        /// </value>
+        public string CategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the product order position in virtual catalog.
+        /// </summary>
+        public int Priority { get; set; }
+
         /// <summary>
         /// Gets or sets the source category identifier.
         /// </summary>
@@ -25,18 +35,11 @@
         public string SourceCategoryId { get; set; }
 
         /// <summary>
-        /// Gets or sets the target catalog identifier.
+        /// Gets or sets the source item id.
         /// </summary>
         /// <value>
-        /// The catalog identifier.
+        /// The source item identifier.
         /// </value>
-        public string CatalogId { get; set; }
-        /// <summary>
-        /// Gets or sets the target category identifier.
-        /// </summary>
-        /// <value>
-        /// The category identifier.
-        /// </value>
-        public string CategoryId { get; set; }
+        public string SourceItemId { get; set; }
     }
 }

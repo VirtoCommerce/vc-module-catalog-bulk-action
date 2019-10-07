@@ -7,47 +7,35 @@
     /// </summary>
     public class ListEntry : AuditableEntity
     {
-        //Default deserialization ctor
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListEntry"/> class.
+        /// </summary>
         public ListEntry()
         {
         }
 
-        public ListEntry(string typeName, AuditableEntity auditableEntity)
+        public ListEntry(string typeName, AuditableEntity entity)
         {
             Type = typeName;
-            if (auditableEntity != null)
+            if (entity != null)
             {
-                // Entity
-                Id = auditableEntity.Id;
-
-                // AuditableEntity
-                CreatedDate = auditableEntity.CreatedDate;
-                ModifiedDate = auditableEntity.ModifiedDate;
-                CreatedBy = auditableEntity.CreatedBy;
-                ModifiedBy = auditableEntity.ModifiedBy;
+                Id = entity.Id;
+                CreatedDate = entity.CreatedDate;
+                ModifiedDate = entity.ModifiedDate;
+                CreatedBy = entity.CreatedBy;
+                ModifiedBy = entity.ModifiedBy;
+            }
+            else
+            {
+                // what else?
+                // idle
             }
         }
 
         /// <summary>
-        /// Gets or sets the type. E.g. "product", "category"
+        /// Gets or sets the catalog id.
         /// </summary>
-        /// <value>
-        /// The type.
-        /// </value>
-		public string Type { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this entry is active.
-        /// </summary>
-		public bool? IsActive { get; set; }
-
-        /// <summary>
-        /// Gets or sets the image URL.
-        /// </summary>
-        /// <value>
-        /// The image URL.
-        /// </value>
-		public string ImageUrl { get; set; }
+        public string CatalogId { get; set; }
 
         /// <summary>
         /// Gets or sets the entry code.
@@ -55,15 +43,20 @@
         /// <value>
         /// The code.
         /// </value>
-		public string Code { get; set; }
+        public string Code { get; set; }
 
         /// <summary>
-        /// Gets or sets the name.
+        /// Gets or sets the image URL.
         /// </summary>
         /// <value>
-        /// The name.
+        /// The image URL.
         /// </value>
-		public string Name { get; set; }
+        public string ImageUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this entry is active.
+        /// </summary>
+        public bool? IsActive { get; set; }
 
         /// <summary>
         /// Gets or sets the links.
@@ -71,21 +64,32 @@
         /// <value>
         /// The links.
         /// </value>
-		public ListEntryLink[] Links { get; set; }
+        public ListEntryLink[] Links { get; set; }
 
         /// <summary>
-        /// All entry parents ids
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the all entry parents ids.
         /// </summary>
         public string[] Outline { get; set; }
 
         /// <summary>
-        /// All entry parents names
+        /// Gets or sets the all entry parents names
         /// </summary>
         public string[] Path { get; set; }
 
         /// <summary>
-        /// Gets or sets the catalog id.
+        /// Gets or sets the type. E.g. "product", "category"
         /// </summary>
-        public string CatalogId { get; set; }
+        /// <value>
+        /// The type.
+        /// </value>
+        public string Type { get; set; }
     }
 }
