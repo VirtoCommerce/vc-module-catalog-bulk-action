@@ -5,5 +5,17 @@
         "title": "Hello world blade"
       }
     }
+  },
+  "actions": {
+    "types": {
+      "ChangeCategoryBulkUpdateAction": {
+        "title": "Change Category",
+        "subtitle": "Move products to another category"
+      },
+      "UpdatePropertiesBulkUpdateAction": {
+        "title": "Edit Properties",
+        "subtitle": "Update one ore more properties"
+      }
+    }
   }
 }
