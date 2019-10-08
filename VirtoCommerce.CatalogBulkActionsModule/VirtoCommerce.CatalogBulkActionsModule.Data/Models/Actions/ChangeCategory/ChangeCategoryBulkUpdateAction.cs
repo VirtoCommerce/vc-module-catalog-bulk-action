@@ -48,19 +48,21 @@
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public BulkUpdateActionContext Context => _context;
+
         public BulkUpdateActionResult Execute(IEnumerable<IEntity> entities)
         {
             var listEntries = entities.Cast<ListEntry>().ToArray();
             var result = BulkUpdateActionResult.Success;
-            var moveOperationContext = new MoveOperationContext
+            var moveInfo = new MoveOperationContext
                                {
                                    Catalog = _context.CatalogId,
                                    Category = _context.CategoryId,
                                    ListEntries = listEntries,
                                };
 
-            var categories = _categoryMover.PrepareMove(moveOperationContext);
-            var products = _productMover.PrepareMove(moveOperationContext);
+            var categories = _categoryMover.PrepareMove(moveInfo);
+            var products = _productMover.PrepareMove(moveInfo);
 
             _categoryMover.ConfirmMove(categories);
             _productMover.ConfirmMove(products);

@@ -58,6 +58,8 @@
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public BulkUpdateActionContext Context => _context;
+
         public virtual BulkUpdateActionResult Execute(IEnumerable<IEntity> entities)
         {
             var listEntries = entities.Cast<ListEntry>().ToArray();
