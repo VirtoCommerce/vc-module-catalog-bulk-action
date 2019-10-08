@@ -78,7 +78,6 @@
   <ItemGroup>
     <Compile Include="Extensions\BulkUpdateActionDefinitionBuilderExtensions.cs" />
     <Compile Include="Extensions\BulkUpdatePushNotificationExtensions.cs" />
-    <Compile Include="Models\Actions\BulkActionCancellationRequest.cs" />
     <Compile Include="Models\Actions\BulkUpdateActionContext.cs" />
     <Compile Include="Models\Actions\BulkUpdateActionDefinition.cs" />
     <Compile Include="Models\Actions\BulkUpdateActionResult.cs" />

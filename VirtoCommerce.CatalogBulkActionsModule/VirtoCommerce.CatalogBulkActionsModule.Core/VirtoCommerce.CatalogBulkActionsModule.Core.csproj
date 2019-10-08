@@ -77,7 +77,6 @@
     <Compile Include="Models\ListEntryCategory.cs" />
     <Compile Include="Models\ListEntryLink.cs" />
     <Compile Include="Models\ListEntryProduct.cs" />
-    <Compile Include="Models\ListEntrySearchCriteria.cs" />
     <Compile Include="Models\ListEntrySearchResult.cs" />
     <Compile Include="Models\MoveOperationContext.cs" />
     <Compile Include="Models\Product.cs" />
@@ -87,7 +86,6 @@
     <Compile Include="Models\PropertyValidationRule.cs" />
     <Compile Include="Models\PropertyValue.cs" />
     <Compile Include="Models\SearchCriteria.cs" />
-    <Compile Include="ModuleConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IListEntryMover.cs" />
     <Compile Include="Services\IListEntrySearchService.cs" />

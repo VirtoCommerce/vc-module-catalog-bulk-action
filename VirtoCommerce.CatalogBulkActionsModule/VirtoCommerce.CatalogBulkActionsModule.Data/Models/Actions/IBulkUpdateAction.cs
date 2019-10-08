@@ -6,8 +6,6 @@
 
     public interface IBulkUpdateAction
     {
-        BulkUpdateActionContext Context { get; }
-
         BulkUpdateActionResult Execute(IEnumerable<IEntity> entities);
 
         IBulkUpdateActionData GetActionData();

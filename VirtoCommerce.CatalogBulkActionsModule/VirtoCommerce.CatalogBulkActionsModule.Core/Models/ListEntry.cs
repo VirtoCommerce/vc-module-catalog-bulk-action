@@ -10,10 +10,12 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ListEntry"/> class.
         /// </summary>
-        public ListEntry()
-        {
-        }
-
+        /// <param name="typeName">
+        /// The type name.
+        /// </param>
+        /// <param name="entity">
+        /// The entity.
+        /// </param>
         public ListEntry(string typeName, AuditableEntity entity)
         {
             Type = typeName;
