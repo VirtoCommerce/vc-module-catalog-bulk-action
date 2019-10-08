@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
@@ -12,15 +13,20 @@
     {
         private static readonly Type[] _knownTypes = { typeof(BulkUpdateActionContext) };
 
-        public override bool CanWrite => false;
         public override bool CanRead => true;
+
+        public override bool CanWrite => false;
 
         public override bool CanConvert(Type objectType)
         {
             return _knownTypes.Any(x => x.IsAssignableFrom(objectType));
         }
 
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(
+            JsonReader reader,
+            Type objectType,
+            object existingValue,
+            JsonSerializer serializer)
         {
             var obj = JObject.Load(reader);
 

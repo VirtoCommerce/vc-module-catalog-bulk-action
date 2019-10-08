@@ -6,20 +6,22 @@
 
     public class JobCancellationTokenWrapper : ICancellationToken
     {
-        public IJobCancellationToken JobCancellationToken { get; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JobCancellationTokenWrapper"/> class.
+        /// </summary>
+        /// <param name="jobCancellationToken">
+        /// The job cancellation token.
+        /// </param>
         public JobCancellationTokenWrapper(IJobCancellationToken jobCancellationToken)
         {
             JobCancellationToken = jobCancellationToken;
         }
 
-        #region Implementation of ICancellationToken
+        public IJobCancellationToken JobCancellationToken { get; }
 
         public void ThrowIfCancellationRequested()
         {
             JobCancellationToken.ThrowIfCancellationRequested();
         }
-
-        #endregion
     }
 }
