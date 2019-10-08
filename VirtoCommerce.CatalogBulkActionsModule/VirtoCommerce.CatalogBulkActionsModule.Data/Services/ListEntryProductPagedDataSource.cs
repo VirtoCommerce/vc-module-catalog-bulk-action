@@ -9,34 +9,59 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.Platform.Core.Common;
 
-    using domain = VirtoCommerce.Domain.Catalog.Model;
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public class ListEntryProductPagedDataSource : ListEntryPagedDataSource
     {
         private readonly IListEntrySearchService _listEntrySearchService;
 
-        public ListEntryProductPagedDataSource(IListEntrySearchService listEntrySearchService, ListEntryDataQuery dataQuery) : base(listEntrySearchService, dataQuery)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListEntryProductPagedDataSource"/> class.
+        /// </summary>
+        /// <param name="listEntrySearchService">
+        /// The list entry search service.
+        /// </param>
+        /// <param name="dataQuery">
+        /// The data query.
+        /// </param>
+        public ListEntryProductPagedDataSource(
+            IListEntrySearchService listEntrySearchService,
+            ListEntryDataQuery dataQuery)
+            : base(listEntrySearchService, dataQuery)
         {
             _listEntrySearchService = listEntrySearchService;
         }
 
-        protected override IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> listEntries, int skip, int take)
+        protected override VC.SearchCriteria BuildSearchCriteria(ListEntryDataQuery dataQuery)
+        {
+            var result = base.BuildSearchCriteria(dataQuery);
+            result.ResponseGroup = VC.SearchResponseGroup.WithProducts;
+            result.SearchInChildren = true;
+            return result;
+        }
+
+        protected override IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> entries, int skip, int take)
         {
             var result = new List<IEntity>();
             var categoryProductsSkip = 0;
             var categoryProductsTake = 0;
 
-            // Find all products inside category list entries
-            var categoryIds = listEntries.Where(x => x.Type.EqualsInvariant(ListEntryCategory.TypeName)).Select(x => x.Id).ToArray();
-            if (!categoryIds.IsNullOrEmpty())
+            var categoryIds = entries.Where(entry => entry.Type.EqualsInvariant(ListEntryCategory.TypeName))
+                .Select(entry => entry.Id).ToArray();
+            if (categoryIds.IsNullOrEmpty())
             {
+                // idle
+            }
+            else
+            {
+                // find all products inside category entries
                 var searchResult = SearchProductsInCategories(categoryIds, 0, 0);
-                var productsInCategoriesTotalCount = searchResult.TotalCount;
+                var inCategoriesCount = searchResult.TotalCount;
 
-                categoryProductsSkip = Math.Min(productsInCategoriesTotalCount, skip);
-                categoryProductsTake = Math.Min(take, Math.Max(0, productsInCategoriesTotalCount - skip));
+                categoryProductsSkip = Math.Min(inCategoriesCount, skip);
+                categoryProductsTake = Math.Min(take, Math.Max(0, inCategoriesCount - skip));
 
-                if (productsInCategoriesTotalCount > 0 && categoryProductsTake > 0)
+                if (inCategoriesCount > 0 && categoryProductsTake > 0)
                 {
                     searchResult = SearchProductsInCategories(categoryIds, categoryProductsSkip, categoryProductsTake);
                     result.AddRange(searchResult.ListEntries);
@@ -46,57 +71,50 @@
             skip -= categoryProductsSkip;
             take -= categoryProductsTake;
 
-            var products = listEntries.Where(x => x.Type.EqualsInvariant(ListEntryProduct.TypeName))
-                .Skip(skip)
-                .Take(take)
-                .ToArray();
+            var products = entries.Where(entry => entry.Type.EqualsInvariant(ListEntryProduct.TypeName)).Skip(skip)
+                .Take(take).ToArray();
             result.AddRange(products);
 
             return result;
         }
 
-        protected override int GetEntitiesCount(IEnumerable<ListEntry> listEntries)
+        protected override int GetEntitiesCount(IEnumerable<ListEntry> entries)
         {
-            // Find all products inside category list entries
-            var productsInCategoriesTotalCount = 0;
-            var categoryIds = listEntries.Where(x => x.Type.EqualsInvariant(ListEntryCategory.TypeName)).Select(x => x.Id).ToArray();
+            var inCategoriesCount = 0;
+            var categoryIds = entries.Where(entry => entry.Type.EqualsInvariant(ListEntryCategory.TypeName))
+                .Select(entry => entry.Id).ToArray();
 
-            if (!categoryIds.IsNullOrEmpty())
+            if (categoryIds.IsNullOrEmpty())
             {
+                // idle
+            }
+            else
+            {
+                // find all products inside category entries
                 var searchResult = SearchProductsInCategories(categoryIds, 0, 0);
-                productsInCategoriesTotalCount = searchResult.TotalCount;
+                inCategoriesCount = searchResult.TotalCount;
             }
 
-            // Find product list entry count
-            var productCount = listEntries.Count(x => x.Type.EqualsInvariant(ListEntryProduct.TypeName));
+            // find product list entry count
+            var productCount = entries.Count(entry => entry.Type.EqualsInvariant(ListEntryProduct.TypeName));
 
-            return productsInCategoriesTotalCount + productCount;
-        }
-
-        protected override domain.SearchCriteria BuildSearchCriteria(ListEntryDataQuery dataQuery)
-        {
-            var result = base.BuildSearchCriteria(dataQuery);
-
-            result.ResponseGroup = domain.SearchResponseGroup.WithProducts;
-            result.SearchInChildren = true;
-
-            return result;
+            return inCategoriesCount + productCount;
         }
 
         protected virtual ListEntrySearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
         {
-            var searchCriteria = new domain.SearchCriteria()
-            {
-                CategoryIds = categoryIds,
-                Skip = skip,
-                Take = take,
-                ResponseGroup = domain.SearchResponseGroup.WithProducts,
-                SearchInChildren = true,
-                SearchInVariations = true,
-            };
+            var searchCriteria = new VC.SearchCriteria
+                                     {
+                                         CategoryIds = categoryIds,
+                                         Skip = skip,
+                                         Take = take,
+                                         ResponseGroup = VC.SearchResponseGroup.WithProducts,
+                                         SearchInChildren = true,
+                                         SearchInVariations = true
+                                     };
 
-            return _listEntrySearchService.Search(searchCriteria);
+            var result = _listEntrySearchService.Search(searchCriteria);
+            return result;
         }
-
     }
 }

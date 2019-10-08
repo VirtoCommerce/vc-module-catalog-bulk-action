@@ -2,12 +2,12 @@
 {
     using VirtoCommerce.Domain.Catalog.Model;
 
-    using web = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-
+    using moduleModels = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
 
     public interface IBulkUpdatePropertyManager
     {
         Property[] GetProperties(UpdatePropertiesActionContext context);
-        UpdatePropertiesResult UpdateProperties(CatalogProduct[] products, web.Property[] propertiesToSet);
+
+        UpdatePropertiesResult UpdateProperties(CatalogProduct[] products, moduleModels.Property[] propertiesToSet);
     }
 }

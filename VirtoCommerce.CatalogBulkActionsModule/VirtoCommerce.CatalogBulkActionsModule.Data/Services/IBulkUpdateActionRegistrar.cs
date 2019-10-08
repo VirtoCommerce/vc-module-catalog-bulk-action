@@ -6,10 +6,10 @@
 
     public interface IBulkUpdateActionRegistrar
     {
-        BulkUpdateActionDefinition Register(BulkUpdateActionDefinition definition);
+        IEnumerable<BulkUpdateActionDefinition> GetAll();
 
         BulkUpdateActionDefinition GetByName(string name);
 
-        IEnumerable<BulkUpdateActionDefinition> GetAll();
+        BulkUpdateActionDefinition Register(BulkUpdateActionDefinition definition);
     }
 }

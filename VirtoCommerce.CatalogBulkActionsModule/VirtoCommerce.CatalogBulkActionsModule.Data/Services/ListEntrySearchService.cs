@@ -11,50 +11,67 @@
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
+    using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
+
     public class ListEntrySearchService : IListEntrySearchService
     {
-        private readonly ICatalogSearchService _searchService;
         private readonly IBlobUrlResolver _blobUrlResolver;
 
+        private readonly ICatalogSearchService _searchService;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListEntrySearchService"/> class.
+        /// </summary>
+        /// <param name="searchService">
+        /// The search service.
+        /// </param>
+        /// <param name="blobUrlResolver">
+        /// The blob url resolver.
+        /// </param>
         public ListEntrySearchService(ICatalogSearchService searchService, IBlobUrlResolver blobUrlResolver)
         {
             _searchService = searchService;
             _blobUrlResolver = blobUrlResolver;
         }
 
-        public ListEntrySearchResult Search(VirtoCommerce.Domain.Catalog.Model.SearchCriteria criteria)
+        public ListEntrySearchResult Search(SearchCriteria criteria)
         {
             var result = new ListEntrySearchResult();
             var categorySkip = 0;
             var categoryTake = 0;
 
-            //Because products and categories represent in search result as two separated collections for handle paging request 
-            //we should join two resulting collection artificially
-            //search categories
+            // because products and categories represent in search result as two separated collections for handle paging request 
+            // we should join two resulting collection artificially
+
+            // search categories
             var copyRespGroup = criteria.ResponseGroup;
             if ((criteria.ResponseGroup & SearchResponseGroup.WithCategories) == SearchResponseGroup.WithCategories)
             {
-                criteria.ResponseGroup = criteria.ResponseGroup & ~SearchResponseGroup.WithProducts;
+                criteria.ResponseGroup &= ~SearchResponseGroup.WithProducts;
                 var categoriesSearchResult = _searchService.Search(criteria);
                 var categoriesTotalCount = categoriesSearchResult.Categories.Count;
 
                 categorySkip = Math.Min(categoriesTotalCount, criteria.Skip);
                 categoryTake = Math.Min(criteria.Take, Math.Max(0, categoriesTotalCount - criteria.Skip));
-                var categories = categoriesSearchResult.Categories.Skip(categorySkip).Take(categoryTake).Select(x => new ListEntryCategory(x.ToWebModel(_blobUrlResolver))).ToList();
+                var categories = categoriesSearchResult.Categories.Skip(categorySkip).Take(categoryTake)
+                    .Select(category => new ListEntryCategory(category.ToWebModel(_blobUrlResolver))).ToList();
 
                 result.TotalCount = categoriesTotalCount;
                 result.ListEntries.AddRange(categories);
             }
+
             criteria.ResponseGroup = copyRespGroup;
-            //search products
+
+            // search products
             if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
             {
-                criteria.ResponseGroup = criteria.ResponseGroup & ~SearchResponseGroup.WithCategories;
-                criteria.Skip = criteria.Skip - categorySkip;
-                criteria.Take = criteria.Take - categoryTake;
+                criteria.ResponseGroup &= ~SearchResponseGroup.WithCategories;
+                criteria.Skip -= categorySkip;
+                criteria.Take -= categoryTake;
                 var productsSearchResult = _searchService.Search(criteria);
 
-                var products = productsSearchResult.Products.Select(x => new ListEntryProduct(x.ToWebModel(_blobUrlResolver)));
+                var products = productsSearchResult.Products.Select(
+                    product => new ListEntryProduct(product.ToWebModel(_blobUrlResolver)));
 
                 result.TotalCount += productsSearchResult.ProductsTotalCount;
                 result.ListEntries.AddRange(products);

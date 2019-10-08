@@ -10,6 +10,6 @@
     {
         void ConfirmMove(IEnumerable<T> entities);
 
-        List<T> PrepareMove(MoveInfo moveInfo);
+        List<T> PrepareMove(MoveOperationContext moveOperationContext);
     }
 }

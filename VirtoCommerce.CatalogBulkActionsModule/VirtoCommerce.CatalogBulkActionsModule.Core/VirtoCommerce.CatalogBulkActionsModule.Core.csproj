@@ -79,7 +79,7 @@
     <Compile Include="Models\ListEntryProduct.cs" />
     <Compile Include="Models\ListEntrySearchCriteria.cs" />
     <Compile Include="Models\ListEntrySearchResult.cs" />
-    <Compile Include="Models\MoveInfo.cs" />
+    <Compile Include="Models\MoveOperationContext.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductAssociation.cs" />
     <Compile Include="Models\Property.cs" />

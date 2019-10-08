@@ -9,7 +9,8 @@
 
     public class BulkUpdateActionRegistrar : IBulkUpdateActionRegistrar
     {
-        private readonly ConcurrentDictionary<string, BulkUpdateActionDefinition> _knownActionTypes = new ConcurrentDictionary<string, BulkUpdateActionDefinition>();
+        private readonly ConcurrentDictionary<string, BulkUpdateActionDefinition> _knownActionTypes =
+            new ConcurrentDictionary<string, BulkUpdateActionDefinition>();
 
         public IEnumerable<BulkUpdateActionDefinition> GetAll()
         {
@@ -18,14 +19,18 @@
 
         public BulkUpdateActionDefinition GetByName(string name)
         {
-            return _knownActionTypes.Values.FirstOrDefault(x => x.Name.EqualsInvariant(name));
+            return _knownActionTypes.Values.FirstOrDefault(value => value.Name.EqualsInvariant(name));
         }
 
         public BulkUpdateActionDefinition Register(BulkUpdateActionDefinition definition)
         {
             var actionName = definition.Name;
 
-            if (!_knownActionTypes.ContainsKey(actionName))
+            if (_knownActionTypes.ContainsKey(actionName))
+            {
+                // idle
+            }
+            else
             {
                 _knownActionTypes.TryAdd(actionName, definition);
             }

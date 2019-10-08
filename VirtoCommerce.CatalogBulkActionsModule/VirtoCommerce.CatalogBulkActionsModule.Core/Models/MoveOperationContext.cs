@@ -5,7 +5,7 @@
     /// <summary>
     /// Represent move operation detail
     /// </summary>
-    public class MoveInfo
+    public class MoveOperationContext
     {
         /// <summary>
         /// Gets or sets the catalog.

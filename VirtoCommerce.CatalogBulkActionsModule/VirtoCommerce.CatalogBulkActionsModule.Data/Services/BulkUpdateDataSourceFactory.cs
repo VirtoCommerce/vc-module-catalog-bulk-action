@@ -11,6 +11,12 @@
     {
         private readonly IListEntrySearchService _searchService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BulkUpdateDataSourceFactory"/> class.
+        /// </summary>
+        /// <param name="searchService">
+        /// The search service.
+        /// </param>
         public BulkUpdateDataSourceFactory(IListEntrySearchService searchService)
         {
             _searchService = searchService;
@@ -20,16 +26,19 @@
         {
             IPagedDataSource result = null;
 
-            if (context is ChangeCategoryActionContext changeCategoryActionContext)
+            switch (context)
             {
-                result = new ListEntryPagedDataSource(_searchService, changeCategoryActionContext.DataQuery);
-            }
-            else if (context is UpdatePropertiesActionContext bulkUpdateActionContext)
-            {
-                result = new ListEntryProductPagedDataSource(_searchService, bulkUpdateActionContext.DataQuery);
+                case ChangeCategoryActionContext changeCategoryActionContext:
+                    result = new ListEntryPagedDataSource(_searchService, changeCategoryActionContext.DataQuery);
+                    break;
+
+                case UpdatePropertiesActionContext bulkUpdateActionContext:
+                    result = new ListEntryProductPagedDataSource(_searchService, bulkUpdateActionContext.DataQuery);
+                    break;
             }
 
-            return result ?? throw new ArgumentException($"Unsupported bulk update query type: {context.GetType().Name}");
+            return result ?? throw new ArgumentException(
+                       $"Unsupported bulk update query type: {context.GetType().Name}");
         }
     }
 }

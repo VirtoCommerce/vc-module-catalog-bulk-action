@@ -6,16 +6,21 @@
 
     public class BulkUpdateActionDefinitionBuilder
     {
-        public BulkUpdateActionDefinition BulkUpdateActionDefinition { get; private set; }
-
         /// <summary>
-        /// Creates <see cref="ExportedTypeDefinitionBuilder"/> with ExportedTypeDefinition instance.
+        /// Initializes a new instance of the <see cref="BulkUpdateActionDefinitionBuilder"/> class.
         /// </summary>
-        /// <param name="definition">Definition to build.</param>
+        /// <param name="definition">
+        /// The definition.
+        /// </param>
         public BulkUpdateActionDefinitionBuilder(BulkUpdateActionDefinition definition)
         {
             BulkUpdateActionDefinition = definition ?? throw new ArgumentNullException(nameof(definition));
         }
+
+        /// <summary>
+        /// Gets the bulk update action definition.
+        /// </summary>
+        public BulkUpdateActionDefinition BulkUpdateActionDefinition { get; }
 
         public static implicit operator BulkUpdateActionDefinition(BulkUpdateActionDefinitionBuilder builder)
         {

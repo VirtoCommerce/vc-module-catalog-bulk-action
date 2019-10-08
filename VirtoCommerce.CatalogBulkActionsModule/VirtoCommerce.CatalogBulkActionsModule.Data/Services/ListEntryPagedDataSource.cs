@@ -10,41 +10,55 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.Platform.Core.Common;
 
-    using domain = VirtoCommerce.Domain.Catalog.Model;
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public class ListEntryPagedDataSource : IPagedDataSource
     {
         private readonly IListEntrySearchService _searchService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListEntryPagedDataSource"/> class.
+        /// </summary>
+        /// <param name="searchService">
+        /// The search service.
+        /// </param>
+        /// <param name="dataQuery">
+        /// The data query.
+        /// </param>
         public ListEntryPagedDataSource(IListEntrySearchService searchService, ListEntryDataQuery dataQuery)
         {
             _searchService = searchService;
             DataQuery = dataQuery ?? throw new ArgumentNullException(nameof(dataQuery));
         }
 
-        public int PageSize { get; set; } = 50;
-        public IEnumerable<IEntity> Items { get; protected set; }
         public int CurrentPageNumber { get; protected set; }
 
         public ListEntryDataQuery DataQuery { get; protected set; }
 
+        public IEnumerable<IEntity> Items { get; protected set; }
+
+        public int PageSize { get; set; } = 50;
+
         public virtual bool Fetch()
         {
-            if (!DataQuery.ListEntries.IsNullOrEmpty())
+            if (DataQuery.ListEntries.IsNullOrEmpty())
+            {
+                if (DataQuery.SearchCriteria == null)
+                {
+                    Items = Array.Empty<IEntity>();
+                }
+                else
+                {
+                    var searchCriteria = BuildSearchCriteria(DataQuery);
+                    var searchResult = _searchService.Search(searchCriteria);
+                    Items = searchResult.ListEntries;
+                }
+            }
+            else
             {
                 var (skip, take) = GetSkipTake();
                 var entities = GetEntities(DataQuery.ListEntries, skip, take);
                 Items = entities.ToArray();
-            }
-            else if (DataQuery.SearchCriteria != null)
-            {
-                var domainSearchCriteria = BuildSearchCriteria(DataQuery);
-                var searchResult = _searchService.Search(domainSearchCriteria);
-                Items = searchResult.ListEntries;
-            }
-            else
-            {
-                Items = Array.Empty<IEntity>();
             }
 
             CurrentPageNumber++;
@@ -56,44 +70,30 @@
         {
             var result = 0;
 
-            if (!DataQuery.ListEntries.IsNullOrEmpty())
+            if (DataQuery.ListEntries.IsNullOrEmpty())
+            {
+                if (DataQuery.SearchCriteria == null)
+                {
+                    // idle
+                }
+                else
+                {
+                    var searchCriteria = BuildSearchCriteria(DataQuery);
+                    searchCriteria.Skip = 0;
+                    searchCriteria.Take = 0;
+                    var searchResult = _searchService.Search(searchCriteria);
+                    result = searchResult.TotalCount;
+                }
+            }
+            else
             {
                 result = GetEntitiesCount(DataQuery.ListEntries);
-            }
-            else if (DataQuery.SearchCriteria != null)
-            {
-                var domainSearchCriteria = BuildSearchCriteria(DataQuery);
-
-                domainSearchCriteria.Skip = 0;
-                domainSearchCriteria.Take = 0;
-
-                var searchResult = _searchService.Search(domainSearchCriteria);
-
-                result = searchResult.TotalCount;
             }
 
             return result;
         }
 
-        protected virtual IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> listEntries, int skip, int take)
-        {
-            return listEntries.Skip(skip).Take(take);
-        }
-
-        protected virtual int GetEntitiesCount(IEnumerable<ListEntry> listEntries)
-        {
-            return listEntries.Count();
-        }
-
-        protected (int, int) GetSkipTake()
-        {
-            var skip = (DataQuery.Skip ?? 0) + CurrentPageNumber * PageSize;
-            var take = DataQuery.Take ?? PageSize;
-
-            return (skip, take);
-        }
-
-        protected virtual domain.SearchCriteria BuildSearchCriteria(ListEntryDataQuery dataQuery)
+        protected virtual VC.SearchCriteria BuildSearchCriteria(ListEntryDataQuery dataQuery)
         {
             var result = dataQuery.SearchCriteria.ToCoreModel();
             var (skip, take) = GetSkipTake();
@@ -102,14 +102,33 @@
             result.Take = take;
 
             result.WithHidden = true;
-            //Need search in children categories if user specify keyword
-            if (!string.IsNullOrEmpty(result.Keyword))
+
+            if (string.IsNullOrEmpty(result.Keyword))
             {
-                result.SearchInChildren = true;
-                result.SearchInVariations = true;
+                return result;
             }
 
+            // need search in children categories if user specify keyword
+            result.SearchInChildren = true;
+            result.SearchInVariations = true;
             return result;
+        }
+
+        protected virtual IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> entries, int skip, int take)
+        {
+            return entries.Skip(skip).Take(take);
+        }
+
+        protected virtual int GetEntitiesCount(IEnumerable<ListEntry> entries)
+        {
+            return entries.Count();
+        }
+
+        protected (int, int) GetSkipTake()
+        {
+            var skip = (DataQuery.Skip ?? 0) + CurrentPageNumber * PageSize;
+            var take = DataQuery.Take ?? PageSize;
+            return (skip, take);
         }
     }
 }

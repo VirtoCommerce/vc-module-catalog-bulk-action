@@ -9,54 +9,66 @@
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using domain = VirtoCommerce.Domain.Catalog.Model;
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
-    public class CategoryMover : IListEntryMover<domain.Category>
+    public class CategoryMover : IListEntryMover<VC.Category>
     {
         private readonly ICategoryService _categoryService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CategoryMover"/> class.
+        /// </summary>
+        /// <param name="categoryService">
+        /// The category service.
+        /// </param>
         public CategoryMover(ICategoryService categoryService)
         {
             _categoryService = categoryService;
         }
 
-        public void ConfirmMove(IEnumerable<domain.Category> entities)
+        public void ConfirmMove(IEnumerable<VC.Category> entities)
         {
-            if (entities.Any())
+            var categories = entities.ToArray();
+            if (categories.Any())
             {
-                _categoryService.Update(entities.ToArray());
+                _categoryService.Update(categories);
             }
         }
 
-        public List<domain.Category> PrepareMove(MoveInfo moveInfo)
+        public List<VC.Category> PrepareMove(MoveOperationContext moveOperationContext)
         {
-            var result = new List<domain.Category>();
+            var result = new List<VC.Category>();
 
-            foreach (var listEntryCategory in moveInfo.ListEntries.Where(x => x.Type.EqualsInvariant(ListEntryCategory.TypeName)))
+            foreach (var listEntryCategory in moveOperationContext.ListEntries.Where(
+                entry => entry.Type.EqualsInvariant(ListEntryCategory.TypeName)))
             {
-                var category = _categoryService.GetById(listEntryCategory.Id, domain.CategoryResponseGroup.Info);
-                var targetCategory = _categoryService.GetById(moveInfo.Category, domain.CategoryResponseGroup.WithOutlines);
+                var category = _categoryService.GetById(listEntryCategory.Id, VC.CategoryResponseGroup.Info);
+                var targetCategory = _categoryService.GetById(
+                    moveOperationContext.Category,
+                    VC.CategoryResponseGroup.WithOutlines);
 
-                if (category.Id == moveInfo.Category)
+                if (category.Id == moveOperationContext.Category)
                 {
                     throw new ArgumentException("Unable to move category to itself");
                 }
 
-                var outlinesIds = targetCategory.Outlines.SelectMany(x => x.Items);
+                var ids = targetCategory.Outlines.SelectMany(outline => outline.Items).Select(outline => outline.Id);
 
-                if (outlinesIds.Any(x => x.Id.EqualsInvariant(category.Id)))
+                if (ids.Any(outline => outline.EqualsInvariant(category.Id)))
                 {
                     throw new ArgumentException("Unable to move category to its descendant");
                 }
 
-                if (category.CatalogId != moveInfo.Catalog)
+                if (category.CatalogId != moveOperationContext.Catalog)
                 {
-                    category.CatalogId = moveInfo.Catalog;
+                    category.CatalogId = moveOperationContext.Catalog;
                 }
-                if (category.ParentId != moveInfo.Category)
+
+                if (category.ParentId != moveOperationContext.Category)
                 {
-                    category.ParentId = moveInfo.Category;
+                    category.ParentId = moveOperationContext.Category;
                 }
+
                 result.Add(category);
             }
 

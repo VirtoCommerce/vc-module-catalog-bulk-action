@@ -6,9 +6,12 @@
 
     public interface IPagedDataSource
     {
-        int PageSize { get; set; }
-        bool Fetch();
         IEnumerable<IEntity> Items { get; }
+
+        int PageSize { get; set; }
+
+        bool Fetch();
+
         int GetTotalCount();
     }
 }

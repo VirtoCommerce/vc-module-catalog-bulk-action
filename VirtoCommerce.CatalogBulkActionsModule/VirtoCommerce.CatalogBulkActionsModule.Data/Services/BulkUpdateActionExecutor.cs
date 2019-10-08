@@ -10,12 +10,21 @@
     {
         private readonly IBulkUpdateActionRegistrar _bulkUpdateActionRegistrar;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BulkUpdateActionExecutor"/> class.
+        /// </summary>
+        /// <param name="bulkUpdateActionRegistrar">
+        /// The bulk update action registrar.
+        /// </param>
         public BulkUpdateActionExecutor(IBulkUpdateActionRegistrar bulkUpdateActionRegistrar)
         {
             _bulkUpdateActionRegistrar = bulkUpdateActionRegistrar;
         }
 
-        public virtual void Execute(BulkUpdateActionContext context, Action<BulkUpdateProgressInfo> progressCallback, ICancellationToken token)
+        public virtual void Execute(
+            BulkUpdateActionContext context,
+            Action<BulkUpdateProgressContext> progressCallback,
+            ICancellationToken token)
         {
             if (context == null)
             {
@@ -27,10 +36,7 @@
             var totalCount = 0;
             var processedCount = 0;
 
-            var progressInfo = new BulkUpdateProgressInfo()
-            {
-                Description = "Validation has started…",
-            };
+            var progressInfo = new BulkUpdateProgressContext { Description = "Validation has started…", };
             progressCallback(progressInfo);
 
             try
@@ -43,23 +49,24 @@
 
                 token.ThrowIfCancellationRequested();
 
-                if (!proceed)
+                if (proceed)
                 {
-                    progressInfo.Description = "Validation completed with errors.";
-                    progressInfo.Errors = validationResult.Errors;
+                    progressInfo.Description = "Validation completed successfully.";
                 }
                 else
                 {
-                    progressInfo.Description = "Validation completed successfully.";
+                    progressInfo.Description = "Validation completed with errors.";
+                    progressInfo.Errors = validationResult.Errors;
                 }
 
                 progressCallback(progressInfo);
 
                 if (proceed)
                 {
-                    var dataSourceFactory = actionDefinition.DataSourceFactory ?? throw new ArgumentException(nameof(BulkUpdateActionDefinition.DataSourceFactory));
-                    var dataSource = dataSourceFactory.Create(
-                        context);
+                    var dataSourceFactory = actionDefinition.DataSourceFactory
+                                            ?? throw new ArgumentException(
+                                                nameof(BulkUpdateActionDefinition.DataSourceFactory));
+                    var dataSource = dataSourceFactory.Create(context);
                     totalCount = dataSource.GetTotalCount();
                     processedCount = 0;
 
@@ -74,7 +81,11 @@
 
                         var result = action.Execute(dataSource.Items);
 
-                        if (!result.Succeeded)
+                        if (result.Succeeded)
+                        {
+                            // idle
+                        }
+                        else
                         {
                             progressInfo.Errors.AddRange(result.Errors);
                         }
@@ -82,12 +93,18 @@
                         processedCount += dataSource.Items.Count();
                         progressInfo.ProcessedCount = processedCount;
 
-                        if (processedCount != totalCount)
+                        if (processedCount == totalCount)
                         {
-                            progressInfo.Description = $"{processedCount} out of {totalCount} have been updated.";
-                            progressCallback(progressInfo);
+                            continue;
                         }
+
+                        progressInfo.Description = $"{processedCount} out of {totalCount} have been updated.";
+                        progressCallback(progressInfo);
                     }
+                }
+                else
+                {
+                    // idle
                 }
             }
             catch (Exception e)
@@ -96,9 +113,8 @@
             }
             finally
             {
-                var completedMessage = (progressInfo.Errors?.Count > 0) ? "Update completed with errors" : "Update completed";
-
-                progressInfo.Description = $"{completedMessage}: {processedCount} out of {totalCount} have been updated.";
+                var message = progressInfo.Errors?.Count > 0 ? "Update completed with errors" : "Update completed";
+                progressInfo.Description = $"{message}: {processedCount} out of {totalCount} have been updated.";
                 progressCallback(progressInfo);
             }
         }

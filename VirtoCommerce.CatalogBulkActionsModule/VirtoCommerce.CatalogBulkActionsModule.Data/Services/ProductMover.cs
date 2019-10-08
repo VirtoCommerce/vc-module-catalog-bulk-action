@@ -8,18 +8,24 @@
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using domain = VirtoCommerce.Domain.Catalog.Model;
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
-    public class ProductMover : IListEntryMover<domain.CatalogProduct>
+    public class ProductMover : IListEntryMover<VC.CatalogProduct>
     {
         private readonly IItemService _itemService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProductMover"/> class.
+        /// </summary>
+        /// <param name="itemService">
+        /// The item service.
+        /// </param>
         public ProductMover(IItemService itemService)
         {
             _itemService = itemService;
         }
 
-        public void ConfirmMove(IEnumerable<domain.CatalogProduct> entities)
+        public void ConfirmMove(IEnumerable<VC.CatalogProduct> entities)
         {
             if (entities.Any())
             {
@@ -27,32 +33,42 @@
             }
         }
 
-        public List<domain.CatalogProduct> PrepareMove(MoveInfo moveInfo)
+        public List<VC.CatalogProduct> PrepareMove(MoveOperationContext moveOperationContext)
         {
-            var result = new List<domain.CatalogProduct>();
+            var result = new List<VC.CatalogProduct>();
 
-            foreach (var listEntryProduct in moveInfo.ListEntries.Where(x => x.Type.EqualsInvariant(ListEntryProduct.TypeName)))
+            foreach (var listEntryProduct in moveOperationContext.ListEntries.Where(
+                listEntry => listEntry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
             {
-                var product = _itemService.GetById(listEntryProduct.Id, domain.ItemResponseGroup.ItemLarge);
-                if (product.CatalogId != moveInfo.Catalog)
+                var product = _itemService.GetById(listEntryProduct.Id, VC.ItemResponseGroup.ItemLarge);
+                if (product.CatalogId == moveOperationContext.Catalog)
                 {
-                    product.CatalogId = moveInfo.Catalog;
+                    // idle
+                }
+                else
+                {
+                    product.CatalogId = moveOperationContext.Catalog;
                     product.CategoryId = null;
                     foreach (var variation in product.Variations)
                     {
-                        variation.CatalogId = moveInfo.Catalog;
+                        variation.CatalogId = moveOperationContext.Catalog;
                         variation.CategoryId = null;
                     }
-
                 }
-                if (product.CategoryId != moveInfo.Category)
+
+                if (product.CategoryId == moveOperationContext.Category)
                 {
-                    product.CategoryId = moveInfo.Category;
+                    // idle
+                }
+                else
+                {
+                    product.CategoryId = moveOperationContext.Category;
                     foreach (var variation in product.Variations)
                     {
-                        variation.CategoryId = moveInfo.Category;
+                        variation.CategoryId = moveOperationContext.Category;
                     }
                 }
+
                 result.Add(product);
                 result.AddRange(product.Variations);
             }

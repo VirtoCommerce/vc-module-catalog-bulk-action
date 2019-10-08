@@ -82,7 +82,7 @@
     <Compile Include="Models\Actions\BulkUpdateActionContext.cs" />
     <Compile Include="Models\Actions\BulkUpdateActionDefinition.cs" />
     <Compile Include="Models\Actions\BulkUpdateActionResult.cs" />
-    <Compile Include="Models\Actions\BulkUpdateProgressInfo.cs" />
+    <Compile Include="Models\Actions\BulkUpdateProgressContext.cs" />
     <Compile Include="Models\Actions\BulkUpdatePushNotification.cs" />
     <Compile Include="Models\Actions\ChangeCategory\ChangeCategoryActionContext.cs" />
     <Compile Include="Models\Actions\ChangeCategory\ChangeCategoryBulkUpdateAction.cs" />

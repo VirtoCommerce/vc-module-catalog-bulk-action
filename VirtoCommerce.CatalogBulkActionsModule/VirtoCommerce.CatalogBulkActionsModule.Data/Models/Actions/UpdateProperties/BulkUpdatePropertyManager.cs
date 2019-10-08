@@ -7,21 +7,29 @@
     using System.Reflection;
 
     using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using web = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using moduleCoreModels = Core.Models;
 
     public class BulkUpdatePropertyManager : IBulkUpdatePropertyManager
     {
         private readonly IPagedDataSourceFactory _dataSourceFactory;
+
         private readonly IItemService _itemService;
 
         private readonly Dictionary<string, MethodInfo> _productProperties = new Dictionary<string, MethodInfo>();
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BulkUpdatePropertyManager"/> class.
+        /// </summary>
+        /// <param name="dataSourceFactory">
+        /// The data source factory.
+        /// </param>
+        /// <param name="itemService">
+        /// The item service.
+        /// </param>
         public BulkUpdatePropertyManager(IPagedDataSourceFactory dataSourceFactory, IItemService itemService)
         {
             _dataSourceFactory = dataSourceFactory;
@@ -30,7 +38,8 @@
 
         public virtual Property[] GetProperties(UpdatePropertiesActionContext context)
         {
-            // TechDebt: Should get all product inherited properties faster, by getting all properties for category line entries (including outline) + all inherited product line entry properties
+            // TechDebt: Should get all product inherited properties faster,
+            // by getting all properties for category line entries (including outline) + all inherited product line entry properties
             var dataSource = _dataSourceFactory.Create(context);
             var result = new List<Property>();
             var propertyIds = new HashSet<string>();
@@ -39,28 +48,36 @@
 
             while (dataSource.Fetch())
             {
-                var productIds = dataSource.Items.Select(x => x.Id).ToArray();
-                var products = _itemService.GetByIds(productIds, ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
-                // Using only product inherited properties from categories, own product props (only from PropertyValues) are not set via bulk update 
-                var newProperties = products
-                    .SelectMany(x => x.Properties.Where(y => y.IsInherited))
-                    .Distinct(AnonymousComparer.Create<Property, string>(x => x.Id))
-                    .Where(x => !propertyIds.Contains(x.Id))
-                    .ToArray();
+                var productIds = dataSource.Items.Select(item => item.Id).ToArray();
+                var products = _itemService.GetByIds(
+                    productIds,
+                    ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
 
-                propertyIds.AddRange(newProperties.Select(x => x.Id));
+                // using only product inherited properties from categories,
+                // own product props (only from PropertyValues) are not set via bulk update 
+                var newProperties = products.SelectMany(product => product.Properties.Where(property => property.IsInherited))
+                    .Distinct(AnonymousComparer.Create<Property, string>(property => property.Id))
+                    .Where(property => !propertyIds.Contains(property.Id)).ToArray();
+
+                propertyIds.AddRange(newProperties.Select(property => property.Id));
                 result.AddRange(newProperties);
             }
 
             return result.ToArray();
         }
 
-        public virtual UpdatePropertiesResult UpdateProperties(CatalogProduct[] products, web.Property[] propertiesToSet)
+        public virtual UpdatePropertiesResult UpdateProperties(
+            CatalogProduct[] products,
+            moduleCoreModels.Property[] propertiesToSet)
         {
-            var result = new UpdatePropertiesResult() { Succeeded = true };
+            var result = new UpdatePropertiesResult { Succeeded = true };
             var hasChanges = false;
 
-            if (!products.IsNullOrEmpty())
+            if (products.IsNullOrEmpty())
+            {
+                // idle
+            }
+            else
             {
                 hasChanges = ChangesProductPropertyValues(propertiesToSet, products, result);
             }
@@ -73,30 +90,10 @@
             return result;
         }
 
-        protected virtual IEnumerable<Property> GetStandardProperties()
-        {
-            yield return new Property() { Name = nameof(CatalogProduct.Name), Type = PropertyType.Product, ValueType = PropertyValueType.LongText, Required = true };
-            yield return new Property() { Name = nameof(CatalogProduct.StartDate), Type = PropertyType.Product, ValueType = PropertyValueType.DateTime, Required = true, };
-            yield return new Property() { Name = nameof(CatalogProduct.EndDate), Type = PropertyType.Product, ValueType = PropertyValueType.DateTime, };
-            yield return new Property() { Name = nameof(CatalogProduct.Priority), Type = PropertyType.Product, ValueType = PropertyValueType.Integer, Required = true, };
-            yield return new Property() { Name = nameof(CatalogProduct.EnableReview), Type = PropertyType.Product, ValueType = PropertyValueType.Boolean, };
-            yield return new Property() { Name = nameof(CatalogProduct.IsActive), Type = PropertyType.Product, ValueType = PropertyValueType.Boolean, };
-            yield return new Property() { Name = nameof(CatalogProduct.IsBuyable), Type = PropertyType.Product, ValueType = PropertyValueType.Boolean, };
-            yield return new Property() { Name = nameof(CatalogProduct.TrackInventory), Type = PropertyType.Product, ValueType = PropertyValueType.Boolean, };
-            yield return new Property() { Name = nameof(CatalogProduct.MinQuantity), Type = PropertyType.Product, ValueType = PropertyValueType.Integer, };
-            yield return new Property() { Name = nameof(CatalogProduct.MaxQuantity), Type = PropertyType.Product, ValueType = PropertyValueType.Integer, };
-            yield return new Property() { Name = nameof(CatalogProduct.Vendor), Type = PropertyType.Product, ValueType = PropertyValueType.ShortText, Dictionary = true };
-            yield return new Property() { Name = nameof(CatalogProduct.WeightUnit), Type = PropertyType.Product, ValueType = PropertyValueType.ShortText, Dictionary = true };
-            yield return new Property() { Name = nameof(CatalogProduct.Weight), Type = PropertyType.Product, ValueType = PropertyValueType.Number, };
-            yield return new Property() { Name = nameof(CatalogProduct.MeasureUnit), Type = PropertyType.Product, ValueType = PropertyValueType.ShortText, Dictionary = true };
-            yield return new Property() { Name = nameof(CatalogProduct.PackageType), Type = PropertyType.Product, ValueType = PropertyValueType.ShortText, Dictionary = true };
-            yield return new Property() { Name = nameof(CatalogProduct.Height), Type = PropertyType.Product, ValueType = PropertyValueType.Number, };
-            yield return new Property() { Name = nameof(CatalogProduct.Width), Type = PropertyType.Product, ValueType = PropertyValueType.Number, };
-            yield return new Property() { Name = nameof(CatalogProduct.Length), Type = PropertyType.Product, ValueType = PropertyValueType.Number, };
-            yield return new Property() { Name = nameof(CatalogProduct.TaxType), Type = PropertyType.Product, ValueType = PropertyValueType.Number, Dictionary = true };
-        }
-
-        protected virtual bool ChangesProductPropertyValues(web.Property[] propertiesToSet, CatalogProduct[] products, UpdatePropertiesResult updateResult)
+        protected virtual bool ChangesProductPropertyValues(
+            moduleCoreModels.Property[] propertiesToSet,
+            CatalogProduct[] products,
+            UpdatePropertiesResult updateResult)
         {
             var hasChanges = false;
 
@@ -106,13 +103,18 @@
                 {
                     foreach (var propertyToSet in propertiesToSet)
                     {
-                        if (!string.IsNullOrEmpty(propertyToSet.Id))
+                        if (string.IsNullOrEmpty(propertyToSet.Id))
+                        {
+                            if (string.IsNullOrEmpty(propertyToSet.Name))
+                            {
+                                continue;
+                            }
+
+                            hasChanges = SetOwnProperty(product, propertyToSet) || hasChanges;
+                        }
+                        else
                         {
                             hasChanges = SetCustomProperty(product, propertyToSet) || hasChanges;
-                        }
-                        else if (!string.IsNullOrEmpty(propertyToSet.Name))
-                        {
-                            hasChanges = SetOwnProperty(product, propertyToSet) || hasChanges;
                         }
                     }
                 }
@@ -124,116 +126,6 @@
             }
 
             return hasChanges;
-        }
-
-        protected virtual bool SetCustomProperty(CatalogProduct product, web.Property propertyToSet)
-        {
-            bool result;
-
-            if (propertyToSet.Multivalue)
-            {
-                var productPropertyValues = product.PropertyValues?.Where(x => x.Property != null && x.Property.Id.EqualsInvariant(propertyToSet.Id)).ToArray();
-
-                if (!productPropertyValues.IsNullOrEmpty())
-                {
-#pragma warning disable S2259 // Null pointers should not be dereferenced
-                    foreach (var productPropertyValue in productPropertyValues)
-#pragma warning restore S2259 // Null pointers should not be dereferenced
-                    {
-                        product.PropertyValues?.Remove(productPropertyValue);
-                    }
-                }
-
-                result = AddPropertyValues(product, propertyToSet);
-            }
-            else
-            {
-                var productPropertyValue = product.PropertyValues?.FirstOrDefault(x => x.Property != null && x.Property.Id.EqualsInvariant(propertyToSet.Id));
-
-                if (productPropertyValue != null)
-                {
-                    var propertyValueToSet = propertyToSet.Values.FirstOrDefault();
-
-                    productPropertyValue.Value = propertyValueToSet?.Value;
-
-                    if (propertyToSet.Dictionary)
-                    {
-                        productPropertyValue.ValueId = propertyValueToSet?.ValueId;
-                    }
-                    result = true;
-                }
-                else
-                {
-                    result = AddPropertyValues(product, propertyToSet);
-                }
-            }
-            return result;
-        }
-
-        private bool AddPropertyValues(CatalogProduct product, web.Property propertyToSet)
-        {
-            var property = product.Properties.FirstOrDefault(x => x.Id.EqualsInvariant(propertyToSet.Id));
-
-            var result = false;
-            if (property != null)
-            {
-
-                if (product.PropertyValues == null)
-                {
-                    product.PropertyValues = new List<PropertyValue>();
-                }
-
-                foreach (var propertyValue in propertyToSet.Values.Select(x => x.ToCoreModel()))
-                {
-                    propertyValue.Property = property;
-                    propertyValue.PropertyId = property.Id;
-                    propertyValue.PropertyName = property.Name;
-                    product.PropertyValues.Add(propertyValue);
-                }
-
-                result = true;
-            }
-
-            return result;
-        }
-
-        protected virtual bool SetOwnProperty(CatalogProduct product, web.Property propertyToSet)
-        {
-            var result = false;
-            var propertyValueToSet = propertyToSet.Values.FirstOrDefault();
-            var valueToSet = propertyToSet.Dictionary ? propertyValueToSet?.ValueId : propertyValueToSet?.Value;
-            var setter = GetProductPropertySetter(product, propertyToSet);
-
-            if (setter != null)
-            {
-                if (valueToSet == null && propertyToSet.Required)
-                {
-                    throw new ArgumentException($"Property value is missing for required property \"{propertyToSet.Name}\".");
-                }
-
-                var convertedValue = valueToSet != null ? ConvertValue(propertyToSet.ValueType, valueToSet) : null;
-
-                setter.Invoke(product, new object[] { convertedValue });
-                result = true;
-            }
-
-            return result;
-        }
-
-        protected virtual MethodInfo GetProductPropertySetter(CatalogProduct product, web.Property propertyToSet)
-        {
-            MethodInfo result;
-            var propertyName = propertyToSet.Name;
-
-            if (!_productProperties.TryGetValue(propertyName, out result))
-            {
-                var productType = product.GetType();
-                var productProperty = productType.GetProperty(propertyName);
-                result = productProperty?.GetSetMethod();
-
-                _productProperties.Add(propertyName, result);
-            }
-            return result;
         }
 
         protected virtual object ConvertValue(PropertyValueType valueType, object value)
@@ -265,6 +157,266 @@
                     break;
                 default:
                     throw new NotSupportedException();
+            }
+
+            return result;
+        }
+
+        protected virtual MethodInfo GetProductPropertySetter(CatalogProduct product, moduleCoreModels.Property propertyToSet)
+        {
+            var propertyName = propertyToSet.Name;
+
+            if (_productProperties.TryGetValue(propertyName, out var result))
+            {
+                return result;
+            }
+
+            var productType = product.GetType();
+            var productProperty = productType.GetProperty(propertyName);
+            result = productProperty?.GetSetMethod();
+
+            _productProperties.Add(propertyName, result);
+
+            return result;
+        }
+
+        protected virtual IEnumerable<Property> GetStandardProperties()
+        {
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Name),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.LongText,
+                                 Required = true
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.StartDate),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.DateTime,
+                                 Required = true,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.EndDate),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.DateTime,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Priority),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                                 Required = true,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.EnableReview),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.IsActive),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.IsBuyable),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.TrackInventory),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.MinQuantity),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.MaxQuantity),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Vendor),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.WeightUnit),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Weight),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.MeasureUnit),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.PackageType),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Height),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Width),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.Length),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             };
+            yield return new Property
+                             {
+                                 Name = nameof(CatalogProduct.TaxType),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                                 Dictionary = true
+                             };
+        }
+
+        protected virtual bool SetCustomProperty(CatalogProduct product, moduleCoreModels.Property propertyToSet)
+        {
+            bool result;
+
+            if (propertyToSet.Multivalue)
+            {
+                var propertyValues = product.PropertyValues?.Where(
+                    propertyValue => propertyValue.Property != null
+                                     && propertyValue.Property.Id.EqualsInvariant(propertyToSet.Id)).ToArray();
+
+                if (propertyValues.IsNullOrEmpty())
+                {
+                    // idle
+                }
+                else
+                {
+                    if (propertyValues == null)
+                    {
+                        // idle
+                    }
+                    else
+                    {
+                        foreach (var productPropertyValue in propertyValues)
+                        {
+                            product.PropertyValues?.Remove(productPropertyValue);
+                        }
+                    }
+                }
+
+                result = AddPropertyValues(product, propertyToSet);
+            }
+            else
+            {
+                var productPropertyValue = product.PropertyValues?.FirstOrDefault(
+                    propertyValue => propertyValue.Property != null
+                                     && propertyValue.Property.Id.EqualsInvariant(propertyToSet.Id));
+
+                if (productPropertyValue != null)
+                {
+                    var propertyValue = propertyToSet.Values.FirstOrDefault();
+
+                    productPropertyValue.Value = propertyValue?.Value;
+
+                    if (propertyToSet.Dictionary)
+                    {
+                        productPropertyValue.ValueId = propertyValue?.ValueId;
+                    }
+
+                    result = true;
+                }
+                else
+                {
+                    result = AddPropertyValues(product, propertyToSet);
+                }
+            }
+
+            return result;
+        }
+
+        protected virtual bool SetOwnProperty(CatalogProduct product, moduleCoreModels.Property property)
+        {
+            bool result;
+            var propertyValue = property.Values.FirstOrDefault();
+            var value = property.Dictionary ? propertyValue?.ValueId : propertyValue?.Value;
+            var setter = GetProductPropertySetter(product, property);
+
+            if (setter == null)
+            {
+                result = false;
+            }
+            else
+            {
+                if (value == null && property.Required)
+                {
+                    throw new ArgumentException(
+                        $"Property value is missing for required property \"{property.Name}\".");
+                }
+
+                var convertedValue = value != null ? ConvertValue(property.ValueType, value) : null;
+
+                setter.Invoke(product, new[] { convertedValue });
+                result = true;
+            }
+
+            return result;
+        }
+
+        private static bool AddPropertyValues(IHasProperties product, moduleCoreModels.Property propertyToSet)
+        {
+            bool result;
+            var property = product.Properties.FirstOrDefault(p => p.Id.EqualsInvariant(propertyToSet.Id));
+            if (property == null)
+            {
+                result = false;
+            }
+            else
+            {
+                if (product.PropertyValues == null)
+                {
+                    product.PropertyValues = new List<PropertyValue>();
+                }
+
+                foreach (var propertyValue in propertyToSet.Values.Select(value => value.ToCoreModel()))
+                {
+                    propertyValue.Property = property;
+                    propertyValue.PropertyId = property.Id;
+                    propertyValue.PropertyName = property.Name;
+                    product.PropertyValues.Add(propertyValue);
+                }
+
+                result = true;
             }
 
             return result;

@@ -1,11 +1,11 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Web.BackgroundJobs
 {
     using System;
+
     using Hangfire;
     using Hangfire.Server;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Extensions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models.Actions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.Platform.Core.PushNotifications;
@@ -13,10 +13,24 @@
 
     public class BulkUpdateJob
     {
-        private readonly IPushNotificationManager _pushNotificationManager;
         private readonly IBulkUpdateActionExecutor _bulkUpdateActionExecutor;
 
-        public BulkUpdateJob(IBulkUpdateActionRegistrar bulkUpdateActionRegistrar,
+        private readonly IPushNotificationManager _pushNotificationManager;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BulkUpdateJob"/> class.
+        /// </summary>
+        /// <param name="bulkUpdateActionRegistrar">
+        /// The bulk update action registrar.
+        /// </param>
+        /// <param name="pushNotificationManager">
+        /// The push notification manager.
+        /// </param>
+        /// <param name="bulkUpdateActionExecutor">
+        /// The bulk update action executor.
+        /// </param>
+        public BulkUpdateJob(
+            IBulkUpdateActionRegistrar bulkUpdateActionRegistrar,
             IPushNotificationManager pushNotificationManager,
             IBulkUpdateActionExecutor bulkUpdateActionExecutor)
         {
@@ -24,7 +38,11 @@
             _bulkUpdateActionExecutor = bulkUpdateActionExecutor;
         }
 
-        public void Execute(BulkUpdateActionContext bulkUpdateActionContext, BulkUpdatePushNotification notification, IJobCancellationToken cancellationToken, PerformContext performContext)
+        public void Execute(
+            BulkUpdateActionContext bulkUpdateActionContext,
+            BulkUpdatePushNotification notification,
+            IJobCancellationToken cancellationToken,
+            PerformContext performContext)
         {
             if (bulkUpdateActionContext == null)
             {
@@ -36,7 +54,7 @@
                 throw new ArgumentNullException(nameof(performContext));
             }
 
-            void progressCallback(BulkUpdateProgressInfo x)
+            void progressCallback(BulkUpdateProgressContext x)
             {
                 notification.Patch(x);
                 notification.JobId = performContext.BackgroundJob.Id;
@@ -45,11 +63,14 @@
 
             try
             {
-                _bulkUpdateActionExecutor.Execute(bulkUpdateActionContext, progressCallback, new JobCancellationTokenWrapper(cancellationToken));
+                _bulkUpdateActionExecutor.Execute(
+                    bulkUpdateActionContext,
+                    progressCallback,
+                    new JobCancellationTokenWrapper(cancellationToken));
             }
             catch (JobAbortedException)
             {
-                //do nothing
+                // idle
             }
             catch (Exception ex)
             {

@@ -7,6 +7,9 @@
 
     public interface IBulkUpdateActionExecutor
     {
-        void Execute(BulkUpdateActionContext context, Action<BulkUpdateProgressInfo> progressCallback, ICancellationToken token);
+        void Execute(
+            BulkUpdateActionContext context,
+            Action<BulkUpdateProgressContext> progressCallback,
+            ICancellationToken token);
     }
 }

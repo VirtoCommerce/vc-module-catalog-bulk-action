@@ -1,29 +1,60 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models.Actions
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions
 {
     using System;
     using System.Collections.Generic;
+
     using Newtonsoft.Json;
+
     using VirtoCommerce.Platform.Core.PushNotifications;
 
     public class BulkUpdatePushNotification : PushNotification
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BulkUpdatePushNotification"/> class.
+        /// </summary>
+        /// <param name="creator">
+        /// The creator.
+        /// </param>
         public BulkUpdatePushNotification(string creator)
             : base(creator)
         {
             Errors = new List<string>();
         }
 
-        [JsonProperty("jobId")]
-        public string JobId { get; set; }
-        [JsonProperty("finished")]
-        public DateTime? Finished { get; set; }
-        [JsonProperty("totalCount")]
-        public int? TotalCount { get; set; }
-        [JsonProperty("processedCount")]
-        public int? ProcessedCount { get; set; }
+        /// <summary>
+        /// The error count.
+        /// </summary>
         [JsonProperty("errorCount")]
         public long ErrorCount => Errors?.Count ?? 0;
+
+        /// <summary>
+        /// Gets or sets the errors.
+        /// </summary>
         [JsonProperty("errors")]
         public ICollection<string> Errors { get; set; }
+
+        /// <summary>
+        /// Gets or sets the finished.
+        /// </summary>
+        [JsonProperty("finished")]
+        public DateTime? Finished { get; set; }
+
+        /// <summary>
+        /// Gets or sets the job id.
+        /// </summary>
+        [JsonProperty("jobId")]
+        public string JobId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the processed count.
+        /// </summary>
+        [JsonProperty("processedCount")]
+        public int? ProcessedCount { get; set; }
+
+        /// <summary>
+        /// Gets or sets the total count.
+        /// </summary>
+        [JsonProperty("totalCount")]
+        public int? TotalCount { get; set; }
     }
 }

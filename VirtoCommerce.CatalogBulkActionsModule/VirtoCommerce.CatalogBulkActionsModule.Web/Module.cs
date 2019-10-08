@@ -4,8 +4,8 @@
 
     using Microsoft.Practices.Unity;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties;
