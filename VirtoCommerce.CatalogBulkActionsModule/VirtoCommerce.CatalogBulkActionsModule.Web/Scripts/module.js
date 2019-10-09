@@ -60,13 +60,13 @@ angular.module(moduleName, [])
             mainMenuService.addMenuItem(menuItem);
 
             catalogBulkActionService.register({
-                name: 'ChangeCategoryBulkAction',
+                name: 'CategoryChangeBulkAction',
                 controller: 'virtoCommerce.catalogModule.changeCategoryActionStepsController',
                 template: 'Modules/$(VirtoCommerce.CatalogBulkActionsModule)/Scripts/blades/action-change-category.tpl.html'
             });
 
             catalogBulkActionService.register({
-                name: 'UpdatePropertiesBulkAction',
+                name: 'PropertiesUpdateBulkAction',
                 controller: 'virtoCommerce.catalogModule.editPropertiesActionController',
                 template: 'Modules/$(VirtoCommerce.CatalogBulkActionsModule)/Scripts/blades/action-edit-properties.tpl.html'
             });

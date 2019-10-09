@@ -8,8 +8,8 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Web.JsonConverters;
@@ -37,7 +37,7 @@
             _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
             _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
-            _container.RegisterType<IBulkUpdateActionPropertyManager, BulkUpdateActionPropertyManager>();
+            _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
         }
 
@@ -49,8 +49,8 @@
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(
                 new BulkActionContextJsonConverter());
 
-            AbstractTypeFactory<BulkActionContext>.RegisterType<ChangeCategoryBulkActionContext>();
-            AbstractTypeFactory<BulkActionContext>.RegisterType<UpdatePropertiesBulkActionContext>();
+            AbstractTypeFactory<BulkActionContext>.RegisterType<CategoryChangeBulkActionContext>();
+            AbstractTypeFactory<BulkActionContext>.RegisterType<PropertiesUpdateBulkActionContext>();
 
             // TechDebt: IItemService and similar does not decorated with vc-module-cache/CatalogServicesDecorator as it is not registered yet.
             // Cache decorator registration is in PostInitialize for all used service being init.
@@ -59,8 +59,8 @@
             // 1. WithActionFactory and WithDataSourceFactory should use registered creation factory (e.g. Func<IBulkUpdateActionFactory>) for deferred factories instantiation (IMHO preferred)
             // 2. Pass DI container (IUnityContainer) to the factories. (not safe because of potential harmful container usage there)
             // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
-            Register(nameof(ChangeCategoryBulkAction), nameof(ChangeCategoryBulkActionContext));
-            Register(nameof(UpdatePropertiesBulkAction), nameof(UpdatePropertiesBulkActionContext));
+            Register(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
+            Register(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
         }
 
         public override void SetupDatabase()

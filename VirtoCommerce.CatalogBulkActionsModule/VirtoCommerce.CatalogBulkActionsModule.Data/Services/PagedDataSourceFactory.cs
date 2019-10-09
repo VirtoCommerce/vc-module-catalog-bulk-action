@@ -5,8 +5,8 @@
     using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
 
     public class PagedDataSourceFactory : IPagedDataSourceFactory
     {
@@ -29,11 +29,11 @@
 
             switch (context)
             {
-                case ChangeCategoryBulkActionContext _:
+                case CategoryChangeBulkActionContext _:
                     result = new PagedDataSource(_searchService, context.DataQuery);
                     break;
 
-                case UpdatePropertiesBulkActionContext _:
+                case PropertiesUpdateBulkActionContext _:
                     result = new ProductPagedDataSource(_searchService, context.DataQuery);
                     break;
             }

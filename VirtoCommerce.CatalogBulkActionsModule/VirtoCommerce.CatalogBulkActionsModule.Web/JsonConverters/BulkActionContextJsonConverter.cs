@@ -40,7 +40,7 @@
             var result = AbstractTypeFactory<BulkActionContext>.TryCreateInstance(typeName);
             if (result == null)
             {
-                throw new NotSupportedException("Unknown BulkUpdateActionContext type: " + typeName);
+                throw new NotSupportedException("Unknown BulkActionContext type: " + typeName);
             }
 
             serializer.Populate(obj.CreateReader(), result);

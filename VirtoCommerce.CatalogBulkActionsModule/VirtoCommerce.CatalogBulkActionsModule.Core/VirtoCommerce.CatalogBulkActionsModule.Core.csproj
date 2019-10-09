@@ -54,6 +54,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkActionPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Models\PropertyValidationRule.cs" />
     <Compile Include="Models\PropertyValue.cs" />
     <Compile Include="Models\SearchCriteria.cs" />
-    <Compile Include="ModuleConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IMover.cs" />
     <Compile Include="Services\ISearchService.cs" />

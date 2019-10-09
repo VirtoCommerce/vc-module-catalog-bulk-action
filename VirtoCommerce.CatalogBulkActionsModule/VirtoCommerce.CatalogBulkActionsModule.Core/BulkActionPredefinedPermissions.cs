@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
     public static class BulkActionPredefinedPermissions
     {

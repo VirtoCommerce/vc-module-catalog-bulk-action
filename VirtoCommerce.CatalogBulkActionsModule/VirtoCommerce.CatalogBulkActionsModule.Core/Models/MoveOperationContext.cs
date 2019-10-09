@@ -20,6 +20,6 @@
         /// <summary>
         /// Gets or sets the list entries.
         /// </summary>
-        public ICollection<ListEntry> ListEntries { get; set; }
+        public ICollection<ListEntry> Entries { get; set; }
     }
 }

@@ -39,7 +39,7 @@
         {
             var result = new List<VC.Category>();
 
-            foreach (var listEntryCategory in moveOperationContext.ListEntries.Where(
+            foreach (var listEntryCategory in moveOperationContext.Entries.Where(
                 entry => entry.Type.EqualsInvariant(ListEntryCategory.TypeName)))
             {
                 var category = _categoryService.GetById(listEntryCategory.Id, VC.CategoryResponseGroup.Info);

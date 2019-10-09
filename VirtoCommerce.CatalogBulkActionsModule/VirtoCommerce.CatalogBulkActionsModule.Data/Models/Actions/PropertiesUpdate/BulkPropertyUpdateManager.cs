@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate
 {
     using System;
     using System.Collections.Generic;
@@ -12,9 +12,11 @@
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using moduleCoreModels = Core.Models;
+    using moduleCoreModels = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using Property = VirtoCommerce.Domain.Catalog.Model.Property;
+    using PropertyValue = VirtoCommerce.Domain.Catalog.Model.PropertyValue;
 
-    public class BulkUpdateActionPropertyManager : IBulkUpdateActionPropertyManager
+    public class BulkPropertyUpdateManager : IBulkPropertyUpdateManager
     {
         private readonly IPagedDataSourceFactory _dataSourceFactory;
 
@@ -23,7 +25,7 @@
         private readonly Dictionary<string, MethodInfo> _productProperties = new Dictionary<string, MethodInfo>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BulkUpdateActionPropertyManager"/> class.
+        /// Initializes a new instance of the <see cref="BulkPropertyUpdateManager"/> class.
         /// </summary>
         /// <param name="dataSourceFactory">
         /// The data source factory.
@@ -31,13 +33,13 @@
         /// <param name="itemService">
         /// The item service.
         /// </param>
-        public BulkUpdateActionPropertyManager(IPagedDataSourceFactory dataSourceFactory, IItemService itemService)
+        public BulkPropertyUpdateManager(IPagedDataSourceFactory dataSourceFactory, IItemService itemService)
         {
             _dataSourceFactory = dataSourceFactory;
             _itemService = itemService;
         }
 
-        public virtual Property[] GetProperties(UpdatePropertiesBulkActionContext context)
+        public virtual Property[] GetProperties(PropertiesUpdateBulkActionContext context)
         {
             // TechDebt: Should get all product inherited properties faster,
             // by getting all properties for category line entries (including outline) + all inherited product line entry properties
@@ -67,11 +69,11 @@
             return result.ToArray();
         }
 
-        public virtual UpdatePropertiesBulkActionResult UpdateProperties(
+        public virtual PropertiesUpdateBulkActionResult UpdateProperties(
             CatalogProduct[] products,
             moduleCoreModels.Property[] propertiesToSet)
         {
-            var result = new UpdatePropertiesBulkActionResult { Succeeded = true };
+            var result = new PropertiesUpdateBulkActionResult { Succeeded = true };
             var hasChanges = false;
 
             if (products.IsNullOrEmpty())
@@ -94,7 +96,7 @@
         protected virtual bool ChangesProductPropertyValues(
             moduleCoreModels.Property[] propertiesToSet,
             CatalogProduct[] products,
-            UpdatePropertiesBulkActionResult result)
+            PropertiesUpdateBulkActionResult result)
         {
             var hasChanges = false;
 

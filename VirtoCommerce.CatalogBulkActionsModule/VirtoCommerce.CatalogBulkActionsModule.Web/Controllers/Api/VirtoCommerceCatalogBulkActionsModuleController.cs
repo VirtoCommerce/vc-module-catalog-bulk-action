@@ -7,6 +7,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 
     using Hangfire;
 
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;

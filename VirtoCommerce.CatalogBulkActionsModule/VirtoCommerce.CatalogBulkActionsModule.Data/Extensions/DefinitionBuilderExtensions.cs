@@ -3,7 +3,7 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
 
-    public static class BulkActionDefinitionBuilderExtensions
+    public static class DefinitionBuilderExtensions
     {
         public static BulkActionDefinitionBuilder WithActionFactory(
             this BulkActionDefinitionBuilder builder,

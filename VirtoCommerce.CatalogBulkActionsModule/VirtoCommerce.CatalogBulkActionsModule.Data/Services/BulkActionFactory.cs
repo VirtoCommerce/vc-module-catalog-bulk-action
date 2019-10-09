@@ -5,14 +5,14 @@
     using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
 
     public class BulkActionFactory : IBulkActionFactory
     {
-        private readonly IBulkUpdateActionPropertyManager bulkUpdateActionPropertyManager;
+        private readonly IBulkPropertyUpdateManager bulkPropertyUpdateManager;
 
         private readonly ICatalogService _catalogService;
 
@@ -36,7 +36,7 @@
         /// <param name="productMover">
         /// The product mover.
         /// </param>
-        /// <param name="bulkUpdateActionPropertyManager">
+        /// <param name="bulkPropertyUpdateManager">
         /// The bulk update property manager.
         /// </param>
         /// <param name="itemService">
@@ -49,14 +49,14 @@
             ICatalogService catalogService,
             IMover<Category> categoryMover,
             IMover<CatalogProduct> productMover,
-            IBulkUpdateActionPropertyManager bulkUpdateActionPropertyManager,
+            IBulkPropertyUpdateManager bulkPropertyUpdateManager,
             IItemService itemService,
             ICategoryService categoryService)
         {
             _catalogService = catalogService;
             _categoryMover = categoryMover;
             _productMover = productMover;
-            this.bulkUpdateActionPropertyManager = bulkUpdateActionPropertyManager;
+            this.bulkPropertyUpdateManager = bulkPropertyUpdateManager;
             _itemService = itemService;
             _categoryService = categoryService;
         }
@@ -67,17 +67,17 @@
 
             switch (context)
             {
-                case ChangeCategoryBulkActionContext changeCategoryActionContext:
-                    result = new ChangeCategoryBulkAction(
+                case CategoryChangeBulkActionContext changeCategoryActionContext:
+                    result = new CategoryChangeBulkAction(
                         _catalogService,
                         _categoryMover,
                         _productMover,
                         changeCategoryActionContext);
                     break;
 
-                case UpdatePropertiesBulkActionContext updatePropertiesActionContext:
-                    result = new UpdatePropertiesBulkAction(
-                        bulkUpdateActionPropertyManager,
+                case PropertiesUpdateBulkActionContext updatePropertiesActionContext:
+                    result = new PropertiesUpdateBulkAction(
+                        bulkPropertyUpdateManager,
                         _itemService,
                         _catalogService,
                         _categoryService,

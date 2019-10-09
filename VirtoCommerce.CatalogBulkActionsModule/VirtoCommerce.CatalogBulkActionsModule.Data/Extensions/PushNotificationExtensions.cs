@@ -2,7 +2,7 @@
 {
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
 
-    public static class BulkPushNotificationExtensions
+    public static class PushNotificationExtensions
     {
         public static void Patch(this BulkActionPushNotification target, BulkActionProgressContext source)
         {

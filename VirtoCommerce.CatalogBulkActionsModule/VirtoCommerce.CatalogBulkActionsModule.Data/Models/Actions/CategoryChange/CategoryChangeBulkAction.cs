@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange
 {
     using System;
     using System.Collections.Generic;
@@ -12,18 +12,18 @@
 
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
-    public class ChangeCategoryBulkAction : IBulkAction
+    public class CategoryChangeBulkAction : IBulkAction
     {
         private readonly ICatalogService _catalogService;
 
         private readonly IMover<VC.Category> _categoryMover;
 
-        private readonly ChangeCategoryBulkActionContext _context;
+        private readonly CategoryChangeBulkActionContext _context;
 
         private readonly IMover<VC.CatalogProduct> _productMover;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeCategoryBulkAction"/> class.
+        /// Initializes a new instance of the <see cref="CategoryChangeBulkAction"/> class.
         /// </summary>
         /// <param name="catalogService">
         /// The catalog service.
@@ -37,11 +37,11 @@
         /// <param name="context">
         /// The context.
         /// </param>
-        public ChangeCategoryBulkAction(
+        public CategoryChangeBulkAction(
             ICatalogService catalogService,
             IMover<VC.Category> categoryMover,
             IMover<VC.CatalogProduct> productMover,
-            ChangeCategoryBulkActionContext context)
+            CategoryChangeBulkActionContext context)
         {
             _catalogService = catalogService;
             _categoryMover = categoryMover;
@@ -59,7 +59,7 @@
                                {
                                    Catalog = _context.CatalogId,
                                    Category = _context.CategoryId,
-                                   ListEntries = listEntries,
+                                   Entries = listEntries,
                                };
 
             var categories = _categoryMover.Prepare(moveInfo);

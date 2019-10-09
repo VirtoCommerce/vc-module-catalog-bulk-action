@@ -37,7 +37,7 @@
         {
             var result = new List<VC.CatalogProduct>();
 
-            foreach (var listEntryProduct in moveOperationContext.ListEntries.Where(
+            foreach (var listEntryProduct in moveOperationContext.Entries.Where(
                 listEntry => listEntry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
             {
                 var product = _itemService.GetById(listEntryProduct.Id, VC.ItemResponseGroup.ItemLarge);

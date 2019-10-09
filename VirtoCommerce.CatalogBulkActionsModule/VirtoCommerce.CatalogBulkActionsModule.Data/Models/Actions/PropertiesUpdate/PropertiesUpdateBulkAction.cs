@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate
 {
     using System;
     using System.Collections.Generic;
@@ -13,24 +13,24 @@
 
     using Property = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Property;
 
-    public class UpdatePropertiesBulkAction : IBulkAction
+    public class PropertiesUpdateBulkAction : IBulkAction
     {
-        private readonly IBulkUpdateActionPropertyManager bulkUpdateActionPropertyManager;
+        private readonly IBulkPropertyUpdateManager bulkPropertyUpdateManager;
 
         private readonly ICatalogService _catalogService;
 
         private readonly ICategoryService _categoryService;
 
-        private readonly UpdatePropertiesBulkActionContext _context;
+        private readonly PropertiesUpdateBulkActionContext _context;
 
         private readonly IItemService _itemService;
 
         private readonly Dictionary<string, string> _namesById = new Dictionary<string, string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UpdatePropertiesBulkAction"/> class.
+        /// Initializes a new instance of the <see cref="PropertiesUpdateBulkAction"/> class.
         /// </summary>
-        /// <param name="bulkUpdateActionPropertyManager">
+        /// <param name="bulkPropertyUpdateManager">
         /// The bulk update property manager.
         /// </param>
         /// <param name="itemService">
@@ -45,14 +45,14 @@
         /// <param name="context">
         /// The context.
         /// </param>
-        public UpdatePropertiesBulkAction(
-            IBulkUpdateActionPropertyManager bulkUpdateActionPropertyManager,
+        public PropertiesUpdateBulkAction(
+            IBulkPropertyUpdateManager bulkPropertyUpdateManager,
             IItemService itemService,
             ICatalogService catalogService,
             ICategoryService categoryService,
-            UpdatePropertiesBulkActionContext context)
+            PropertiesUpdateBulkActionContext context)
         {
-            this.bulkUpdateActionPropertyManager = bulkUpdateActionPropertyManager;
+            this.bulkPropertyUpdateManager = bulkPropertyUpdateManager;
             _itemService = itemService;
             _catalogService = catalogService;
             _categoryService = categoryService;
@@ -76,14 +76,14 @@
                 productIds,
                 ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
 
-            return bulkUpdateActionPropertyManager.UpdateProperties(products, _context.Properties);
+            return bulkPropertyUpdateManager.UpdateProperties(products, _context.Properties);
         }
 
         public virtual object GetActionData()
         {
-            var properties = bulkUpdateActionPropertyManager.GetProperties(_context);
+            var properties = bulkPropertyUpdateManager.GetProperties(_context);
 
-            return new UpdatePropertiesBulkActionData { Properties = properties.Select(CreateWebModel).ToArray() };
+            return new { Properties = properties.Select(CreateWebModel).ToArray() };
         }
 
         public virtual BulkActionResult Validate()

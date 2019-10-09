@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate
 {
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
 
-    public class UpdatePropertiesBulkActionContext : BulkActionContext
+    public class PropertiesUpdateBulkActionContext : BulkActionContext
     {
         /// <summary>
         /// Gets or sets the properties.

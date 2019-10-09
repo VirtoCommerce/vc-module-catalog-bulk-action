@@ -1,6 +1,6 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange
 {
-    public class ChangeCategoryBulkActionContext : BulkActionContext
+    public class CategoryChangeBulkActionContext : BulkActionContext
     {
         /// <summary>
         /// Gets or sets the catalog id.

@@ -78,7 +78,7 @@
             }
             finally
             {
-                notification.Description = "Update finished";
+                notification.Description = "Job finished";
                 notification.Finished = DateTime.UtcNow;
                 _pushNotificationManager.Upsert(notification);
             }
