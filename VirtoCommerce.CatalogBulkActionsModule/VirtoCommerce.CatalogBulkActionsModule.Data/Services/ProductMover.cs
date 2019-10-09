@@ -10,7 +10,7 @@
 
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
-    public class ProductMover : IListEntryMover<VC.CatalogProduct>
+    public class ProductMover : IMover<VC.CatalogProduct>
     {
         private readonly IItemService _itemService;
 
@@ -25,7 +25,7 @@
             _itemService = itemService;
         }
 
-        public void ConfirmMove(IEnumerable<VC.CatalogProduct> entities)
+        public void Confirm(IEnumerable<VC.CatalogProduct> entities)
         {
             if (entities.Any())
             {
@@ -33,7 +33,7 @@
             }
         }
 
-        public List<VC.CatalogProduct> PrepareMove(MoveOperationContext moveOperationContext)
+        public List<VC.CatalogProduct> Prepare(MoveOperationContext moveOperationContext)
         {
             var result = new List<VC.CatalogProduct>();
 

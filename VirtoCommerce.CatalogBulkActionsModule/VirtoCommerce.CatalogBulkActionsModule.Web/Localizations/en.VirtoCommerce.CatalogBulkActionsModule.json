@@ -8,11 +8,11 @@
   },
   "actions": {
     "types": {
-      "ChangeCategoryBulkUpdateAction": {
+      "ChangeCategoryBulkAction": {
         "title": "Change Category",
         "subtitle": "Move products to another category"
       },
-      "UpdatePropertiesBulkUpdateAction": {
+      "UpdatePropertiesBulkAction": {
         "title": "Edit Properties",
         "subtitle": "Update one ore more properties"
       }

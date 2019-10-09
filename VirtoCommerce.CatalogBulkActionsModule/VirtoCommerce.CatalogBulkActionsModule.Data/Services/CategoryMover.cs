@@ -11,7 +11,7 @@
 
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
-    public class CategoryMover : IListEntryMover<VC.Category>
+    public class CategoryMover : IMover<VC.Category>
     {
         private readonly ICategoryService _categoryService;
 
@@ -26,7 +26,7 @@
             _categoryService = categoryService;
         }
 
-        public void ConfirmMove(IEnumerable<VC.Category> entities)
+        public void Confirm(IEnumerable<VC.Category> entities)
         {
             var categories = entities.ToArray();
             if (categories.Any())
@@ -35,7 +35,7 @@
             }
         }
 
-        public List<VC.Category> PrepareMove(MoveOperationContext moveOperationContext)
+        public List<VC.Category> Prepare(MoveOperationContext moveOperationContext)
         {
             var result = new List<VC.Category>();
 

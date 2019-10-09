@@ -7,9 +7,11 @@
     using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.ChangeCategory;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.UpdateProperties;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Web.JsonConverters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
@@ -28,15 +30,15 @@
         {
             base.Initialize();
 
-            _container.RegisterType<IListEntrySearchService, ListEntrySearchService>();
-            _container.RegisterType<IListEntryMover<Category>, CategoryMover>();
-            _container.RegisterType<IListEntryMover<CatalogProduct>, ProductMover>();
+            _container.RegisterType<ISearchService, SearchService>();
+            _container.RegisterType<IMover<Category>, CategoryMover>();
+            _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
 
-            _container.RegisterInstance<IBulkUpdateActionRegistrar>(new BulkUpdateActionRegistrar());
-            _container.RegisterType<IBulkUpdateActionExecutor, BulkUpdateActionExecutor>();
-            _container.RegisterType<IBulkUpdateActionFactory, BulkUpdateActionFactory>();
-            _container.RegisterType<IBulkUpdatePropertyManager, BulkUpdatePropertyManager>();
-            _container.RegisterType<IPagedDataSourceFactory, BulkUpdateDataSourceFactory>();
+            _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
+            _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
+            _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
+            _container.RegisterType<IBulkUpdateActionPropertyManager, BulkUpdateActionPropertyManager>();
+            _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
         }
 
         public override void PostInitialize()
@@ -45,10 +47,10 @@
 
             var httpConfiguration = _container.Resolve<HttpConfiguration>();
             httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(
-                new BulkUpdateActionContextJsonConverter());
+                new BulkActionContextJsonConverter());
 
-            AbstractTypeFactory<BulkUpdateActionContext>.RegisterType<ChangeCategoryActionContext>();
-            AbstractTypeFactory<BulkUpdateActionContext>.RegisterType<UpdatePropertiesActionContext>();
+            AbstractTypeFactory<BulkActionContext>.RegisterType<ChangeCategoryBulkActionContext>();
+            AbstractTypeFactory<BulkActionContext>.RegisterType<UpdatePropertiesBulkActionContext>();
 
             // TechDebt: IItemService and similar does not decorated with vc-module-cache/CatalogServicesDecorator as it is not registered yet.
             // Cache decorator registration is in PostInitialize for all used service being init.
@@ -57,8 +59,8 @@
             // 1. WithActionFactory and WithDataSourceFactory should use registered creation factory (e.g. Func<IBulkUpdateActionFactory>) for deferred factories instantiation (IMHO preferred)
             // 2. Pass DI container (IUnityContainer) to the factories. (not safe because of potential harmful container usage there)
             // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
-            Register(nameof(ChangeCategoryBulkUpdateAction), nameof(ChangeCategoryActionContext));
-            Register(nameof(UpdatePropertiesBulkUpdateAction), nameof(UpdatePropertiesActionContext));
+            Register(nameof(ChangeCategoryBulkAction), nameof(ChangeCategoryBulkActionContext));
+            Register(nameof(UpdatePropertiesBulkAction), nameof(UpdatePropertiesBulkActionContext));
         }
 
         public override void SetupDatabase()
@@ -68,17 +70,17 @@
 
         private void Register(string name, string contextTypeName)
         {
-            var actionDefinition = new BulkUpdateActionDefinition
+            var actionDefinition = new BulkActionDefinition
                                        {
                                            Name = name,
-                                           AppliableTypes = new[] { nameof(CatalogProduct) },
+                                           ApplicableTypes = new[] { nameof(CatalogProduct) },
                                            ContextTypeName = contextTypeName
                                        };
-            var actionFactory = _container.Resolve<IBulkUpdateActionFactory>();
+            var actionFactory = _container.Resolve<IBulkActionFactory>();
             var dataSourceFactory = _container.Resolve<IPagedDataSourceFactory>();
-            var actionRegistrar = _container.Resolve<IBulkUpdateActionRegistrar>();
+            var actionRegistrar = _container.Resolve<IBulkActionRegistrar>();
 
-            var actionDefinitionBuilder = new BulkUpdateActionDefinitionBuilder(actionDefinition);
+            var actionDefinitionBuilder = new BulkActionDefinitionBuilder(actionDefinition);
             var withActionFactory = actionDefinitionBuilder.WithActionFactory(actionFactory);
             var withDataSourceFactory = withActionFactory.WithDataSourceFactory(dataSourceFactory);
 

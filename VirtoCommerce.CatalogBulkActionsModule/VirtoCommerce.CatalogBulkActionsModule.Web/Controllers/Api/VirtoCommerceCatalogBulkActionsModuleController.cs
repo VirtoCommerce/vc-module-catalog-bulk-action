@@ -9,6 +9,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Web.BackgroundJobs;
     using VirtoCommerce.CatalogBulkActionsModule.Web.Models;
     using VirtoCommerce.Platform.Core.Security;
@@ -17,24 +18,24 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
     [RoutePrefix("api/bulkUpdate")]
     public class VirtoCommerceCatalogBulkActionsModuleController : ApiController
     {
-        private readonly IBulkUpdateActionRegistrar _bulkUpdateActionRegistrar;
+        private readonly IBulkActionRegistrar bulkActionRegistrar;
 
         private readonly IUserNameResolver _userNameResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogBulkActionsModuleController"/> class.
         /// </summary>
-        /// <param name="bulkUpdateActionRegistrar">
+        /// <param name="bulkActionRegistrar">
         /// The bulk update action registrar.
         /// </param>
         /// <param name="userNameResolver">
         /// The user name resolver.
         /// </param>
         public VirtoCommerceCatalogBulkActionsModuleController(
-            IBulkUpdateActionRegistrar bulkUpdateActionRegistrar,
+            IBulkActionRegistrar bulkActionRegistrar,
             IUserNameResolver userNameResolver)
         {
-            _bulkUpdateActionRegistrar = bulkUpdateActionRegistrar;
+            this.bulkActionRegistrar = bulkActionRegistrar;
             _userNameResolver = userNameResolver;
         }
 
@@ -45,8 +46,8 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <returns>201 - on success</returns>
         [HttpPost]
         [Route("task/cancel")]
-        [CheckPermission(Permission = BulkUpdatePredefinedPermissions.Execute)]
-        public IHttpActionResult Cancel([FromBody] UpdateCancellationRequest cancellationRequest)
+        [CheckPermission(Permission = BulkActionPredefinedPermissions.Execute)]
+        public IHttpActionResult Cancel([FromBody] ActionCancellationRequest cancellationRequest)
         {
             BackgroundJob.Delete(cancellationRequest.JobId);
             return Ok();
@@ -59,9 +60,8 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <returns>Initialization data for the given context.</returns>
         [HttpPost]
         [Route("action/data")]
-        [ResponseType(typeof(IBulkUpdateActionData))]
-        [CheckPermission(Permission = BulkUpdatePredefinedPermissions.Read)]
-        public IHttpActionResult GetActionData([FromBody] BulkUpdateActionContext context)
+        [CheckPermission(Permission = BulkActionPredefinedPermissions.Read)]
+        public IHttpActionResult GetActionData([FromBody] BulkActionContext context)
         {
             if (context == null)
             {
@@ -87,11 +87,11 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <returns>The list of registered actions</returns>
         [HttpGet]
         [Route("actions")]
-        [ResponseType(typeof(BulkUpdateActionDefinition[]))]
-        [CheckPermission(Permission = BulkUpdatePredefinedPermissions.Read)]
+        [ResponseType(typeof(BulkActionDefinition[]))]
+        [CheckPermission(Permission = BulkActionPredefinedPermissions.Read)]
         public IHttpActionResult GetRegisteredActions()
         {
-            var all = _bulkUpdateActionRegistrar.GetAll();
+            var all = bulkActionRegistrar.GetAll();
             var array = all.ToArray();
             return Ok(array);
         }
@@ -103,9 +103,9 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <returns>Notification with job id.</returns>
         [HttpPost]
         [Route("run")]
-        [CheckPermission(Permission = BulkUpdatePredefinedPermissions.Execute)]
-        [ResponseType(typeof(BulkUpdatePushNotification))]
-        public IHttpActionResult Run([FromBody] BulkUpdateActionContext context)
+        [CheckPermission(Permission = BulkActionPredefinedPermissions.Execute)]
+        [ResponseType(typeof(BulkActionPushNotification))]
+        public IHttpActionResult Run([FromBody] BulkActionContext context)
         {
             if (context == null)
             {
@@ -116,12 +116,12 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 
             if (Authorize(actionDefinition, context))
             {
-                var notification = new BulkUpdatePushNotification(_userNameResolver.GetCurrentUserName())
+                var notification = new BulkActionPushNotification(_userNameResolver.GetCurrentUserName())
                                        {
                                            Title = $"{context.ActionName}", Description = "Starting…"
                                        };
 
-                var jobId = BackgroundJob.Enqueue<BulkUpdateJob>(
+                var jobId = BackgroundJob.Enqueue<BulkActionJob>(
                     job => job.Execute(context, notification, JobCancellationToken.Null, null));
                 notification.JobId = jobId;
 
@@ -137,19 +137,19 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <param name="definition"></param>
         /// <param name="context"></param>
         /// <returns>True if all checks are succeeded, otherwise false.</returns>
-        private bool Authorize(BulkUpdateActionDefinition definition, BulkUpdateActionContext context)
+        private bool Authorize(BulkActionDefinition definition, BulkActionContext context)
         {
             // TechDebt: Need to add permission and custom authorization for bulk update.
             // For that we could use IExportSecurityHandler and IPermissionExportSecurityHandlerFactory - just need to move them to platform and remove export specific objects
             return true;
         }
 
-        private BulkUpdateActionDefinition GetActionDefinition(BulkUpdateActionContext context)
+        private BulkActionDefinition GetActionDefinition(BulkActionContext context)
         {
             var actionName = context.ActionName;
-            var entityName = nameof(IBulkUpdateActionRegistrar);
+            var entityName = nameof(IBulkActionRegistrar);
             var message = $"Action \"{actionName}\" is not registered using \"{entityName}\".";
-            return _bulkUpdateActionRegistrar.GetByName(actionName) ?? throw new ArgumentException(message);
+            return bulkActionRegistrar.GetByName(actionName) ?? throw new ArgumentException(message);
         }
     }
 }

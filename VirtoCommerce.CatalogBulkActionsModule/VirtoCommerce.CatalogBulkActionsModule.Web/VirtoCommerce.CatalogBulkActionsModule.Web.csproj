@@ -167,11 +167,11 @@
     <Content Include="Scripts\resources\virto-commerce.catalog-bulk-actions-module-api.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundJobs\BulkUpdateJob.cs" />
+    <Compile Include="BackgroundJobs\BulkActionJob.cs" />
     <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
     <Compile Include="Controllers\Api\VirtoCommerceCatalogBulkActionsModuleController.cs" />
-    <Compile Include="JsonConverters\BulkUpdateActionContextJsonConverter.cs" />
-    <Compile Include="Models\UpdateCancellationRequest.cs" />
+    <Compile Include="JsonConverters\BulkActionContextJsonConverter.cs" />
+    <Compile Include="Models\ActionCancellationRequest.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
