@@ -3,6 +3,9 @@
     "blades": {
       "hello-world": {
         "title": "Hello world blade"
+      },
+      "action-progress": {
+        "title": "Execution progress"
       }
     }
   },

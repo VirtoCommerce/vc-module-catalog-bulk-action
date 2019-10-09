@@ -52,7 +52,7 @@ angular.module('virtoCommerce.catalogModule')
 
             var progressBlade = {
                 id: 'actionProgress',
-                title: 'catalog.blades.action-progress.title',
+                title: 'virtoCommerce.catalogBulkActionsModule.blades.action-progress.title',
                 controller: 'virtoCommerce.catalogModule.bulkActionProgressController',
                 template: 'Modules/$(virtoCommerce.catalogBulkActionsModule)/Scripts/blades/bulk-action-progress.tpl.html',
                 actionDataContext: blade.actionDataContext,
