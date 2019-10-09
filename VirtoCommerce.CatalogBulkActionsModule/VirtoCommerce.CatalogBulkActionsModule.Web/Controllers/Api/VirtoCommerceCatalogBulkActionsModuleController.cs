@@ -2,6 +2,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 {
     using System;
     using System.Linq;
+    using System.Net;
     using System.Web.Http;
     using System.Web.Http.Description;
 
@@ -9,14 +10,12 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 
     using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Web.BackgroundJobs;
-    using VirtoCommerce.CatalogBulkActionsModule.Web.Models;
     using VirtoCommerce.Platform.Core.Security;
     using VirtoCommerce.Platform.Core.Web.Security;
 
-    [RoutePrefix("api/bulkUpdate")]
+    [RoutePrefix("api/bulk")]
     public class VirtoCommerceCatalogBulkActionsModuleController : ApiController
     {
         private readonly IBulkActionRegistrar bulkActionRegistrar;
@@ -41,17 +40,21 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Attempts to cancel running task
+        /// Attempts to cancel running task.
         /// </summary>
-        /// <param name="cancellationRequest">Cancellation request with task id</param>
-        /// <returns>201 - on success</returns>
-        [HttpPost]
-        [Route("task/cancel")]
+        /// <param name="jobId">
+        /// The job id.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IHttpActionResult"/>.
+        /// </returns>
+        [HttpDelete]
+        [Route]
         [CheckPermission(Permission = BulkActionPredefinedPermissions.Execute)]
-        public IHttpActionResult Cancel([FromBody] ActionCancellationRequest cancellationRequest)
+        public IHttpActionResult Cancel(string jobId)
         {
-            BackgroundJob.Delete(cancellationRequest.JobId);
-            return Ok();
+            BackgroundJob.Delete(jobId);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         /// <summary>
@@ -60,7 +63,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <param name="context">Context for which we want initialization data.</param>
         /// <returns>Initialization data for the given context.</returns>
         [HttpPost]
-        [Route("action/data")]
+        [Route("data")]
         [CheckPermission(Permission = BulkActionPredefinedPermissions.Read)]
         public IHttpActionResult GetActionData([FromBody] BulkActionContext context)
         {
@@ -87,7 +90,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// </summary>
         /// <returns>The list of registered actions</returns>
         [HttpGet]
-        [Route("actions")]
+        [Route]
         [ResponseType(typeof(BulkActionDefinition[]))]
         [CheckPermission(Permission = BulkActionPredefinedPermissions.Read)]
         public IHttpActionResult GetRegisteredActions()
@@ -103,7 +106,7 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
         /// <param name="context">Execution context.</param>
         /// <returns>Notification with job id.</returns>
         [HttpPost]
-        [Route("run")]
+        [Route]
         [CheckPermission(Permission = BulkActionPredefinedPermissions.Execute)]
         [ResponseType(typeof(BulkActionPushNotification))]
         public IHttpActionResult Run([FromBody] BulkActionContext context)

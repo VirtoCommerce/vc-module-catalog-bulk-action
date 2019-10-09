@@ -173,7 +173,6 @@
     <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
     <Compile Include="Controllers\Api\VirtoCommerceCatalogBulkActionsModuleController.cs" />
     <Compile Include="JsonConverters\BulkActionContextJsonConverter.cs" />
-    <Compile Include="Models\ActionCancellationRequest.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,6 +185,9 @@
       <Project>{182eefb6-f536-4f34-84a0-945c8e14ce22}</Project>
       <Name>VirtoCommerce.CatalogBulkActionsModule.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
