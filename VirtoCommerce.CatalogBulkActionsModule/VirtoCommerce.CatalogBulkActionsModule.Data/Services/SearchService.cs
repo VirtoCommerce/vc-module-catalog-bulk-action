@@ -5,7 +5,6 @@
 
     using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Assets;

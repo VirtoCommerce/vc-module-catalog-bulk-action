@@ -5,17 +5,17 @@
     using Hangfire;
     using Hangfire.Server;
 
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.Platform.Core.PushNotifications;
     using VirtoCommerce.Platform.Data.Common;
 
     public class BulkActionJob
     {
-        private readonly IBulkActionExecutor bulkActionExecutor;
-
         private readonly IPushNotificationManager _pushNotificationManager;
+
+        private readonly IBulkActionExecutor _bulkActionExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkActionJob"/> class.
@@ -35,7 +35,7 @@
             IBulkActionExecutor bulkActionExecutor)
         {
             _pushNotificationManager = pushNotificationManager;
-            this.bulkActionExecutor = bulkActionExecutor;
+            _bulkActionExecutor = bulkActionExecutor;
         }
 
         public void Execute(
@@ -54,16 +54,16 @@
                 throw new ArgumentNullException(nameof(performContext));
             }
 
-            void progressCallback(BulkActionProgressContext x)
+            void progressCallback(BulkActionProgressContext progressContext)
             {
-                notification.Patch(x);
+                notification.Patch(progressContext);
                 notification.JobId = performContext.BackgroundJob.Id;
                 _pushNotificationManager.Upsert(notification);
             }
 
             try
             {
-                bulkActionExecutor.Execute(
+                _bulkActionExecutor.Execute(
                     bulkActionContext,
                     progressCallback,
                     new JobCancellationTokenWrapper(cancellationToken));

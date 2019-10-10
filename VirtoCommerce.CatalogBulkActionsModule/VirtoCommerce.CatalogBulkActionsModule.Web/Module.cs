@@ -4,14 +4,15 @@
 
     using Microsoft.Practices.Unity;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionImplementations;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.DataSources;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Web.JsonConverters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
@@ -30,15 +31,17 @@
         {
             base.Initialize();
 
+            // to shared module
+            _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
+            _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
+
+            // to custom module
             _container.RegisterType<ISearchService, SearchService>();
             _container.RegisterType<IMover<Category>, CategoryMover>();
             _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
-
-            _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
-            _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
-            _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
+            _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
         }
 
         public override void PostInitialize()
@@ -46,8 +49,8 @@
             base.PostInitialize();
 
             var httpConfiguration = _container.Resolve<HttpConfiguration>();
-            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(
-                new BulkActionContextJsonConverter());
+            var converter = new BulkActionContextJsonConverter();
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(converter);
 
             AbstractTypeFactory<BulkActionContext>.RegisterType<CategoryChangeBulkActionContext>();
             AbstractTypeFactory<BulkActionContext>.RegisterType<PropertiesUpdateBulkActionContext>();
@@ -59,8 +62,8 @@
             // 1. WithActionFactory and WithDataSourceFactory should use registered creation factory (e.g. Func<IBulkUpdateActionFactory>) for deferred factories instantiation (IMHO preferred)
             // 2. Pass DI container (IUnityContainer) to the factories. (not safe because of potential harmful container usage there)
             // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
-            Register(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
-            Register(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
+            RegisterBulkAction(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
+            RegisterBulkAction(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
         }
 
         public override void SetupDatabase()
@@ -68,7 +71,7 @@
             // idle
         }
 
-        private void Register(string name, string contextTypeName)
+        private void RegisterBulkAction(string name, string contextTypeName)
         {
             var actionDefinition = new BulkActionDefinition
                                        {

@@ -1,6 +1,7 @@
 namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Net;
     using System.Web.Http;
@@ -9,8 +10,8 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
     using Hangfire;
 
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
     using VirtoCommerce.CatalogBulkActionsModule.Web.BackgroundJobs;
     using VirtoCommerce.Platform.Core.Security;
     using VirtoCommerce.Platform.Core.Web.Security;
@@ -18,9 +19,9 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
     [RoutePrefix("api/bulk")]
     public class VirtoCommerceCatalogBulkActionsModuleController : ApiController
     {
-        private readonly IBulkActionRegistrar bulkActionRegistrar;
-
         private readonly IUserNameResolver _userNameResolver;
+
+        private readonly IBulkActionRegistrar bulkActionRegistrar;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtoCommerceCatalogBulkActionsModuleController"/> class.
@@ -120,14 +121,13 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
 
             if (Authorize(actionDefinition, context))
             {
-                var notification = new BulkActionPushNotification(_userNameResolver.GetCurrentUserName())
+                var creator = _userNameResolver.GetCurrentUserName();
+                var notification = new BulkActionPushNotification(creator)
                                        {
                                            Title = $"{context.ActionName}", Description = "Starting…"
                                        };
 
-                var jobId = BackgroundJob.Enqueue<BulkActionJob>(
-                    job => job.Execute(context, notification, JobCancellationToken.Null, null));
-                notification.JobId = jobId;
+                notification.JobId = BackgroundJob.Enqueue<BulkActionJob>(job => job.Execute(context, notification, JobCancellationToken.Null, null));
 
                 return Ok(notification);
             }
@@ -135,16 +135,19 @@ namespace VirtoCommerce.CatalogBulkActionsModule.Web.Controllers.Api
             return Unauthorized();
         }
 
+
         /// <summary>
         /// Performs all definition security handlers checks, and returns true if all are succeeded.
         /// </summary>
         /// <param name="definition"></param>
         /// <param name="context"></param>
         /// <returns>True if all checks are succeeded, otherwise false.</returns>
+        [SuppressMessage("Major Code Smell", "S1172:Unused method parameters should be removed", Justification = "<Pending>")]
         private bool Authorize(BulkActionDefinition definition, BulkActionContext context)
         {
             // TechDebt: Need to add permission and custom authorization for bulk update.
-            // For that we could use IExportSecurityHandler and IPermissionExportSecurityHandlerFactory - just need to move them to platform and remove export specific objects
+            // For that we could use IExportSecurityHandler and IPermissionExportSecurityHandlerFactory
+            // - just need to move them to platform and remove export specific objects
             return true;
         }
 

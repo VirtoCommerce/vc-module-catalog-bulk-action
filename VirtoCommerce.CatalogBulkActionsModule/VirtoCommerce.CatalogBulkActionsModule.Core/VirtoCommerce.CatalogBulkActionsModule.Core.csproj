@@ -54,6 +54,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BulkActionAbstractions\IBulkAction.cs" />
+    <Compile Include="BulkActionAbstractions\IBulkActionExecutor.cs" />
+    <Compile Include="BulkActionAbstractions\IBulkActionFactory.cs" />
+    <Compile Include="BulkActionAbstractions\IBulkActionRegistrar.cs" />
+    <Compile Include="BulkActionImplementations\BulkActionDefinitionBuilder.cs" />
+    <Compile Include="BulkActionImplementations\BulkActionExecutor.cs" />
+    <Compile Include="BulkActionImplementations\BulkActionRegistrar.cs" />
+    <Compile Include="BulkActionModels\BulkActionContext.cs" />
+    <Compile Include="BulkActionModels\BulkActionDefinition.cs" />
+    <Compile Include="BulkActionModels\BulkActionProgressContext.cs" />
+    <Compile Include="BulkActionModels\BulkActionPushNotification.cs" />
+    <Compile Include="BulkActionModels\BulkActionResult.cs" />
+    <Compile Include="BulkActionModels\DataQuery.cs" />
     <Compile Include="BulkActionPredefinedPermissions.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\AssociationConverter.cs" />
@@ -67,6 +80,8 @@
     <Compile Include="Converters\PropertyValidationRuleConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="DataSourceAbstractions\IPagedDataSource.cs" />
+    <Compile Include="DataSourceAbstractions\IPagedDataSourceFactory.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\AssetBase.cs" />
     <Compile Include="Models\Category.cs" />
@@ -89,8 +104,6 @@
     <Compile Include="Models\PropertyValue.cs" />
     <Compile Include="Models\SearchCriteria.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\IMover.cs" />
-    <Compile Include="Services\ISearchService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

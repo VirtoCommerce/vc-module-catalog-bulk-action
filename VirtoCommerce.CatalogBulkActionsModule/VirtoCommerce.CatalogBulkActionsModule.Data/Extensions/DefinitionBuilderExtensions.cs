@@ -1,6 +1,8 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Extensions
 {
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionImplementations;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
 
     public static class DefinitionBuilderExtensions
