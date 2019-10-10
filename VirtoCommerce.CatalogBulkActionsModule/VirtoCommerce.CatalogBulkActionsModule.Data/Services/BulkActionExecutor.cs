@@ -37,8 +37,8 @@
             var totalCount = 0;
             var processedCount = 0;
 
-            var progressInfo = new BulkActionProgressContext { Description = "Validation has started…", };
-            progressCallback(progressInfo);
+            var progressContext = new BulkActionProgressContext { Description = "Validation has started…", };
+            progressCallback(progressContext);
 
             try
             {
@@ -52,15 +52,15 @@
 
                 if (proceed)
                 {
-                    progressInfo.Description = "Validation completed successfully.";
+                    progressContext.Description = "Validation successfully completed.";
                 }
                 else
                 {
-                    progressInfo.Description = "Validation completed with errors.";
-                    progressInfo.Errors = validationResult.Errors;
+                    progressContext.Description = "Validation has been completed with errors.";
+                    progressContext.Errors = validationResult.Errors;
                 }
 
-                progressCallback(progressInfo);
+                progressCallback(progressContext);
 
                 if (proceed)
                 {
@@ -71,10 +71,10 @@
                     totalCount = dataSource.GetTotalCount();
                     processedCount = 0;
 
-                    progressInfo.ProcessedCount = processedCount;
-                    progressInfo.TotalCount = totalCount;
-                    progressInfo.Description = "Update has started…";
-                    progressCallback(progressInfo);
+                    progressContext.ProcessedCount = processedCount;
+                    progressContext.TotalCount = totalCount;
+                    progressContext.Description = "The process has been started…";
+                    progressCallback(progressContext);
 
                     while (dataSource.Fetch())
                     {
@@ -88,19 +88,19 @@
                         }
                         else
                         {
-                            progressInfo.Errors.AddRange(result.Errors);
+                            progressContext.Errors.AddRange(result.Errors);
                         }
 
                         processedCount += dataSource.Items.Count();
-                        progressInfo.ProcessedCount = processedCount;
+                        progressContext.ProcessedCount = processedCount;
 
                         if (processedCount == totalCount)
                         {
                             continue;
                         }
 
-                        progressInfo.Description = $"{processedCount} out of {totalCount} have been updated.";
-                        progressCallback(progressInfo);
+                        progressContext.Description = $"{processedCount} out of {totalCount} have been updated.";
+                        progressCallback(progressContext);
                     }
                 }
                 else
@@ -110,13 +110,13 @@
             }
             catch (Exception e)
             {
-                progressInfo.Errors.Add(e.Message);
+                progressContext.Errors.Add(e.Message);
             }
             finally
             {
-                var message = progressInfo.Errors?.Count > 0 ? "Update completed with errors" : "Update completed";
-                progressInfo.Description = $"{message}: {processedCount} out of {totalCount} have been updated.";
-                progressCallback(progressInfo);
+                var message = progressContext.Errors?.Count > 0 ? "The process has been completed with errors" : "Process is completed";
+                progressContext.Description = $"{message}: {processedCount} out of {totalCount} have been updated.";
+                progressCallback(progressContext);
             }
         }
     }
