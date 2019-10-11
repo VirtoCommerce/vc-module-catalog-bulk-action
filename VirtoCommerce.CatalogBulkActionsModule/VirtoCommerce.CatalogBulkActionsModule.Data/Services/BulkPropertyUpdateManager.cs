@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,14 +6,16 @@
     using System.Linq;
     using System.Reflection;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.Converters;
+    using VirtoCommerce.BulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using local = VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using local = VirtoCommerce.BulkActionsModule.Core.Models;
 
     public class BulkPropertyUpdateManager : IBulkPropertyUpdateManager
     {

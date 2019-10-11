@@ -4,7 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.BulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 

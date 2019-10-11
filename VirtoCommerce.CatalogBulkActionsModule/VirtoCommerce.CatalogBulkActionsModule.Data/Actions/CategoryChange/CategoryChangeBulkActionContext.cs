@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange
 {
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
 
     public class CategoryChangeBulkActionContext : BulkActionContext
     {

@@ -46,6 +46,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="VirtoCommerce.BulkActionsModule.Core">
+      <HintPath>..\..\..\vc-module-bulk-actions\VirtoCommerce.BulkActionsModule\VirtoCommerce.BulkActionsModule.Web\bin\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
+    </Reference>
     <Reference Include="VirtoCommerce.Domain, Version=2.25.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\VirtoCommerce.Domain.2.25.21\lib\net461\VirtoCommerce.Domain.dll</HintPath>
     </Reference>
@@ -54,55 +57,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BulkActionAbstractions\IBulkAction.cs" />
-    <Compile Include="BulkActionAbstractions\IBulkActionExecutor.cs" />
-    <Compile Include="BulkActionAbstractions\IBulkActionFactory.cs" />
-    <Compile Include="BulkActionAbstractions\IBulkActionRegistrar.cs" />
-    <Compile Include="BulkActionImplementations\BulkActionDefinitionBuilder.cs" />
-    <Compile Include="BulkActionImplementations\BulkActionExecutor.cs" />
-    <Compile Include="BulkActionImplementations\BulkActionRegistrar.cs" />
-    <Compile Include="BulkActionModels\BulkActionContext.cs" />
-    <Compile Include="BulkActionModels\BulkActionDefinition.cs" />
-    <Compile Include="BulkActionModels\BulkActionProgressContext.cs" />
-    <Compile Include="BulkActionModels\BulkActionPushNotification.cs" />
-    <Compile Include="BulkActionModels\BulkActionResult.cs" />
-    <Compile Include="BulkActionModels\DataQuery.cs" />
-    <Compile Include="BulkActionPredefinedPermissions.cs" />
-    <Compile Include="Converters\AssetConverter.cs" />
-    <Compile Include="Converters\AssociationConverter.cs" />
-    <Compile Include="Converters\CategoryConverter.cs" />
-    <Compile Include="Converters\EditorialReviewConverter.cs" />
-    <Compile Include="Converters\LinkConverter.cs" />
-    <Compile Include="Converters\OutlineConverter.cs" />
-    <Compile Include="Converters\ProductConverter.cs" />
-    <Compile Include="Converters\PropertyAttributeConverter.cs" />
-    <Compile Include="Converters\PropertyConverter.cs" />
-    <Compile Include="Converters\PropertyValidationRuleConverter.cs" />
-    <Compile Include="Converters\PropertyValueConverter.cs" />
-    <Compile Include="Converters\SearchCriteriaConverter.cs" />
-    <Compile Include="DataSourceAbstractions\IPagedDataSource.cs" />
-    <Compile Include="DataSourceAbstractions\IPagedDataSourceFactory.cs" />
-    <Compile Include="Models\Asset.cs" />
-    <Compile Include="Models\AssetBase.cs" />
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\CategoryLink.cs" />
-    <Compile Include="Models\EditorialReview.cs" />
-    <Compile Include="Models\ResponseGroup.cs" />
-    <Compile Include="Models\Image.cs" />
-    <Compile Include="Models\ListEntry.cs" />
-    <Compile Include="Models\ListEntryCategory.cs" />
-    <Compile Include="Models\ListEntryLink.cs" />
-    <Compile Include="Models\ListEntryProduct.cs" />
-    <Compile Include="Models\ListEntrySearchCriteria.cs" />
-    <Compile Include="Models\SearchResult.cs" />
-    <Compile Include="Models\MoveOperationContext.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\ProductAssociation.cs" />
-    <Compile Include="Models\Property.cs" />
-    <Compile Include="Models\PropertyAttribute.cs" />
-    <Compile Include="Models\PropertyValidationRule.cs" />
-    <Compile Include="Models\PropertyValue.cs" />
-    <Compile Include="Models\SearchCriteria.cs" />
+    <Compile Include="IMover.cs" />
+    <Compile Include="ISearchService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

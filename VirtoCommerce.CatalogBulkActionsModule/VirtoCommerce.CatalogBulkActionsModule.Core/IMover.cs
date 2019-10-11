@@ -1,8 +1,8 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
     using System.Collections.Generic;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.BulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Common;
 
     public interface IMover<T>

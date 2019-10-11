@@ -1,19 +1,17 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Web
 {
-    using System.Web.Http;
-
     using Microsoft.Practices.Unity;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionImplementations;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Data;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.CatalogBulkActionsModule.Data.DataSources;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
-    using VirtoCommerce.CatalogBulkActionsModule.Web.JsonConverters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
     using VirtoCommerce.Platform.Core.Modularity;
@@ -31,11 +29,6 @@
         {
             base.Initialize();
 
-            // to shared module
-            _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
-            _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
-
-            // to custom module
             _container.RegisterType<ISearchService, SearchService>();
             _container.RegisterType<IMover<Category>, CategoryMover>();
             _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
@@ -47,10 +40,6 @@
         public override void PostInitialize()
         {
             base.PostInitialize();
-
-            var httpConfiguration = _container.Resolve<HttpConfiguration>();
-            var converter = new BulkActionContextJsonConverter();
-            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(converter);
 
             AbstractTypeFactory<BulkActionContext>.RegisterType<CategoryChangeBulkActionContext>();
             AbstractTypeFactory<BulkActionContext>.RegisterType<PropertiesUpdateBulkActionContext>();
@@ -73,21 +62,17 @@
 
         private void RegisterBulkAction(string name, string contextTypeName)
         {
-            var actionDefinition = new BulkActionDefinition
-                                       {
-                                           Name = name,
-                                           ApplicableTypes = new[] { nameof(CatalogProduct) },
-                                           ContextTypeName = contextTypeName
-                                       };
-            var actionFactory = _container.Resolve<IBulkActionFactory>();
             var dataSourceFactory = _container.Resolve<IPagedDataSourceFactory>();
+            var actionFactory = _container.Resolve<IBulkActionFactory>();
             var actionRegistrar = _container.Resolve<IBulkActionRegistrar>();
 
-            var actionDefinitionBuilder = new BulkActionDefinitionBuilder(actionDefinition);
-            var withActionFactory = actionDefinitionBuilder.WithActionFactory(actionFactory);
-            var withDataSourceFactory = withActionFactory.WithDataSourceFactory(dataSourceFactory);
-
-            actionRegistrar.Register(withDataSourceFactory);
+            var actionDefinition = new BulkActionDefinition(
+                name,
+                contextTypeName,
+                new[] { nameof(CatalogProduct) },
+                dataSourceFactory,
+                actionFactory);
+            actionRegistrar.Register(actionDefinition);
         }
     }
 }

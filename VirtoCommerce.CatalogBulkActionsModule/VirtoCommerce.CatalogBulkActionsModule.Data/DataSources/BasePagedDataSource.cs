@@ -4,11 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.Converters;
+    using VirtoCommerce.BulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Platform.Core.Common;
 
     using VC = VirtoCommerce.Domain.Catalog.Model;

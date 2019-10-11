@@ -1,6 +1,6 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.BulkActionsModule.Core.Models;
 
     public interface ISearchService
     {

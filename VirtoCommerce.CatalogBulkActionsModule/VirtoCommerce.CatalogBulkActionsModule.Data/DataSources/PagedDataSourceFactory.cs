@@ -2,11 +2,11 @@
 {
     using System;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.DataSourceAbstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
 
     public class PagedDataSourceFactory : IPagedDataSourceFactory
     {

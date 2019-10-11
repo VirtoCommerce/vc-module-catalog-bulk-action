@@ -2,8 +2,10 @@
 {
     using System;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionAbstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionAbstractions;
+    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
