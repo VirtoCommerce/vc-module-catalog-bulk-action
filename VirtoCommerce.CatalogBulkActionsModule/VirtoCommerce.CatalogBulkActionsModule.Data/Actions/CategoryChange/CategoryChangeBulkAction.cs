@@ -54,15 +54,17 @@
 
         public BulkActionResult Execute(IEnumerable<IEntity> entities)
         {
-            var listEntries = entities.Cast<ListEntry>().ToArray();
+            var entries = entities.Cast<ListEntry>().ToArray();
             var result = BulkActionResult.Success;
-            var moveInfo = new MoveOperationContext
-                               {
-                                   Catalog = _context.CatalogId, Category = _context.CategoryId, Entries = listEntries,
-                               };
+            var operationContext = new MoveOperationContext
+                                       {
+                                           Catalog = _context.CatalogId,
+                                           Category = _context.CategoryId,
+                                           Entries = entries,
+                                       };
 
-            var categories = _categoryMover.Prepare(moveInfo);
-            var products = _productMover.Prepare(moveInfo);
+            var categories = _categoryMover.Prepare(operationContext);
+            var products = _productMover.Prepare(operationContext);
 
             _categoryMover.Confirm(categories);
             _productMover.Confirm(products);

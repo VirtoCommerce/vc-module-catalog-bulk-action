@@ -6,7 +6,6 @@
     using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
     using VirtoCommerce.BulkActionsModule.Core.DataSourceAbstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Data;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
@@ -64,15 +63,15 @@
         {
             var dataSourceFactory = _container.Resolve<IPagedDataSourceFactory>();
             var actionFactory = _container.Resolve<IBulkActionFactory>();
-            var actionRegistrar = _container.Resolve<IBulkActionRegistrar>();
-
-            var actionDefinition = new BulkActionDefinition(
+            var actionDefinition = new BulkActionProvider(
                 name,
                 contextTypeName,
                 new[] { nameof(CatalogProduct) },
                 dataSourceFactory,
                 actionFactory);
-            actionRegistrar.Register(actionDefinition);
+
+            var bulkActionDefinitionStorage = _container.Resolve<IBulkActionProviderStorage>();
+            bulkActionDefinitionStorage.Add(actionDefinition);
         }
     }
 }
