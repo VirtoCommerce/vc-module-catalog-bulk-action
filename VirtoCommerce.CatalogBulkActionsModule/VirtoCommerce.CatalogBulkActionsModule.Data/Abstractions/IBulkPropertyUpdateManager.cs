@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions
 {
-    using VirtoCommerce.BulkActionsModule.Core.BulkActionModels;
+    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
 
