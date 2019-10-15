@@ -313,7 +313,7 @@
         {
             bool result;
 
-            if (propertyToSet.Multivalue)
+            if (propertyToSet.Multivalue || propertyToSet.Dictionary)
             {
                 var propertyValues = product.PropertyValues?.Where(
                     propertyValue => propertyValue.Property != null
@@ -351,11 +351,6 @@
                     var propertyValue = propertyToSet.Values.FirstOrDefault();
 
                     productPropertyValue.Value = propertyValue?.Value;
-
-                    if (propertyToSet.Dictionary)
-                    {
-                        productPropertyValue.ValueId = propertyValue?.ValueId;
-                    }
 
                     result = true;
                 }
