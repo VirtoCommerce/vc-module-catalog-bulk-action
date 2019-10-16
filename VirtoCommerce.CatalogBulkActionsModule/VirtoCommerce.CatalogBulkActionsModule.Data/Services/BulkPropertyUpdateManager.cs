@@ -56,7 +56,7 @@
                 // using only product inherited properties from categories,
                 // own product props (only from PropertyValues) are not set via bulk update 
                 var newProperties = products
-                    .SelectMany(product => product.Properties.Where(property => property.IsInherited))
+                    .SelectMany(product => product.Properties.Where(property => property.IsInherited && property.Type != PropertyType.Category))
                     .Distinct(AnonymousComparer.Create<Property, string>(property => property.Id))
                     .Where(property => !propertyIds.Contains(property.Id)).ToArray();
 
