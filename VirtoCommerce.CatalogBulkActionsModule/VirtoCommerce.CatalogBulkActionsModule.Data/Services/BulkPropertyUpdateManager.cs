@@ -156,7 +156,7 @@
         {
             bool result;
 
-            if (property.Multivalue)
+            if (property.Multivalue || property.Dictionary)
             {
                 var propertyValues = product.PropertyValues?.Where(
                     propertyValue => propertyValue.Property != null
@@ -194,11 +194,6 @@
                     var propertyValue = property.Values.FirstOrDefault();
 
                     productPropertyValue.Value = propertyValue?.Value;
-
-                    if (property.Dictionary)
-                    {
-                        productPropertyValue.ValueId = propertyValue?.ValueId;
-                    }
 
                     result = true;
                 }
