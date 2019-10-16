@@ -2,17 +2,18 @@
 {
     using System;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
+    using VirtoCommerce.BulkActionsModule.Core;
+    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
 
     public class BulkActionFactory : IBulkActionFactory
     {
-        private readonly IBulkPropertyUpdateManager bulkPropertyUpdateManager;
+        private readonly IBulkPropertyUpdateManager _bulkPropertyUpdateManager;
 
         private readonly ICatalogService _catalogService;
 
@@ -56,7 +57,7 @@
             _catalogService = catalogService;
             _categoryMover = categoryMover;
             _productMover = productMover;
-            this.bulkPropertyUpdateManager = bulkPropertyUpdateManager;
+            _bulkPropertyUpdateManager = bulkPropertyUpdateManager;
             _itemService = itemService;
             _categoryService = categoryService;
         }
@@ -77,7 +78,7 @@
 
                 case PropertiesUpdateBulkActionContext updatePropertiesActionContext:
                     result = new PropertiesUpdateBulkAction(
-                        bulkPropertyUpdateManager,
+                        _bulkPropertyUpdateManager,
                         _itemService,
                         _catalogService,
                         _categoryService,

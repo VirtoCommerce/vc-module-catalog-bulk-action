@@ -1,18 +1,15 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Web
 {
-    using System.Web.Http;
-
     using Microsoft.Practices.Unity;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Extensions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.CategoryChange;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Models.Actions.PropertiesUpdate;
+    using VirtoCommerce.BulkActionsModule.Core;
+    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.DataSources;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Web.JsonConverters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
     using VirtoCommerce.Platform.Core.Modularity;
@@ -33,21 +30,14 @@
             _container.RegisterType<ISearchService, SearchService>();
             _container.RegisterType<IMover<Category>, CategoryMover>();
             _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
-
-            _container.RegisterInstance<IBulkActionRegistrar>(new BulkActionRegistrar());
-            _container.RegisterType<IBulkActionExecutor, BulkActionExecutor>();
-            _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
+            _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
         }
 
         public override void PostInitialize()
         {
             base.PostInitialize();
-
-            var httpConfiguration = _container.Resolve<HttpConfiguration>();
-            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.Converters.Add(
-                new BulkActionContextJsonConverter());
 
             AbstractTypeFactory<BulkActionContext>.RegisterType<CategoryChangeBulkActionContext>();
             AbstractTypeFactory<BulkActionContext>.RegisterType<PropertiesUpdateBulkActionContext>();
@@ -59,8 +49,8 @@
             // 1. WithActionFactory and WithDataSourceFactory should use registered creation factory (e.g. Func<IBulkUpdateActionFactory>) for deferred factories instantiation (IMHO preferred)
             // 2. Pass DI container (IUnityContainer) to the factories. (not safe because of potential harmful container usage there)
             // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
-            Register(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
-            Register(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
+            RegisterBulkAction(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
+            RegisterBulkAction(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
         }
 
         public override void SetupDatabase()
@@ -68,23 +58,19 @@
             // idle
         }
 
-        private void Register(string name, string contextTypeName)
+        private void RegisterBulkAction(string name, string contextTypeName)
         {
-            var actionDefinition = new BulkActionDefinition
-                                       {
-                                           Name = name,
-                                           ApplicableTypes = new[] { nameof(CatalogProduct) },
-                                           ContextTypeName = contextTypeName
-                                       };
-            var actionFactory = _container.Resolve<IBulkActionFactory>();
             var dataSourceFactory = _container.Resolve<IPagedDataSourceFactory>();
-            var actionRegistrar = _container.Resolve<IBulkActionRegistrar>();
+            var actionFactory = _container.Resolve<IBulkActionFactory>();
+            var actionDefinition = new BulkActionProvider(
+                name,
+                contextTypeName,
+                new[] { nameof(CatalogProduct) },
+                dataSourceFactory,
+                actionFactory);
 
-            var actionDefinitionBuilder = new BulkActionDefinitionBuilder(actionDefinition);
-            var withActionFactory = actionDefinitionBuilder.WithActionFactory(actionFactory);
-            var withDataSourceFactory = withActionFactory.WithDataSourceFactory(dataSourceFactory);
-
-            actionRegistrar.Register(withDataSourceFactory);
+            var bulkActionDefinitionStorage = _container.Resolve<IBulkActionProviderStorage>();
+            bulkActionDefinitionStorage.Add(actionDefinition);
         }
     }
 }

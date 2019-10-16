@@ -3,16 +3,16 @@
     using System;
     using System.Linq;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+    using VirtoCommerce.BulkActionsModule.Core.Converters;
+    using VirtoCommerce.BulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
     using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
-    using SearchResult = VirtoCommerce.CatalogBulkActionsModule.Core.Models.SearchResult;
+    using SearchResult = VirtoCommerce.BulkActionsModule.Core.Models.SearchResult;
 
     public class SearchService : ISearchService
     {

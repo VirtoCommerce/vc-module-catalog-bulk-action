@@ -101,10 +101,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -114,6 +110,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="VirtoCommerce.BulkActionsModule.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VirtoCommerce.BulkActionsModule.Core.1.0.0.2\lib\net461\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
+    </Reference>
     <Reference Include="VirtoCommerce.Domain, Version=2.25.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\VirtoCommerce.Domain.2.25.21\lib\net461\VirtoCommerce.Domain.dll</HintPath>
     </Reference>
@@ -169,10 +168,6 @@
     <Content Include="Scripts\resources\virto-commerce.catalog-bulk-actions-module-api.js" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgroundJobs\BulkActionJob.cs" />
-    <Compile Include="BackgroundJobs\JobCancellationTokenWrapper.cs" />
-    <Compile Include="Controllers\Api\VirtoCommerceCatalogBulkActionsModuleController.cs" />
-    <Compile Include="JsonConverters\BulkActionContextJsonConverter.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -186,9 +181,7 @@
       <Name>VirtoCommerce.CatalogBulkActionsModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

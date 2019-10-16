@@ -76,6 +76,7 @@ angular.module(moduleName, [])
                 name: "Bulk Actions", icon: 'fa fa-cubes',
                 executeMethod: function (blade) {
                     var gridApi = blade.$scope.gridApi;
+                    var filter = blade.filter;
 
                     var newBlade = {
                         id: 'catalogBulkActions',
