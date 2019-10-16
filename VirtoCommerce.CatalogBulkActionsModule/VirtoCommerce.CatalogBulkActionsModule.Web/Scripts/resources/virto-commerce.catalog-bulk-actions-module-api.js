@@ -1,9 +1,10 @@
 angular.module('virtoCommerce.catalogBulkActionsModule')
     .factory('virtoCommerce.catalogBulkActionsModule.webApi', ['$resource', function ($resource) {
+        var baseUrl = 'api/bulk/actions';
         return $resource('', null, {
-            getActions: { method: 'GET', isArray: true, url: 'api/bulk' },
-            getActionData: { method: 'POST', url: 'api/bulk/data' },
-            runBulkAction: { method: 'POST', url: 'api/bulk' },
-            cancel: { method: 'DELETE', url: 'api/bulk' }
+            getActions: { method: 'GET', isArray: true, url: baseUrl },
+            getActionData: { method: 'POST', url: baseUrl + '/data' },
+            runBulkAction: { method: 'POST', url: baseUrl },
+            cancel: { method: 'DELETE', url: baseUrl }
         });
 }]);
