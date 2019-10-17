@@ -168,6 +168,7 @@
     <Content Include="Scripts\resources\virto-commerce.catalog-bulk-actions-module-api.js" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LazyServiceProvider.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

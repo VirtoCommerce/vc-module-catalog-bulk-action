@@ -32,6 +32,7 @@
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
+            _container.RegisterInstance<IServiceProvider>(new LazyServiceProvider(_container));
         }
 
         public override void PostInitialize()

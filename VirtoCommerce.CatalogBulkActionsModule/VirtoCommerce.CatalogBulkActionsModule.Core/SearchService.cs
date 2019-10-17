@@ -15,28 +15,24 @@
 
     public class SearchService : ISearchService
     {
-        private readonly IBlobUrlResolver _blobUrlResolver;
-
-        private readonly ICatalogSearchService _searchService;
+        private readonly IServiceProvider _lazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
         /// </summary>
-        /// <param name="searchService">
-        /// The search service.
+        /// <param name="serviceProvider">
+        /// The service provider.
         /// </param>
-        /// <param name="blobUrlResolver">
-        /// The blob url resolver.
-        /// </param>
-        public SearchService(ICatalogSearchService searchService, IBlobUrlResolver blobUrlResolver)
+        public SearchService(IServiceProvider serviceProvider)
         {
-            _searchService = searchService;
-            _blobUrlResolver = blobUrlResolver;
+            _lazyServiceProvider = serviceProvider;
         }
 
         public SearchResult Search(SearchCriteria criteria)
         {
             var result = new SearchResult();
+            var catalogSearchService = _lazyServiceProvider.Resolve<ICatalogSearchService>();
+            var blobUrlResolver = _lazyServiceProvider.Resolve<IBlobUrlResolver>();
             var categorySkip = 0;
             var categoryTake = 0;
 
@@ -48,13 +44,13 @@
             if ((criteria.ResponseGroup & SearchResponseGroup.WithCategories) == SearchResponseGroup.WithCategories)
             {
                 criteria.ResponseGroup &= ~SearchResponseGroup.WithProducts;
-                var categoriesSearchResult = _searchService.Search(criteria);
+                var categoriesSearchResult = catalogSearchService.Search(criteria);
                 var categoriesTotalCount = categoriesSearchResult.Categories.Count;
 
                 categorySkip = Math.Min(categoriesTotalCount, criteria.Skip);
                 categoryTake = Math.Min(criteria.Take, Math.Max(0, categoriesTotalCount - criteria.Skip));
                 var categories = categoriesSearchResult.Categories.Skip(categorySkip).Take(categoryTake)
-                    .Select(category => new ListEntryCategory(category.ToWebModel(_blobUrlResolver))).ToList();
+                    .Select(category => new ListEntryCategory(category.ToWebModel(blobUrlResolver))).ToList();
 
                 result.TotalCount = categoriesTotalCount;
                 result.Entries.AddRange(categories);
@@ -68,10 +64,10 @@
                 criteria.ResponseGroup &= ~SearchResponseGroup.WithCategories;
                 criteria.Skip -= categorySkip;
                 criteria.Take -= categoryTake;
-                var productsSearchResult = _searchService.Search(criteria);
+                var productsSearchResult = catalogSearchService.Search(criteria);
 
                 var products = productsSearchResult.Products.Select(
-                    product => new ListEntryProduct(product.ToWebModel(_blobUrlResolver)));
+                    product => new ListEntryProduct(product.ToWebModel(blobUrlResolver)));
 
                 result.TotalCount += productsSearchResult.ProductsTotalCount;
                 result.Entries.AddRange(products);

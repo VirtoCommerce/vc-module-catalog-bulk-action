@@ -10,25 +10,23 @@
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
 
+    using IServiceProvider = VirtoCommerce.CatalogBulkActionsModule.Core.IServiceProvider;
+
     public class BulkActionFactory : IBulkActionFactory
     {
         private readonly IBulkPropertyUpdateManager _bulkPropertyUpdateManager;
 
-        private readonly ICatalogService _catalogService;
-
         private readonly IMover<Category> _categoryMover;
 
-        private readonly ICategoryService _categoryService;
-
-        private readonly IItemService _itemService;
-
         private readonly IMover<CatalogProduct> _productMover;
+        
+        private readonly IServiceProvider _lazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BulkActionFactory"/> class.
         /// </summary>
-        /// <param name="catalogService">
-        /// The catalog service.
+        /// <param name="serviceProvider">
+        /// The service provider.
         /// </param>
         /// <param name="categoryMover">
         /// The category mover.
@@ -37,39 +35,33 @@
         /// The product mover.
         /// </param>
         /// <param name="bulkPropertyUpdateManager">
-        /// The bulk update property manager.
-        /// </param>
-        /// <param name="itemService">
-        /// The item service.
-        /// </param>
-        /// <param name="categoryService">
-        /// The category service.
+        /// The bulk property update manager.
         /// </param>
         public BulkActionFactory(
-            ICatalogService catalogService,
+            IServiceProvider serviceProvider,
             IMover<Category> categoryMover,
             IMover<CatalogProduct> productMover,
-            IBulkPropertyUpdateManager bulkPropertyUpdateManager,
-            IItemService itemService,
-            ICategoryService categoryService)
+            IBulkPropertyUpdateManager bulkPropertyUpdateManager)
         {
-            _catalogService = catalogService;
+            _lazyServiceProvider = serviceProvider;
             _categoryMover = categoryMover;
             _productMover = productMover;
             _bulkPropertyUpdateManager = bulkPropertyUpdateManager;
-            _itemService = itemService;
-            _categoryService = categoryService;
         }
 
         public IBulkAction Create(BulkActionContext context)
         {
             IBulkAction result = null;
 
+            var catalogService = _lazyServiceProvider.Resolve<ICatalogService>();
+            var itemService = _lazyServiceProvider.Resolve<IItemService>();
+            var categoryService = _lazyServiceProvider.Resolve<ICategoryService>();
+
             switch (context)
             {
                 case CategoryChangeBulkActionContext changeCategoryActionContext:
                     result = new CategoryChangeBulkAction(
-                        _catalogService,
+                        catalogService,
                         _categoryMover,
                         _productMover,
                         changeCategoryActionContext);
@@ -78,9 +70,9 @@
                 case PropertiesUpdateBulkActionContext updatePropertiesActionContext:
                     result = new PropertiesUpdateBulkAction(
                         _bulkPropertyUpdateManager,
-                        _itemService,
-                        _catalogService,
-                        _categoryService,
+                        itemService,
+                        catalogService,
+                        categoryService,
                         updatePropertiesActionContext);
                     break;
             }
