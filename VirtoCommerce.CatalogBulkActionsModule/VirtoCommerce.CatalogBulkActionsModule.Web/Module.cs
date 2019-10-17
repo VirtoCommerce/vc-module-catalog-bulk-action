@@ -5,7 +5,6 @@
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.CatalogBulkActionsModule.Data.DataSources;
@@ -51,11 +50,6 @@
             // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
             RegisterBulkAction(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
             RegisterBulkAction(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
-        }
-
-        public override void SetupDatabase()
-        {
-            // idle
         }
 
         private void RegisterBulkAction(string name, string contextTypeName)
