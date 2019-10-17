@@ -42,9 +42,10 @@
 
         public Property[] GetProperties(BulkActionContext context)
         {
+            var result = new List<Property>();
             var propertyIds = new HashSet<string>();
             var dataSource = _dataSourceFactory.Create(context);
-            var standardProperties = GetStandardProperties();
+            result.AddRange(GetStandardProperties());
 
             while (dataSource.Fetch())
             {
@@ -61,10 +62,10 @@
                     .Where(property => !propertyIds.Contains(property.Id)).ToArray();
 
                 propertyIds.AddRange(newProperties.Select(property => property.Id));
-                standardProperties.AddRange(newProperties);
+                result.AddRange(newProperties);
             }
 
-            return standardProperties.ToArray();
+            return result.ToArray();
         }
 
         public BulkActionResult UpdateProperties(CatalogProduct[] products, local.Property[] properties)
