@@ -32,6 +32,13 @@
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
+
+            // This registration is necessary to avoid problems with caching.
+            // These problems might occur when we doing the bulk operation and after completion, we don't see any result.
+            // We think it's because we using the cache decorators here:
+            // https://github.com/VirtoCommerce/vc-module-cache/blob/b6cb9ae85d1f38ff23149dffac806ce150896bb2/VirtoCommerce.CacheModule.Web/Module.cs#L56
+            // Decorators dependencies might be registered in a container after this module will have registered their own and eventually, we will get wrong dependencies.
+            // That's why we trying to resolve these problems with "lazy" dependency resolving.
             _container.RegisterInstance<IServiceProvider>(new LazyServiceProvider(_container));
         }
 
