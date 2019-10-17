@@ -57,9 +57,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IBulkPropertyUpdateManager.cs" />
     <Compile Include="IMover.cs" />
     <Compile Include="ISearchService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchService.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

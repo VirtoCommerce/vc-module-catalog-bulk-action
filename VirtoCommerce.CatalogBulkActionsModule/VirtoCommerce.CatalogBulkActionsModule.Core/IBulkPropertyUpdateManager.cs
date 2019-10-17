@@ -1,14 +1,14 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.Domain.Catalog.Model;
 
     using moduleModels = VirtoCommerce.BulkActionsModule.Core.Models;
+    using Property = VirtoCommerce.Domain.Catalog.Model.Property;
 
     public interface IBulkPropertyUpdateManager
     {
-        Property[] GetProperties(PropertiesUpdateBulkActionContext context);
+        Property[] GetProperties(BulkActionContext context);
 
         BulkActionResult UpdateProperties(CatalogProduct[] products, moduleModels.Property[] properties);
     }

@@ -1,11 +1,10 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
     using System;
     using System.Linq;
 
     using VirtoCommerce.BulkActionsModule.Core.Converters;
     using VirtoCommerce.BulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Assets;

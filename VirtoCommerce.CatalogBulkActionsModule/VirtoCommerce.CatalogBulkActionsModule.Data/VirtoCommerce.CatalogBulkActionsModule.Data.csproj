@@ -81,7 +81,6 @@
   <ItemGroup>
     <Compile Include="Actions\CategoryChange\CategoryChangeBulkActionContext.cs" />
     <Compile Include="Actions\CategoryChange\CategoryChangeBulkAction.cs" />
-    <Compile Include="Abstractions\IBulkPropertyUpdateManager.cs" />
     <Compile Include="Services\BulkPropertyUpdateManager.cs" />
     <Compile Include="Actions\PropertiesUpdate\PropertiesUpdateBulkActionContext.cs" />
     <Compile Include="Actions\PropertiesUpdate\PropertiesUpdateBulkAction.cs" />
@@ -91,7 +90,6 @@
     <Compile Include="Services\CategoryMover.cs" />
     <Compile Include="DataSources\BasePagedDataSource.cs" />
     <Compile Include="DataSources\ProductPagedDataSource.cs" />
-    <Compile Include="Services\SearchService.cs" />
     <Compile Include="Services\ProductMover.cs" />
   </ItemGroup>
   <ItemGroup />

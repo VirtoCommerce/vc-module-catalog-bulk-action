@@ -8,7 +8,7 @@
     using VirtoCommerce.BulkActionsModule.Core.Converters;
     using VirtoCommerce.BulkActionsModule.Core.Models;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;

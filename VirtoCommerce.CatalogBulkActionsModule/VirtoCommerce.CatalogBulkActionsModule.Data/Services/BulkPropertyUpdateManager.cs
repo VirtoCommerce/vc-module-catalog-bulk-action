@@ -9,8 +9,7 @@
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Converters;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Abstractions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
@@ -40,7 +39,8 @@
             _itemService = itemService;
         }
 
-        public Property[] GetProperties(PropertiesUpdateBulkActionContext context)
+
+        public Property[] GetProperties(BulkActionContext context)
         {
             var propertyIds = new HashSet<string>();
             var dataSource = _dataSourceFactory.Create(context);
