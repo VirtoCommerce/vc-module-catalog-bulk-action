@@ -90,6 +90,7 @@
     <Compile Include="Services\CategoryMover.cs" />
     <Compile Include="DataSources\BasePagedDataSource.cs" />
     <Compile Include="DataSources\ProductPagedDataSource.cs" />
+    <Compile Include="Services\IBulkPropertyUpdateManager.cs" />
     <Compile Include="Services\ProductMover.cs" />
   </ItemGroup>
   <ItemGroup />

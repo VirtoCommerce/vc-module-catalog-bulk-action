@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
+﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
 {
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.Domain.Catalog.Model;
