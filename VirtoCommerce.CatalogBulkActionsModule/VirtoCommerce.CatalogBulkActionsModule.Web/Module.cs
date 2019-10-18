@@ -49,13 +49,6 @@
             AbstractTypeFactory<BulkActionContext>.RegisterType<CategoryChangeBulkActionContext>();
             AbstractTypeFactory<BulkActionContext>.RegisterType<PropertiesUpdateBulkActionContext>();
 
-            // TechDebt: IItemService and similar does not decorated with vc-module-cache/CatalogServicesDecorator as it is not registered yet.
-            // Cache decorator registration is in PostInitialize for all used service being init.
-            // Thus items cache is not invalidated after the changes.
-            // So need to handle this situation here. Possible solutions:
-            // 1. WithActionFactory and WithDataSourceFactory should use registered creation factory (e.g. Func<IBulkUpdateActionFactory>) for deferred factories instantiation (IMHO preferred)
-            // 2. Pass DI container (IUnityContainer) to the factories. (not safe because of potential harmful container usage there)
-            // Workaround - turn off Smart caching in platform UI in Settings/Cache/General.
             RegisterBulkAction(nameof(CategoryChangeBulkAction), nameof(CategoryChangeBulkActionContext));
             RegisterBulkAction(nameof(PropertiesUpdateBulkAction), nameof(PropertiesUpdateBulkActionContext));
         }
