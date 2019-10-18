@@ -141,7 +141,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
-    <Content Include="Content\css\virto-commerce.catalog-bulk-actions-module.css" />
     <Content Include="Scripts\blades\action-change-category.js" />
     <Content Include="Scripts\blades\action-change-category.tpl.html" />
     <Content Include="Scripts\blades\action-edit-properties.js" />
