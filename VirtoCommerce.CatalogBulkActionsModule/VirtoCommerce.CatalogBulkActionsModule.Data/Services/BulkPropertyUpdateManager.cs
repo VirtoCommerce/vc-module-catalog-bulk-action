@@ -398,9 +398,10 @@
 
         private bool TrySetOwnProperty(CatalogProduct product, local.Property property)
         {
-            bool result;
+            bool result;            
             var propertyValue = property.Values.FirstOrDefault();
-            var value = property.Dictionary ? propertyValue?.ValueId : propertyValue?.Value;
+            var value = (property.Dictionary && !string.IsNullOrEmpty(propertyValue.ValueId)) ? propertyValue.ValueId : propertyValue?.Value;            
+            
             var setter = GetProductPropertySetter(product, property);
 
             if (setter == null)
