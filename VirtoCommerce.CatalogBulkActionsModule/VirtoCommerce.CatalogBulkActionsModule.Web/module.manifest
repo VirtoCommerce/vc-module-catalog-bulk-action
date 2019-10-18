@@ -8,7 +8,7 @@
       <dependency id="VirtoCommerce.BulkActionsModule" version="1.0.2" />
     </dependencies>
 
-    <title>Catalog Bulk Actions</title>
+    <title>Catalog Bulk Actions(Preview)</title>
     <description>Catalog bulk actions module</description>
     <authors>
         <author>Burashov T.S.</author>
