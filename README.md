@@ -1,4 +1,4 @@
-# vc-module-catalog-bulk-action
+# Catalog Bulk Actions Module
 
 ## Known issues:
 1. When we trying to perform bulk action operation we have an issue with smart caching. It leads to the fact that we getting an effect when the result of the operation can't be shown in UI before the cache will be invalidated. To avoid this problem we recommend disabling the smart caching in system settings or reduce the caching time.
