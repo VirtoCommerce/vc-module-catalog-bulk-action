@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <module>
     <id>VirtoCommerce.CatalogBulkActionsModule</id>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <platformVersion>2.13.44</platformVersion>
     <dependencies>
       <dependency id="VirtoCommerce.Core" version="2.25.21" />
       <dependency id="VirtoCommerce.BulkActionsModule" version="1.0.2" />
     </dependencies>
 
-    <title>Catalog Bulk Actions</title>
+    <title>Catalog Bulk Actions(Preview)</title>
     <description>Catalog bulk actions module</description>
     <authors>
         <author>Burashov T.S.</author>
@@ -25,7 +25,7 @@
     <moduleType>VirtoCommerce.CatalogBulkActionsModule.Web.Module, VirtoCommerce.CatalogBulkActionsModule.Web</moduleType>
 
     <styles>
-        <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+        <!--<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />-->
     </styles>
     <scripts>
         <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
