@@ -8,33 +8,33 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
 
-    public class PagedDataSourceFactory : IPagedDataSourceFactory
+    public class DataSourceFactory : IDataSourceFactory
     {
         private readonly ISearchService _searchService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PagedDataSourceFactory"/> class.
+        /// Initializes a new instance of the <see cref="DataSourceFactory"/> class.
         /// </summary>
         /// <param name="searchService">
         /// The search service.
         /// </param>
-        public PagedDataSourceFactory(ISearchService searchService)
+        public DataSourceFactory(ISearchService searchService)
         {
             _searchService = searchService;
         }
 
-        public IPagedDataSource Create(BulkActionContext context)
+        public IDataSource Create(BulkActionContext context)
         {
-            IPagedDataSource result = null;
+            IDataSource result = null;
 
             switch (context)
             {
-                case CategoryChangeBulkActionContext _:
-                    result = new BasePagedDataSource(_searchService, context.DataQuery);
+                case CategoryChangeBulkActionContext categoryChangeContext:
+                    result = new BaseDataSource(_searchService, categoryChangeContext.DataQuery);
                     break;
 
-                case PropertiesUpdateBulkActionContext _:
-                    result = new ProductPagedDataSource(_searchService, context.DataQuery);
+                case PropertiesUpdateBulkActionContext propertiesUpdateContext:
+                    result = new ProductDataSource(_searchService, propertiesUpdateContext.DataQuery);
                     break;
             }
 

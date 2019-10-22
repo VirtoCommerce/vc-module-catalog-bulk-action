@@ -5,15 +5,12 @@
     using System.Linq;
 
     using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Converters;
-    using VirtoCommerce.BulkActionsModule.Core.Models;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
 
-    using VC = VirtoCommerce.Domain.Catalog.Model;
-
-    public class BasePagedDataSource : IPagedDataSource
+    public class BaseDataSource : IDataSource
     {
         private readonly DataQuery _dataQuery;
 
@@ -21,10 +18,10 @@
 
         private readonly ISearchService _searchService;
 
-        private int _currentPageNumber;
+        private int _pageNumber;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BasePagedDataSource"/> class.
+        /// Initializes a new instance of the <see cref="BaseDataSource"/> class.
         /// </summary>
         /// <param name="searchService">
         /// The search service.
@@ -32,7 +29,7 @@
         /// <param name="dataQuery">
         /// The data query.
         /// </param>
-        public BasePagedDataSource(ISearchService searchService, DataQuery dataQuery)
+        public BaseDataSource(ISearchService searchService, DataQuery dataQuery)
         {
             _searchService = searchService;
             _dataQuery = dataQuery ?? throw new ArgumentNullException(nameof(dataQuery));
@@ -59,11 +56,11 @@
             {
                 var skip = GetSkip();
                 var take = GetTake();
-                var entities = GetEntities(_dataQuery.ListEntries, skip, take);
+                var entities = GetNextItems(_dataQuery.ListEntries, skip, take);
                 Items = entities.ToArray();
             }
 
-            _currentPageNumber++;
+            _pageNumber++;
 
             return Items.Any();
         }
@@ -95,13 +92,17 @@
             return result;
         }
 
-        protected virtual VC.SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
+        protected virtual SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
         {
-            var result = dataQuery.SearchCriteria.ToCoreModel();
+            if (dataQuery.SearchCriteria == null)
+            {
+                dataQuery.SearchCriteria = new SearchCriteria();
+            }
+
+            var result = dataQuery.SearchCriteria;
 
             result.Skip = GetSkip();
             result.Take = GetTake();
-
             result.WithHidden = true;
 
             if (string.IsNullOrEmpty(result.Keyword))
@@ -115,7 +116,7 @@
             return result;
         }
 
-        protected virtual IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> entries, int skip, int take)
+        protected virtual IEnumerable<IEntity> GetNextItems(IEnumerable<ListEntry> entries, int skip, int take)
         {
             return entries.Skip(skip).Take(take);
         }
@@ -127,13 +128,13 @@
 
         private int GetSkip()
         {
-            var skip = _dataQuery.Skip ?? 0;
-            return (_currentPageNumber * _pageSize) + skip;
+            var skip = _dataQuery.Skip.GetValueOrDefault();
+            return (_pageNumber * _pageSize) + skip;
         }
 
         private int GetTake()
         {
-            return _dataQuery.Take ?? _pageSize;
+            return _dataQuery.Take.GetValueOrDefault(_pageSize);
         }
     }
 }

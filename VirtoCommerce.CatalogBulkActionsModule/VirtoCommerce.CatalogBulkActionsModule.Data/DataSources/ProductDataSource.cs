@@ -4,19 +4,17 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using VirtoCommerce.BulkActionsModule.Core.Models;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
 
-    using VC = VirtoCommerce.Domain.Catalog.Model;
-
-    public class ProductPagedDataSource : BasePagedDataSource
+    public class ProductDataSource : BaseDataSource
     {
-        private readonly ISearchService searchService;
+        private readonly ISearchService _searchService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProductPagedDataSource"/> class.
+        /// Initializes a new instance of the <see cref="ProductDataSource"/> class.
         /// </summary>
         /// <param name="searchService">
         /// The list entry search service.
@@ -24,21 +22,21 @@
         /// <param name="dataQuery">
         /// The data query.
         /// </param>
-        public ProductPagedDataSource(ISearchService searchService, DataQuery dataQuery)
+        public ProductDataSource(ISearchService searchService, DataQuery dataQuery)
             : base(searchService, dataQuery)
         {
-            this.searchService = searchService;
+            _searchService = searchService;
         }
 
-        protected override VC.SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
+        protected override SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
         {
             var result = base.BuildSearchCriteria(dataQuery);
-            result.ResponseGroup = VC.SearchResponseGroup.WithProducts;
+            result.ResponseGroup = SearchResponseGroup.WithProducts;
             result.SearchInChildren = true;
             return result;
         }
 
-        protected override IEnumerable<IEntity> GetEntities(IEnumerable<ListEntry> entries, int skip, int take)
+        protected override IEnumerable<IEntity> GetNextItems(IEnumerable<ListEntry> entries, int skip, int take)
         {
             var result = new List<IEntity>();
             var categoryProductsSkip = 0;
@@ -99,19 +97,19 @@
             return inCategoriesCount + productCount;
         }
 
-        private SearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
+        private Core.Models.SearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
         {
-            var searchCriteria = new VC.SearchCriteria
+            var searchCriteria = new SearchCriteria
                                      {
                                          CategoryIds = categoryIds,
                                          Skip = skip,
                                          Take = take,
-                                         ResponseGroup = VC.SearchResponseGroup.WithProducts,
+                                         ResponseGroup = SearchResponseGroup.WithProducts,
                                          SearchInChildren = true,
                                          SearchInVariations = true
                                      };
 
-            var result = searchService.Search(searchCriteria);
+            var result = _searchService.Search(searchCriteria);
             return result;
         }
     }

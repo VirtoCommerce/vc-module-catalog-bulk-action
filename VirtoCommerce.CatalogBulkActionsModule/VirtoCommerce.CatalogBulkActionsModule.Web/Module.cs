@@ -30,7 +30,7 @@
             _container.RegisterType<IMover<Category>, CategoryMover>();
             _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
-            _container.RegisterType<IPagedDataSourceFactory, PagedDataSourceFactory>();
+            _container.RegisterType<IDataSourceFactory, DataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
 
             // This registration is necessary to avoid problems with caching.
@@ -55,7 +55,7 @@
 
         private void RegisterBulkAction(string name, string contextTypeName)
         {
-            var dataSourceFactory = _container.Resolve<IPagedDataSourceFactory>();
+            var dataSourceFactory = _container.Resolve<IDataSourceFactory>();
             var actionFactory = _container.Resolve<IBulkActionFactory>();
             var actionDefinition = new BulkActionProvider(
                 name,

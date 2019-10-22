@@ -7,18 +7,15 @@
     using System.Reflection;
 
     using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Converters;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using local = VirtoCommerce.BulkActionsModule.Core.Models;
-
     public class BulkPropertyUpdateManager : IBulkPropertyUpdateManager
     {
-        private readonly IPagedDataSourceFactory _dataSourceFactory;
+        private readonly IDataSourceFactory _dataSourceFactory;
 
         private readonly IItemService _itemService;
 
@@ -33,12 +30,11 @@
         /// <param name="itemService">
         /// The item service.
         /// </param>
-        public BulkPropertyUpdateManager(IPagedDataSourceFactory dataSourceFactory, IItemService itemService)
+        public BulkPropertyUpdateManager(IDataSourceFactory dataSourceFactory, IItemService itemService)
         {
             _dataSourceFactory = dataSourceFactory;
             _itemService = itemService;
         }
-
 
         public Property[] GetProperties(BulkActionContext context)
         {
@@ -57,7 +53,9 @@
                 // using only product inherited properties from categories,
                 // own product props (only from PropertyValues) are not set via bulk update 
                 var newProperties = products
-                    .SelectMany(product => product.Properties.Where(property => property.IsInherited && property.Type != PropertyType.Category))
+                    .SelectMany(
+                        product => product.Properties.Where(
+                            property => property.IsInherited && property.Type != PropertyType.Category))
                     .Distinct(AnonymousComparer.Create<Property, string>(property => property.Id))
                     .Where(property => !propertyIds.Contains(property.Id)).ToArray();
 
@@ -68,7 +66,7 @@
             return result.ToArray();
         }
 
-        public BulkActionResult UpdateProperties(CatalogProduct[] products, local.Property[] properties)
+        public BulkActionResult UpdateProperties(CatalogProduct[] products, Core.Models.Property[] properties)
         {
             var result = new BulkActionResult { Succeeded = true };
             var hasChanges = false;
@@ -90,7 +88,7 @@
             return result;
         }
 
-        private static bool AddPropertyValues(IHasProperties product, local.Property property)
+        private static bool AddPropertyValues(IHasProperties product, Core.Models.Property property)
         {
             bool result;
             var defaultProperty = product.Properties.FirstOrDefault(p => p.Id.EqualsInvariant(property.Id));
@@ -153,7 +151,7 @@
             return result;
         }
 
-        private static bool TrySetCustomProperty(IHasProperties product, local.Property property)
+        private static bool TrySetCustomProperty(IHasProperties product, Core.Models.Property property)
         {
             bool result;
 
@@ -207,7 +205,7 @@
             return result;
         }
 
-        private MethodInfo GetProductPropertySetter(CatalogProduct product, local.Property property)
+        private MethodInfo GetProductPropertySetter(CatalogProduct product, Core.Models.Property property)
         {
             var name = property.Name;
 
@@ -359,7 +357,7 @@
         }
 
         private bool TryChangeProductPropertyValues(
-            local.Property[] properties,
+            Core.Models.Property[] properties,
             IEnumerable<CatalogProduct> products,
             BulkActionResult result)
         {
@@ -396,12 +394,14 @@
             return hasChanges;
         }
 
-        private bool TrySetOwnProperty(CatalogProduct product, local.Property property)
+        private bool TrySetOwnProperty(CatalogProduct product, Core.Models.Property property)
         {
-            bool result;            
+            bool result;
             var propertyValue = property.Values.FirstOrDefault();
-            var value = (property.Dictionary && !string.IsNullOrEmpty(propertyValue.ValueId)) ? propertyValue.ValueId : propertyValue?.Value;            
-            
+            var value = (property.Dictionary && !string.IsNullOrEmpty(propertyValue.ValueId))
+                            ? propertyValue.ValueId
+                            : propertyValue?.Value;
+
             var setter = GetProductPropertySetter(product, property);
 
             if (setter == null)
