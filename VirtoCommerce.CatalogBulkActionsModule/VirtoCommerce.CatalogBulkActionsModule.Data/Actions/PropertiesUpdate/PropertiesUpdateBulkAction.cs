@@ -5,15 +5,15 @@
     using System.Linq;
 
     using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Converters;
-    using VirtoCommerce.BulkActionsModule.Core.Models;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Property = VirtoCommerce.BulkActionsModule.Core.Models.Property;
+    using Property = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Property;
 
     public class PropertiesUpdateBulkAction : IBulkAction
     {

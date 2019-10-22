@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    using VirtoCommerce.BulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Common;
 
     public interface IMover<T>
