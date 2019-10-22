@@ -46,8 +46,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.BulkActionsModule.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VirtoCommerce.BulkActionsModule.Core.1.0.0.2\lib\net461\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
+    <Reference Include="VirtoCommerce.BulkActionsModule.Core, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VirtoCommerce.BulkActionsModule.Core.1.0.0.10\lib\net461\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
     </Reference>
     <Reference Include="VirtoCommerce.Domain, Version=2.25.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\VirtoCommerce.Domain.2.25.21\lib\net461\VirtoCommerce.Domain.dll</HintPath>
@@ -57,9 +57,43 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
+    <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
+    <Compile Include="Converters\OutlineConverter.cs" />
+    <Compile Include="Converters\ProductConverter.cs" />
+    <Compile Include="Converters\PropertyAttributeConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\PropertyValidationRuleConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="IMover.cs" />
     <Compile Include="IServiceProvider.cs" />
     <Compile Include="ISearchService.cs" />
+    <Compile Include="Models\Asset.cs" />
+    <Compile Include="Models\AssetBase.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CategoryLink.cs" />
+    <Compile Include="Models\DataQuery.cs" />
+    <Compile Include="Models\EditorialReview.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\ListEntry.cs" />
+    <Compile Include="Models\ListEntryCategory.cs" />
+    <Compile Include="Models\ListEntryLink.cs" />
+    <Compile Include="Models\ListEntryProduct.cs" />
+    <Compile Include="Models\ListEntrySearchCriteria.cs" />
+    <Compile Include="Models\MoveOperationContext.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductAssociation.cs" />
+    <Compile Include="Models\Property.cs" />
+    <Compile Include="Models\PropertyAttribute.cs" />
+    <Compile Include="Models\PropertyValidationRule.cs" />
+    <Compile Include="Models\PropertyValue.cs" />
+    <Compile Include="Models\ResponseGroup.cs" />
+    <Compile Include="Models\SearchCriteria.cs" />
+    <Compile Include="Models\SearchResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchService.cs" />
   </ItemGroup>

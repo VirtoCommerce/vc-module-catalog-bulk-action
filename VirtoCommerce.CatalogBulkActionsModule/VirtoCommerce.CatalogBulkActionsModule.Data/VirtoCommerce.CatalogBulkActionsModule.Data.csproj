@@ -65,8 +65,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.BulkActionsModule.Core, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\VirtoCommerce.BulkActionsModule.Core.1.0.0.2\lib\net461\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
+    <Reference Include="VirtoCommerce.BulkActionsModule.Core, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\VirtoCommerce.BulkActionsModule.Core.1.0.0.10\lib\net461\VirtoCommerce.BulkActionsModule.Core.dll</HintPath>
     </Reference>
     <Reference Include="VirtoCommerce.Domain, Version=2.25.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\VirtoCommerce.Domain.2.25.21\lib\net461\VirtoCommerce.Domain.dll</HintPath>
@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\BaseBulkActionContext.cs" />
     <Compile Include="Actions\CategoryChange\CategoryChangeBulkActionContext.cs" />
     <Compile Include="Actions\CategoryChange\CategoryChangeBulkAction.cs" />
     <Compile Include="Services\BulkPropertyUpdateManager.cs" />
@@ -86,10 +87,10 @@
     <Compile Include="Actions\PropertiesUpdate\PropertiesUpdateBulkAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\BulkActionFactory.cs" />
-    <Compile Include="DataSources\PagedDataSourceFactory.cs" />
+    <Compile Include="DataSources\DataSourceFactory.cs" />
     <Compile Include="Services\CategoryMover.cs" />
-    <Compile Include="DataSources\BasePagedDataSource.cs" />
-    <Compile Include="DataSources\ProductPagedDataSource.cs" />
+    <Compile Include="DataSources\BaseDataSource.cs" />
+    <Compile Include="DataSources\ProductDataSource.cs" />
     <Compile Include="Services\IBulkPropertyUpdateManager.cs" />
     <Compile Include="Services\ProductMover.cs" />
   </ItemGroup>
