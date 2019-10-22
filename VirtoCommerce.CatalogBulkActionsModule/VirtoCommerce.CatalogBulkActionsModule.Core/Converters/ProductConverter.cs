@@ -9,8 +9,6 @@
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Property = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Property;
-    using PropertyValue = VirtoCommerce.CatalogBulkActionsModule.Core.Models.PropertyValue;
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class ProductConverter

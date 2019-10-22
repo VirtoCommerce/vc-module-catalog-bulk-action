@@ -2,7 +2,8 @@
 {
     using Omu.ValueInjecter;
 
-    using EditorialReview = VirtoCommerce.CatalogBulkActionsModule.Core.Models.EditorialReview;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class EditorialReviewConverter
@@ -17,13 +18,13 @@
         public static EditorialReview ToWebModel(this VC.EditorialReview review)
         {
             var result = new EditorialReview
-            {
-                Content = review.Content,
-                Id = review.Id,
-                IsInherited = review.IsInherited,
-                LanguageCode = review.LanguageCode,
-                ReviewType = review.ReviewType
-            };
+                             {
+                                 Content = review.Content,
+                                 Id = review.Id,
+                                 IsInherited = review.IsInherited,
+                                 LanguageCode = review.LanguageCode,
+                                 ReviewType = review.ReviewType
+                             };
 
             return result;
         }

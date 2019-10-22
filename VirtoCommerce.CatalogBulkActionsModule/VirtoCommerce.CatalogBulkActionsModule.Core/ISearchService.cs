@@ -4,6 +4,6 @@
 
     public interface ISearchService
     {
-        SearchResult Search(VirtoCommerce.Domain.Catalog.Model.SearchCriteria criteria);
+        SearchResult Search(Domain.Catalog.Model.SearchCriteria criteria);
     }
 }

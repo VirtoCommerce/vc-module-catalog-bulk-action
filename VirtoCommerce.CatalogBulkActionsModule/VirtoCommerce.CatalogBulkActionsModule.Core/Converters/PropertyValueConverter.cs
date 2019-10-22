@@ -2,7 +2,8 @@
 {
     using Omu.ValueInjecter;
 
-    using PropertyValue = VirtoCommerce.CatalogBulkActionsModule.Core.Models.PropertyValue;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class PropertyValueConverter
@@ -19,16 +20,16 @@
         public static PropertyValue ToWebModel(this VC.PropertyValue propertyValue)
         {
             var result = new PropertyValue
-            {
-                Id = propertyValue.Id,
-                LanguageCode = propertyValue.LanguageCode,
-                PropertyId = propertyValue.PropertyId,
-                PropertyName = propertyValue.PropertyName,
-                ValueId = propertyValue.ValueId,
-                ValueType = propertyValue.ValueType,
-                Alias = propertyValue.Alias,
-                IsInherited = propertyValue.IsInherited
-            };
+                             {
+                                 Id = propertyValue.Id,
+                                 LanguageCode = propertyValue.LanguageCode,
+                                 PropertyId = propertyValue.PropertyId,
+                                 PropertyName = propertyValue.PropertyName,
+                                 ValueId = propertyValue.ValueId,
+                                 ValueType = propertyValue.ValueType,
+                                 Alias = propertyValue.Alias,
+                                 IsInherited = propertyValue.IsInherited
+                             };
 
             if (propertyValue.Property != null)
             {
