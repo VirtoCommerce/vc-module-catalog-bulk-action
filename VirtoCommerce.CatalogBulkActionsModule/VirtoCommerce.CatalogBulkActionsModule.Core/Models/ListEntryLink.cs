@@ -8,13 +8,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="ListEntryLink"/> class.
         /// </summary>
-        public ListEntryLink()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ListEntryLink"/> class.
-        /// </summary>
         /// <param name="link">
         /// The link.
         /// </param>
@@ -48,13 +41,5 @@
         /// The list entry identifier.
         /// </value>
         public string ListEntryId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the list entry. E.g. "product", "category"
-        /// </summary>
-        /// <value>
-        /// The type of the list entry.
-        /// </value>
-        public string ListEntryType { get; set; }
     }
 }
