@@ -398,7 +398,7 @@
         {
             bool result;
             var propertyValue = property.Values.FirstOrDefault();
-            var value = (property.Dictionary && !string.IsNullOrEmpty(propertyValue.ValueId))
+            var value = (property.Dictionary && !string.IsNullOrEmpty(propertyValue?.ValueId))
                             ? propertyValue.ValueId
                             : propertyValue?.Value;
 
