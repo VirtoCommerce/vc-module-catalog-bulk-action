@@ -69,7 +69,7 @@
     <Compile Include="Converters\PropertyValidationRuleConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="IMover.cs" />
-    <Compile Include="IServiceProvider.cs" />
+    <Compile Include="ILazyServiceProvider.cs" />
     <Compile Include="ISearchService.cs" />
     <Compile Include="Models\Asset.cs" />
     <Compile Include="Models\AssetBase.cs" />
