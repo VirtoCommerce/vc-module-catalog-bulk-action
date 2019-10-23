@@ -6,6 +6,7 @@
 
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
@@ -17,54 +18,33 @@
 
     public class PropertiesUpdateBulkAction : IBulkAction
     {
-        private readonly IBulkPropertyUpdateManager _bulkPropertyUpdateManager;
-
-        private readonly ICatalogService _catalogService;
-
-        private readonly ICategoryService _categoryService;
-
         private readonly PropertiesUpdateBulkActionContext _context;
 
-        private readonly IItemService _itemService;
+        private readonly ILazyServiceProvider _lazyLazyServiceProvider;
 
         private readonly Dictionary<string, string> _namesById = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesUpdateBulkAction"/> class.
         /// </summary>
-        /// <param name="bulkPropertyUpdateManager">
-        /// The bulk update property manager.
-        /// </param>
-        /// <param name="itemService">
-        /// The item service.
-        /// </param>
-        /// <param name="catalogService">
-        /// The catalog service.
-        /// </param>
-        /// <param name="categoryService">
-        /// The category service.
+        /// <param name="lazyServiceProvider">
+        /// The lazy service provider.
         /// </param>
         /// <param name="context">
         /// The context.
         /// </param>
-        public PropertiesUpdateBulkAction(
-            IBulkPropertyUpdateManager bulkPropertyUpdateManager,
-            IItemService itemService,
-            ICatalogService catalogService,
-            ICategoryService categoryService,
-            PropertiesUpdateBulkActionContext context)
+        public PropertiesUpdateBulkAction(ILazyServiceProvider lazyServiceProvider, PropertiesUpdateBulkActionContext context)
         {
-            _bulkPropertyUpdateManager = bulkPropertyUpdateManager;
-            _itemService = itemService;
-            _catalogService = catalogService;
-            _categoryService = categoryService;
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _lazyLazyServiceProvider = lazyServiceProvider;
         }
 
         public BulkActionContext Context => _context;
 
         public BulkActionResult Execute(IEnumerable<IEntity> entities)
         {
+            var itemService = _lazyLazyServiceProvider.Resolve<IItemService>();
+            var bulkPropertyUpdateManager = _lazyLazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
             var entries = entities.Cast<ListEntry>().ToArray();
 
             if (entries.Any(entry => !entry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
@@ -74,16 +54,18 @@
 
             var productIds = entries.Where(entry => entry.Type.EqualsInvariant(ListEntryProduct.TypeName))
                 .Select(entry => entry.Id).ToArray();
-            var products = _itemService.GetByIds(
+            var products = itemService.GetByIds(
                 productIds,
                 ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
 
-            return _bulkPropertyUpdateManager.UpdateProperties(products, _context.Properties);
+            return bulkPropertyUpdateManager.UpdateProperties(products, _context.Properties);
         }
 
         public object GetActionData()
         {
-            var properties = _bulkPropertyUpdateManager.GetProperties(_context);
+            var bulkPropertyUpdateManager = _lazyLazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
+
+            var properties = bulkPropertyUpdateManager.GetProperties(_context);
 
             return new { Properties = properties.Select(CreateModel).ToArray() };
         }
@@ -96,6 +78,9 @@
         private Property CreateModel(Domain.Catalog.Model.Property property)
         {
             var result = property.ToWebModel();
+            var catalogService = _lazyLazyServiceProvider.Resolve<ICatalogService>();
+            var categoryService = _lazyLazyServiceProvider.Resolve<ICategoryService>();
+
             string path;
 
             if (string.IsNullOrEmpty(property.CategoryId))
@@ -112,7 +97,7 @@
                     }
                     else
                     {
-                        var catalog = _catalogService.GetById(property.CatalogId);
+                        var catalog = catalogService.GetById(property.CatalogId);
                         path = $"{catalog?.Name} (Catalog)";
                         _namesById.Add(property.CatalogId, path);
                     }
@@ -126,7 +111,7 @@
                 }
                 else
                 {
-                    var category = _categoryService.GetById(property.CategoryId, CategoryResponseGroup.Info);
+                    var category = categoryService.GetById(property.CategoryId, CategoryResponseGroup.Info);
                     path = $"{category?.Name} (Category)";
                     _namesById.Add(property.CategoryId, path);
                 }

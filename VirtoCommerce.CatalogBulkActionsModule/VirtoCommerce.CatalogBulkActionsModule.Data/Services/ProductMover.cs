@@ -12,35 +12,34 @@
 
     public class ProductMover : IMover<VC.CatalogProduct>
     {
-        private readonly IItemService _itemService;
+        private readonly ILazyServiceProvider _lazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductMover"/> class.
         /// </summary>
-        /// <param name="itemService">
-        /// The item service.
+        /// <param name="lazyServiceProvider">
+        /// The service Provider.
         /// </param>
-        public ProductMover(IItemService itemService)
+        public ProductMover(ILazyServiceProvider lazyServiceProvider)
         {
-            _itemService = itemService;
+            _lazyServiceProvider = lazyServiceProvider;
         }
 
         public void Confirm(IEnumerable<VC.CatalogProduct> entities)
         {
-            if (entities.Any())
-            {
-                _itemService.Update(entities.ToArray());
-            }
+            var itemService = _lazyServiceProvider.Resolve<IItemService>();
+            itemService.Update(entities.ToArray());
         }
 
         public List<VC.CatalogProduct> Prepare(MoveOperationContext moveOperationContext)
         {
             var result = new List<VC.CatalogProduct>();
+            var itemService = _lazyServiceProvider.Resolve<IItemService>();
 
             foreach (var listEntryProduct in moveOperationContext.Entries.Where(
                 listEntry => listEntry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
             {
-                var product = _itemService.GetById(listEntryProduct.Id, VC.ItemResponseGroup.ItemLarge);
+                var product = itemService.GetById(listEntryProduct.Id, VC.ItemResponseGroup.ItemLarge);
                 if (product.CatalogId == moveOperationContext.Catalog)
                 {
                     // idle

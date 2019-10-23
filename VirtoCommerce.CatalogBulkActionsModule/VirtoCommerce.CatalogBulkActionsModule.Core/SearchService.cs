@@ -16,24 +16,24 @@
 
     public class SearchService : ISearchService
     {
-        private readonly IServiceProvider _lazyServiceProvider;
+        private readonly ILazyServiceProvider _lazyLazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchService"/> class.
         /// </summary>
-        /// <param name="serviceProvider">
+        /// <param name="lazyServiceProvider">
         /// The service provider.
         /// </param>
-        public SearchService(IServiceProvider serviceProvider)
+        public SearchService(ILazyServiceProvider lazyServiceProvider)
         {
-            _lazyServiceProvider = serviceProvider;
+            _lazyLazyServiceProvider = lazyServiceProvider;
         }
 
         public SearchResult Search(SearchCriteria criteria)
         {
             var result = new SearchResult();
-            var searchService = _lazyServiceProvider.Resolve<ICatalogSearchService>();
-            var blobUrlResolver = _lazyServiceProvider.Resolve<IBlobUrlResolver>();
+            var searchService = _lazyLazyServiceProvider.Resolve<ICatalogSearchService>();
+            var blobUrlResolver = _lazyLazyServiceProvider.Resolve<IBlobUrlResolver>();
             var skip = 0;
             var take = 0;
 

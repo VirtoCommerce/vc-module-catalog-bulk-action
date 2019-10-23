@@ -13,37 +13,35 @@
 
     public class CategoryMover : IMover<VC.Category>
     {
-        private readonly ICategoryService _categoryService;
+        private readonly ILazyServiceProvider _lazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryMover"/> class.
         /// </summary>
-        /// <param name="categoryService">
-        /// The category service.
+        /// <param name="lazyServiceProvider">
+        /// The service provider.
         /// </param>
-        public CategoryMover(ICategoryService categoryService)
+        public CategoryMover(ILazyServiceProvider lazyServiceProvider)
         {
-            _categoryService = categoryService;
+            _lazyServiceProvider = lazyServiceProvider;
         }
 
         public void Confirm(IEnumerable<VC.Category> entities)
         {
-            var categories = entities.ToArray();
-            if (categories.Any())
-            {
-                _categoryService.Update(categories);
-            }
+            var categoryService = _lazyServiceProvider.Resolve<ICategoryService>();
+            categoryService.Update(entities.ToArray());
         }
 
         public List<VC.Category> Prepare(MoveOperationContext moveOperationContext)
         {
             var result = new List<VC.Category>();
+            var categoryService = _lazyServiceProvider.Resolve<ICategoryService>();
 
             foreach (var listEntryCategory in moveOperationContext.Entries.Where(
                 entry => entry.Type.EqualsInvariant(ListEntryCategory.TypeName)))
             {
-                var category = _categoryService.GetById(listEntryCategory.Id, VC.CategoryResponseGroup.Info);
-                var targetCategory = _categoryService.GetById(
+                var category = categoryService.GetById(listEntryCategory.Id, VC.CategoryResponseGroup.Info);
+                var targetCategory = categoryService.GetById(
                     moveOperationContext.Category,
                     VC.CategoryResponseGroup.WithOutlines);
 

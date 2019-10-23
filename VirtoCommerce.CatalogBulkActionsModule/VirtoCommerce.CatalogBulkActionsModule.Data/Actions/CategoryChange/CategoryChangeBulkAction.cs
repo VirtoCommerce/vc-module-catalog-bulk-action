@@ -8,6 +8,7 @@
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
@@ -15,38 +16,22 @@
 
     public class CategoryChangeBulkAction : IBulkAction
     {
-        private readonly ICatalogService _catalogService;
-
-        private readonly IMover<VC.Category> _categoryMover;
-
         private readonly CategoryChangeBulkActionContext _context;
 
-        private readonly IMover<VC.CatalogProduct> _productMover;
+        private readonly ILazyServiceProvider _lazyLazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryChangeBulkAction"/> class.
         /// </summary>
-        /// <param name="catalogService">
-        /// The catalog service.
-        /// </param>
-        /// <param name="categoryMover">
-        /// The category mover.
-        /// </param>
-        /// <param name="productMover">
-        /// The product mover.
+        /// <param name="lazyServiceProvider">
+        /// The service provider.
         /// </param>
         /// <param name="context">
         /// The context.
         /// </param>
-        public CategoryChangeBulkAction(
-            ICatalogService catalogService,
-            IMover<VC.Category> categoryMover,
-            IMover<VC.CatalogProduct> productMover,
-            CategoryChangeBulkActionContext context)
+        public CategoryChangeBulkAction(ILazyServiceProvider lazyServiceProvider, CategoryChangeBulkActionContext context)
         {
-            _catalogService = catalogService;
-            _categoryMover = categoryMover;
-            _productMover = productMover;
+            _lazyLazyServiceProvider = lazyServiceProvider;
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -63,11 +48,13 @@
                 Entries = entries
             };
 
-            var categories = _categoryMover.Prepare(operationContext);
-            var products = _productMover.Prepare(operationContext);
+            var categoryMover = _lazyLazyServiceProvider.Resolve<CategoryMover>();
+            var productMover = _lazyLazyServiceProvider.Resolve<ProductMover>();
+            var categories = categoryMover.Prepare(operationContext);
+            var products = productMover.Prepare(operationContext);
 
-            _categoryMover.Confirm(categories);
-            _productMover.Confirm(products);
+            categoryMover.Confirm(categories);
+            productMover.Confirm(products);
 
             return result;
         }
@@ -81,7 +68,8 @@
         {
             var result = BulkActionResult.Success;
 
-            var dstCatalog = _catalogService.GetById(_context.CatalogId);
+            var catalogService = _lazyLazyServiceProvider.Resolve<ICatalogService>();
+            var dstCatalog = catalogService.GetById(_context.CatalogId);
             if (dstCatalog.IsVirtual)
             {
                 result.Succeeded = false;
