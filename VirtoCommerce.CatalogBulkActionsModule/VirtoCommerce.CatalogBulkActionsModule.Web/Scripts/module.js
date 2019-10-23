@@ -7,7 +7,7 @@ if (AppDependencies !== undefined) {
 
 angular.module(moduleName, [])
     .config(['$stateProvider', '$urlRouterProvider',
-        function ($stateProvider) {
+        function ($stateProvider, $urlRouterProvider) {
             $stateProvider
                 .state('workspace.virtoCommerceCatalogBulkActionsModuleState', {
                     url: '/virtoCommerce.catalogBulkActionsModule',

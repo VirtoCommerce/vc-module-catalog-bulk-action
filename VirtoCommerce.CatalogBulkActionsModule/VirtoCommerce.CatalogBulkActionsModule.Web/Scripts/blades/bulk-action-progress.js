@@ -42,7 +42,7 @@ angular.module('virtoCommerce.catalogModule')
                 return blade.notification && !blade.notification.finished;
             },
             executeMethod: function () {
-                webApi.cancel({ jobId: blade.notification.jobId }, function () {
+                webApi.cancel({ jobId: blade.notification.jobId }, function (data) {
                 });
             }
         };

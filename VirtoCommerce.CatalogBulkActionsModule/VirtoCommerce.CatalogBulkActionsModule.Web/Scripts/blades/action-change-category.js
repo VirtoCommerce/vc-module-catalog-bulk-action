@@ -1,5 +1,5 @@
 angular.module('virtoCommerce.catalogModule')
-    .controller('virtoCommerce.catalogModule.changeCategoryActionStepsController', ['$scope', '$translate', 'platformWebApp.bladeNavigationService', function ($scope, $translate, bladeNavigationService) {
+    .controller('virtoCommerce.catalogModule.changeCategoryActionStepsController', ['$scope', '$translate', 'platformWebApp.bladeNavigationService', '$localStorage', function ($scope, $translate, bladeNavigationService, $localStorage) {
         var blade = $scope.blade;
         blade.canStartProcess = false;
         blade.isLoading = true;
