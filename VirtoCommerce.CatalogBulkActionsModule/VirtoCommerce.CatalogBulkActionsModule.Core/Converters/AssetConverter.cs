@@ -4,11 +4,10 @@
 
     using Omu.ValueInjecter;
 
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Asset = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Asset;
-    using Image = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Image;
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class AssetConverter

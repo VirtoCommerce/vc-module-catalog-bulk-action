@@ -2,7 +2,8 @@
 {
     using Omu.ValueInjecter;
 
-    using CategoryLink = VirtoCommerce.CatalogBulkActionsModule.Core.Models.CategoryLink;
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class LinkConverter

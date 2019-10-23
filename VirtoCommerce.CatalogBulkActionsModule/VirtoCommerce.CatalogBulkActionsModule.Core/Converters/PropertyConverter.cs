@@ -11,17 +11,17 @@
         public static Property ToWebModel(this VC.Property property)
         {
             var result = new Property
-                             {
-                                 Id = property.Id,
-                                 Name = property.Name,
-                                 Required = property.Required,
-                                 Type = property.Type,
-                                 Multivalue = property.Multivalue,
-                                 CatalogId = property.CatalogId,
-                                 CategoryId = property.CategoryId,
-                                 Dictionary = property.Dictionary,
-                                 ValueType = property.ValueType
-                             };
+            {
+                Id = property.Id,
+                Name = property.Name,
+                Required = property.Required,
+                Type = property.Type,
+                Multivalue = property.Multivalue,
+                CatalogId = property.CatalogId,
+                CategoryId = property.CategoryId,
+                Dictionary = property.Dictionary,
+                ValueType = property.ValueType
+            };
             result.Type = property.Type;
             result.Multilanguage = property.Multilanguage;
             result.IsInherited = property.IsInherited;

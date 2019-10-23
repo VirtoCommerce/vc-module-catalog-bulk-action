@@ -57,11 +57,11 @@
             var entries = entities.Cast<ListEntry>().ToArray();
             var result = BulkActionResult.Success;
             var operationContext = new MoveOperationContext
-                                       {
-                                           Catalog = _context.CatalogId,
-                                           Category = _context.CategoryId,
-                                           Entries = entries,
-                                       };
+            {
+                Catalog = _context.CatalogId,
+                Category = _context.CategoryId,
+                Entries = entries
+            };
 
             var categories = _categoryMover.Prepare(operationContext);
             var products = _productMover.Prepare(operationContext);

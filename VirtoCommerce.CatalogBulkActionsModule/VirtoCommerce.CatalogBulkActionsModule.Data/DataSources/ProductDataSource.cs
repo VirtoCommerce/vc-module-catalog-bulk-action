@@ -100,14 +100,14 @@
         private Core.Models.SearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
         {
             var searchCriteria = new SearchCriteria
-                                     {
-                                         CategoryIds = categoryIds,
-                                         Skip = skip,
-                                         Take = take,
-                                         ResponseGroup = SearchResponseGroup.WithProducts,
-                                         SearchInChildren = true,
-                                         SearchInVariations = true
-                                     };
+            {
+                CategoryIds = categoryIds,
+                Skip = skip,
+                Take = take,
+                ResponseGroup = SearchResponseGroup.WithProducts,
+                SearchInChildren = true,
+                SearchInVariations = true
+            };
 
             var result = _searchService.Search(searchCriteria);
             return result;

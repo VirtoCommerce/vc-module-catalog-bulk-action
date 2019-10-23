@@ -2,9 +2,9 @@
 {
     using Omu.ValueInjecter;
 
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
 
-    using ProductAssociation = VirtoCommerce.CatalogBulkActionsModule.Core.Models.ProductAssociation;
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class AssociationConverter
@@ -23,14 +23,14 @@
         {
             // do not use omu.InjectFrom for performance reasons
             var result = new ProductAssociation
-            {
-                AssociatedObjectId = association.AssociatedObjectId,
-                AssociatedObjectType = association.AssociatedObjectType,
-                Quantity = association.Quantity,
-                Tags = association.Tags,
-                Type = association.Type,
-                Priority = association.Priority
-            };
+                         {
+                             AssociatedObjectId = association.AssociatedObjectId,
+                             AssociatedObjectType = association.AssociatedObjectType,
+                             Quantity = association.Quantity,
+                             Tags = association.Tags,
+                             Type = association.Type,
+                             Priority = association.Priority
+                         };
 
             result.Tags = association.Tags;
 
