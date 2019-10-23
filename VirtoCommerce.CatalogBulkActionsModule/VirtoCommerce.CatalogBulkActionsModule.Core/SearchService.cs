@@ -1,6 +1,7 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
@@ -10,8 +11,8 @@
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
-    using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
-    using SearchResult = Models.SearchResult;
+    using Flags = VirtoCommerce.Domain.Catalog.Model.SearchResponseGroup;
+    using SearchResult = VirtoCommerce.CatalogBulkActionsModule.Core.Models.SearchResult;
 
     public class SearchService : ISearchService
     {
@@ -31,49 +32,65 @@
         public SearchResult Search(SearchCriteria criteria)
         {
             var result = new SearchResult();
-            var catalogSearchService = _lazyServiceProvider.Resolve<ICatalogSearchService>();
+            var searchService = _lazyServiceProvider.Resolve<ICatalogSearchService>();
             var blobUrlResolver = _lazyServiceProvider.Resolve<IBlobUrlResolver>();
-            var categorySkip = 0;
-            var categoryTake = 0;
+            var skip = 0;
+            var take = 0;
 
             // because products and categories represent in search result as two separated collections for handle paging request 
             // we should join two resulting collection artificially
 
             // search categories
-            var copyRespGroup = criteria.ResponseGroup;
-            if ((criteria.ResponseGroup & SearchResponseGroup.WithCategories) == SearchResponseGroup.WithCategories)
+            var responseGroupCopy = criteria.ResponseGroup;
+            if (criteria.ResponseGroup.HasFlag(Flags.WithCategories))
             {
-                criteria.ResponseGroup &= ~SearchResponseGroup.WithProducts;
-                var categoriesSearchResult = catalogSearchService.Search(criteria);
-                var categoriesTotalCount = categoriesSearchResult.Categories.Count;
+                criteria.ResponseGroup &= ~Flags.WithProducts;
 
-                categorySkip = Math.Min(categoriesTotalCount, criteria.Skip);
-                categoryTake = Math.Min(criteria.Take, Math.Max(0, categoriesTotalCount - criteria.Skip));
-                var categories = categoriesSearchResult.Categories.Skip(categorySkip).Take(categoryTake)
-                    .Select(category => new ListEntryCategory(category.ToWebModel(blobUrlResolver))).ToList();
+                var searchResult = searchService.Search(criteria);
+                var totalCount = searchResult.Categories.Count;
+                skip = GetSkip(criteria, totalCount);
+                take = GetTake(criteria, totalCount);
+                var pagedCategories = GetPaged(searchResult.Categories, skip, take);
+                var categories = pagedCategories.Select(
+                    category => new ListEntryCategory(category.ToWebModel(blobUrlResolver)));
+                result.TotalCount = totalCount;
 
-                result.TotalCount = categoriesTotalCount;
                 result.Entries.AddRange(categories);
             }
 
-            criteria.ResponseGroup = copyRespGroup;
+            criteria.ResponseGroup = responseGroupCopy;
 
             // search products
-            if ((criteria.ResponseGroup & SearchResponseGroup.WithProducts) == SearchResponseGroup.WithProducts)
+            if (criteria.ResponseGroup.HasFlag(Flags.WithProducts))
             {
-                criteria.ResponseGroup &= ~SearchResponseGroup.WithCategories;
-                criteria.Skip -= categorySkip;
-                criteria.Take -= categoryTake;
-                var productsSearchResult = catalogSearchService.Search(criteria);
+                criteria.ResponseGroup &= ~Flags.WithCategories;
 
-                var products = productsSearchResult.Products.Select(
+                criteria.Skip -= skip;
+                criteria.Take -= take;
+                var searchResult = searchService.Search(criteria);
+                var products = searchResult.Products.Select(
                     product => new ListEntryProduct(product.ToWebModel(blobUrlResolver)));
+                result.TotalCount += searchResult.ProductsTotalCount;
 
-                result.TotalCount += productsSearchResult.ProductsTotalCount;
                 result.Entries.AddRange(products);
             }
 
             return result;
+        }
+
+        private static IEnumerable<T> GetPaged<T>(IEnumerable<T> collection, int skip, int take)
+        {
+            return collection.Skip(skip).Take(take);
+        }
+
+        private static int GetSkip(SearchCriteria criteria, int totalCount)
+        {
+            return Math.Min(totalCount, criteria.Skip);
+        }
+
+        private static int GetTake(SearchCriteria criteria, int totalCount)
+        {
+            return Math.Min(criteria.Take, Math.Max(0, totalCount - criteria.Skip));
         }
     }
 }
