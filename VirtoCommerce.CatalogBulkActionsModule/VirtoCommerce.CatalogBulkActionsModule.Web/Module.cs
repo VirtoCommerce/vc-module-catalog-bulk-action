@@ -39,7 +39,7 @@
             // https://github.com/VirtoCommerce/vc-module-cache/blob/b6cb9ae85d1f38ff23149dffac806ce150896bb2/VirtoCommerce.CacheModule.Web/Module.cs#L56
             // Decorators dependencies might be registered in a container after this module will have registered their own and eventually, we will get wrong dependencies.
             // That's why we trying to resolve these problems with "lazy" dependency resolving.
-            _container.RegisterInstance<IServiceProvider>(new LazyServiceProvider(_container));
+            _container.RegisterInstance<ILazyServiceProvider>(new LazyServiceProvider(_container));
         }
 
         public override void PostInitialize()
