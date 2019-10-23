@@ -4,7 +4,7 @@
 
     using VirtoCommerce.CatalogBulkActionsModule.Core;
 
-    public class LazyServiceProvider : IServiceProvider
+    public class LazyServiceProvider : ILazyServiceProvider
     {
         private readonly IUnityContainer _container;
 
