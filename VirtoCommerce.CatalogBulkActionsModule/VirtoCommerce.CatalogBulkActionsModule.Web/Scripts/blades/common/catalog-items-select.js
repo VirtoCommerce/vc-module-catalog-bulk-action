@@ -32,7 +32,7 @@ angular.module('virtoCommerce.catalogModule')
                     skip: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                     take: $scope.pageSettings.itemsPerPageCount
                 }, blade.searchCriteria),
-            function (data, headers) {
+            function (data) {
                 blade.isLoading = false;
                 $scope.pageSettings.totalItems = data.totalCount;
                 $scope.items = data.listEntries;
@@ -198,7 +198,7 @@ angular.module('virtoCommerce.catalogModule')
         //update gridApi for current grid
         $scope.gridApi = gridApi;
 
-        gridApi.grid.registerDataChangeCallback(function (grid) {
+        gridApi.grid.registerDataChangeCallback(function () {
             //check already selected rows
             $timeout(function () {
                 _.each($scope.items, function (x) {

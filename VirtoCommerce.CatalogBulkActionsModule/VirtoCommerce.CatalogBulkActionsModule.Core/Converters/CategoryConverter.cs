@@ -3,55 +3,14 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Omu.ValueInjecter;
-
+    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.Platform.Core.Assets;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Category = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Category;
-    using Property = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Property;
-    using PropertyValue = VirtoCommerce.CatalogBulkActionsModule.Core.Models.PropertyValue;
     using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public static class CategoryConverter
     {
-        public static VC.Category ToModuleModel(this Category category)
-        {
-            var result = category.ToModel(AbstractTypeFactory<VC.Category>.TryCreateInstance());
-
-            result.InjectFrom(category);
-            result.SeoInfos = category.SeoInfos;
-
-            if (category.Links != null)
-            {
-                result.Links = category.Links.Select(link => link.ToCoreModel()).ToList();
-            }
-
-            if (category.Properties != null)
-            {
-                result.PropertyValues = new List<VC.PropertyValue>();
-                foreach (var property in category.Properties)
-                {
-                    foreach (var propValue in property.Values ?? Enumerable.Empty<PropertyValue>())
-                    {
-                        propValue.ValueType = property.ValueType;
-
-                        // need populate required fields
-                        propValue.PropertyId = property.Id;
-                        propValue.PropertyName = property.Name;
-                        result.PropertyValues.Add(propValue.ToCoreModel());
-                    }
-                }
-            }
-
-            if (category.Images != null)
-            {
-                result.Images = category.Images.Select(x => x.ToCoreModel()).ToList();
-            }
-
-            return result;
-        }
-
         public static Category ToWebModel(
             this VC.Category category,
             IBlobUrlResolver blobUrlResolver = null,
