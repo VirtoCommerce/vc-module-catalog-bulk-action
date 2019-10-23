@@ -129,6 +129,11 @@
         public ICollection<Property> Properties { get; set; }
 
         /// <summary>
+        /// Gets or sets the security scopes.
+        /// </summary>
+        public string[] SecurityScopes { get; set; }
+
+        /// <summary>
         /// Gets or sets the list of SEO information records.
         /// </summary>
         /// <value>
@@ -149,6 +154,11 @@
         public virtual Category FromModel(VC.Category category)
         {
             return this;
+        }
+
+        public virtual VC.Category ToModel(VC.Category category)
+        {
+            return category;
         }
     }
 }

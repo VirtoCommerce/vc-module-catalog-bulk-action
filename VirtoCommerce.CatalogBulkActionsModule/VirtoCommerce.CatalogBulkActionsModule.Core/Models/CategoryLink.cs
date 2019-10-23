@@ -27,6 +27,14 @@
         public int Priority { get; set; }
 
         /// <summary>
+        /// Gets or sets the source category identifier.
+        /// </summary>
+        /// <value>
+        /// The source category identifier.
+        /// </value>
+        public string SourceCategoryId { get; set; }
+
+        /// <summary>
         /// Gets or sets the source item id.
         /// </summary>
         /// <value>
