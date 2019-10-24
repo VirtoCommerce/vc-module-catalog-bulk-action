@@ -9,6 +9,7 @@
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
     using VirtoCommerce.CatalogBulkActionsModule.Data.DataSources;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.CatalogBulkActionsModule.Web.Security;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
     using VirtoCommerce.Platform.Core.Modularity;
@@ -57,15 +58,17 @@
         {
             var dataSourceFactory = _container.Resolve<IDataSourceFactory>();
             var actionFactory = _container.Resolve<IBulkActionFactory>();
-            var actionDefinition = new BulkActionProvider(
+            var permissions = new[] { PredefinedPermissions.CategoryChange, PredefinedPermissions.PropertiesUpdate };
+            var provider = new BulkActionProvider(
                 name,
                 contextTypeName,
                 new[] { nameof(CatalogProduct) },
                 dataSourceFactory,
-                actionFactory);
+                actionFactory,
+                permissions);
 
             var bulkActionDefinitionStorage = _container.Resolve<IBulkActionProviderStorage>();
-            bulkActionDefinitionStorage.Add(actionDefinition);
+            bulkActionDefinitionStorage.Add(provider);
         }
     }
 }
