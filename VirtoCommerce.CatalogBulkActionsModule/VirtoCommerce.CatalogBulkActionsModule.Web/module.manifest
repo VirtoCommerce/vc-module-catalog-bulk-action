@@ -36,9 +36,8 @@
   
     <permissions>
         <group name="VirtoCommerce.CatalogBulkActionsModule">
-            <permission id="VirtoCommerce.CatalogBulkActionsModule:read" name="Read" />
-            <permission id="VirtoCommerce.CatalogBulkActionsModule:update" name="Update" />
-            <permission id="VirtoCommerce.CatalogBulkActionsModule:delete" name="Delete" />
+            <permission id="bulk-action:category:change" name="Access" />
+            <permission id="bulk-action:properties:update" name="Access" />
         </group>
     </permissions>
 </module>
