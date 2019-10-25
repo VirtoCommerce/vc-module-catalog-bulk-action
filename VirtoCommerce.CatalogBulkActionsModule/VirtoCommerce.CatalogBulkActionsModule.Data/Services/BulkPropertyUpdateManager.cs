@@ -8,10 +8,12 @@
 
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
+    using VirtoCommerce.CatalogModule.Web.Converters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
+
+    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
 
     public class BulkPropertyUpdateManager : IBulkPropertyUpdateManager
     {
@@ -66,7 +68,7 @@
             return result.ToArray();
         }
 
-        public BulkActionResult UpdateProperties(CatalogProduct[] products, Core.Models.Property[] properties)
+        public BulkActionResult UpdateProperties(CatalogProduct[] products, CatalogModule.Property[] properties)
         {
             var result = new BulkActionResult { Succeeded = true };
             var hasChanges = false;
@@ -88,7 +90,7 @@
             return result;
         }
 
-        private static bool AddPropertyValues(IHasProperties product, Core.Models.Property property)
+        private static bool AddPropertyValues(IHasProperties product, CatalogModule.Property property)
         {
             bool result;
             var defaultProperty = product.Properties.FirstOrDefault(p => p.Id.EqualsInvariant(property.Id));
@@ -151,7 +153,7 @@
             return result;
         }
 
-        private static bool TrySetCustomProperty(IHasProperties product, Core.Models.Property property)
+        private static bool TrySetCustomProperty(IHasProperties product, CatalogModule.Property property)
         {
             bool result;
 
@@ -205,7 +207,7 @@
             return result;
         }
 
-        private MethodInfo GetProductPropertySetter(CatalogProduct product, Core.Models.Property property)
+        private MethodInfo GetProductPropertySetter(CatalogProduct product, CatalogModule.Property property)
         {
             var name = property.Name;
 
@@ -357,7 +359,7 @@
         }
 
         private bool TryChangeProductPropertyValues(
-            Core.Models.Property[] properties,
+            CatalogModule.Property[] properties,
             IEnumerable<CatalogProduct> products,
             BulkActionResult result)
         {
@@ -394,7 +396,7 @@
             return hasChanges;
         }
 
-        private bool TrySetOwnProperty(CatalogProduct product, Core.Models.Property property)
+        private bool TrySetOwnProperty(CatalogProduct product, CatalogModule.Property property)
         {
             bool result;
             var propertyValue = property.Values.FirstOrDefault();

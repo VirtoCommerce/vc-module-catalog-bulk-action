@@ -2,6 +2,8 @@
 {
     using System.Linq;
 
+    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
+
     /// <summary>
     /// Category ListEntry record.
     /// </summary>
@@ -9,7 +11,7 @@
     {
         public const string TypeName = "category";
 
-        public ListEntryCategory(Category category)
+        public ListEntryCategory(CatalogModule.Category category)
             : base(TypeName, category)
         {
             ImageUrl = category.ImgSrc;
@@ -30,7 +32,7 @@
 
             if (category.Links != null)
             {
-                Links = category.Links.Select(link => new ListEntryLink(link)).ToArray();
+                Links = category.Links.Select(link => new CatalogModule.ListEntryLink(link)).ToArray();
             }
         }
     }

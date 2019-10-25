@@ -3,12 +3,12 @@
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.Domain.Catalog.Model;
 
-    using Property = VirtoCommerce.Domain.Catalog.Model.Property;
+    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
 
     public interface IBulkPropertyUpdateManager
     {
         Property[] GetProperties(BulkActionContext context);
 
-        BulkActionResult UpdateProperties(CatalogProduct[] products, Core.Models.Property[] properties);
+        BulkActionResult UpdateProperties(CatalogProduct[] products, CatalogModule.Property[] properties);
     }
 }

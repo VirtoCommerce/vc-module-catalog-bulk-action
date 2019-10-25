@@ -12,8 +12,6 @@
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using VC = VirtoCommerce.Domain.Catalog.Model;
-
     public class CategoryChangeBulkAction : IBulkAction
     {
         private readonly CategoryChangeBulkActionContext _context;

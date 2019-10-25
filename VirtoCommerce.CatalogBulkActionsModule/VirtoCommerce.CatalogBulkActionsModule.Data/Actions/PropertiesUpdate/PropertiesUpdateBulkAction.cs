@@ -7,20 +7,20 @@
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Converters;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.CatalogModule.Web.Converters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Property = VirtoCommerce.CatalogBulkActionsModule.Core.Models.Property;
+    using Property = VirtoCommerce.CatalogModule.Web.Model;
 
     public class PropertiesUpdateBulkAction : IBulkAction
     {
         private readonly PropertiesUpdateBulkActionContext _context;
 
-        private readonly ILazyServiceProvider _lazyLazyServiceProvider;
+        private readonly ILazyServiceProvider _lazyServiceProvider;
 
         private readonly Dictionary<string, string> _namesById = new Dictionary<string, string>();
 
@@ -36,15 +36,15 @@
         public PropertiesUpdateBulkAction(ILazyServiceProvider lazyServiceProvider, PropertiesUpdateBulkActionContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _lazyLazyServiceProvider = lazyServiceProvider;
+            _lazyServiceProvider = lazyServiceProvider;
         }
 
         public BulkActionContext Context => _context;
 
         public BulkActionResult Execute(IEnumerable<IEntity> entities)
         {
-            var itemService = _lazyLazyServiceProvider.Resolve<IItemService>();
-            var bulkPropertyUpdateManager = _lazyLazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
+            var itemService = _lazyServiceProvider.Resolve<IItemService>();
+            var bulkPropertyUpdateManager = _lazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
             var entries = entities.Cast<ListEntry>().ToArray();
 
             if (entries.Any(entry => !entry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
@@ -63,7 +63,7 @@
 
         public object GetActionData()
         {
-            var bulkPropertyUpdateManager = _lazyLazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
+            var bulkPropertyUpdateManager = _lazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
 
             var properties = bulkPropertyUpdateManager.GetProperties(_context);
 
@@ -75,11 +75,14 @@
             return BulkActionResult.Success;
         }
 
-        private Property CreateModel(Domain.Catalog.Model.Property property)
+        private Property.Property CreateModel(Domain.Catalog.Model.Property property)
         {
+            // TechDebt: in the called code we try to get access to validation rules and if they are have a null reference we will get an error
+            property.ValidationRules = new List<PropertyValidationRule>();
+
             var result = property.ToWebModel();
-            var catalogService = _lazyLazyServiceProvider.Resolve<ICatalogService>();
-            var categoryService = _lazyLazyServiceProvider.Resolve<ICategoryService>();
+            var catalogService = _lazyServiceProvider.Resolve<ICatalogService>();
+            var categoryService = _lazyServiceProvider.Resolve<ICategoryService>();
 
             string path;
 
@@ -117,7 +120,8 @@
                 }
             }
 
-            result.Path = path;
+            // TechDebt: verify this. For what we should use this path?
+            //result.Path = path;
 
             return result;
         }

@@ -1,6 +1,7 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models
 {
     using System.Linq;
+    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
 
     /// <summary>
     /// Product ListEntry record.
@@ -15,7 +16,7 @@
         /// <param name="product">
         /// The product.
         /// </param>
-        public ListEntryProduct(Product product)
+        public ListEntryProduct(CatalogModule.Product product)
             : base(TypeName, product)
         {
             ProductType = product.ProductType;
@@ -37,7 +38,7 @@
 
             if (product.Links != null)
             {
-                Links = product.Links.Select(link => new ListEntryLink(link)).ToArray();
+                Links = product.Links.Select(link => new CatalogModule.ListEntryLink(link)).ToArray();
             }
         }
 

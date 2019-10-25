@@ -1,5 +1,6 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models
 {
+    using VirtoCommerce.CatalogModule.Web.Model;
     using VirtoCommerce.Platform.Core.Common;
 
     /// <summary>
