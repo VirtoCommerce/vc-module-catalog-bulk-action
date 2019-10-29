@@ -4,23 +4,23 @@
 
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
+    using VirtoCommerce.CatalogModule.Web.Services;
 
     public class DataSourceFactory : IDataSourceFactory
     {
-        private readonly ISearchService _searchService;
+        private readonly IListEntrySearchService _listEntrySearchService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSourceFactory"/> class.
         /// </summary>
-        /// <param name="searchService">
+        /// <param name="listEntrySearchService">
         /// The search service.
         /// </param>
-        public DataSourceFactory(ISearchService searchService)
+        public DataSourceFactory(IListEntrySearchService listEntrySearchService)
         {
-            _searchService = searchService;
+            _listEntrySearchService = listEntrySearchService;
         }
 
         public IDataSource Create(BulkActionContext context)
@@ -30,11 +30,11 @@
             switch (context)
             {
                 case CategoryChangeBulkActionContext categoryChangeContext:
-                    result = new BaseDataSource(_searchService, categoryChangeContext.DataQuery);
+                    result = new BaseDataSource(_listEntrySearchService, categoryChangeContext.DataQuery);
                     break;
 
                 case PropertiesUpdateBulkActionContext propertiesUpdateContext:
-                    result = new ProductDataSource(_searchService, propertiesUpdateContext.DataQuery);
+                    result = new ProductDataSource(_listEntrySearchService, propertiesUpdateContext.DataQuery);
                     break;
             }
 

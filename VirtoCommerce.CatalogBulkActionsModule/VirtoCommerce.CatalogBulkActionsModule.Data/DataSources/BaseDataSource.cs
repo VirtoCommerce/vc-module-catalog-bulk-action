@@ -5,33 +5,35 @@
     using System.Linq;
 
     using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.Domain.Catalog.Model;
+    using VirtoCommerce.CatalogModule.Web.Model;
+    using VirtoCommerce.CatalogModule.Web.Services;
     using VirtoCommerce.Platform.Core.Common;
+
+    using VC = VirtoCommerce.Domain.Catalog.Model;
 
     public class BaseDataSource : IDataSource
     {
         private readonly DataQuery _dataQuery;
 
-        private readonly int _pageSize = 50;
+        private readonly IListEntrySearchService _listEntrySearchService;
 
-        private readonly ISearchService _searchService;
+        private readonly int _pageSize = 50;
 
         private int _pageNumber;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseDataSource"/> class.
         /// </summary>
-        /// <param name="searchService">
+        /// <param name="listEntrySearchService">
         /// The search service.
         /// </param>
         /// <param name="dataQuery">
         /// The data query.
         /// </param>
-        public BaseDataSource(ISearchService searchService, DataQuery dataQuery)
+        public BaseDataSource(IListEntrySearchService listEntrySearchService, DataQuery dataQuery)
         {
-            _searchService = searchService;
+            _listEntrySearchService = listEntrySearchService;
             _dataQuery = dataQuery ?? throw new ArgumentNullException(nameof(dataQuery));
         }
 
@@ -48,8 +50,8 @@
                 else
                 {
                     var searchCriteria = BuildSearchCriteria(_dataQuery);
-                    var searchResult = _searchService.Search(searchCriteria);
-                    Items = searchResult.Entries;
+                    var searchResult = _listEntrySearchService.Search(searchCriteria);
+                    Items = searchResult.ListEntries;
                 }
             }
             else
@@ -80,7 +82,7 @@
                     var searchCriteria = BuildSearchCriteria(_dataQuery);
                     searchCriteria.Skip = 0;
                     searchCriteria.Take = 0;
-                    var searchResult = _searchService.Search(searchCriteria);
+                    var searchResult = _listEntrySearchService.Search(searchCriteria);
                     result = searchResult.TotalCount;
                 }
             }
@@ -92,11 +94,11 @@
             return result;
         }
 
-        protected virtual SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
+        protected virtual VC.SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
         {
             if (dataQuery.SearchCriteria == null)
             {
-                dataQuery.SearchCriteria = new SearchCriteria();
+                dataQuery.SearchCriteria = new VC.SearchCriteria();
             }
 
             var result = dataQuery.SearchCriteria;
@@ -116,14 +118,14 @@
             return result;
         }
 
-        protected virtual IEnumerable<IEntity> GetNextItems(IEnumerable<ListEntry> entries, int skip, int take)
-        {
-            return entries.Skip(skip).Take(take);
-        }
-
         protected virtual int GetEntitiesCount(IEnumerable<ListEntry> entries)
         {
             return entries.Count();
+        }
+
+        protected virtual IEnumerable<IEntity> GetNextItems(IEnumerable<ListEntry> entries, int skip, int take)
+        {
+            return entries.Skip(skip).Take(take);
         }
 
         private int GetSkip()

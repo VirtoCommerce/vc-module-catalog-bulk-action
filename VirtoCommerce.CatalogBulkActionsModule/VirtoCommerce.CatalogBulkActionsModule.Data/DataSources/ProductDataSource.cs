@@ -4,28 +4,33 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+    using VirtoCommerce.CatalogModule.Web.Model;
+    using VirtoCommerce.CatalogModule.Web.Services;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Platform.Core.Common;
 
+    using ListEntryCategory = VirtoCommerce.CatalogModule.Web.Model.ListEntryCategory;
+    using ListEntryProduct = VirtoCommerce.CatalogModule.Web.Model.ListEntryProduct;
+    using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
+
     public class ProductDataSource : BaseDataSource
     {
-        private readonly ISearchService _searchService;
+        private readonly IListEntrySearchService _listEntrySearchService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProductDataSource"/> class.
         /// </summary>
-        /// <param name="searchService">
+        /// <param name="listEntrySearchService">
         /// The list entry search service.
         /// </param>
         /// <param name="dataQuery">
         /// The data query.
         /// </param>
-        public ProductDataSource(ISearchService searchService, DataQuery dataQuery)
-            : base(searchService, dataQuery)
+        public ProductDataSource(IListEntrySearchService listEntrySearchService, DataQuery dataQuery)
+            : base(listEntrySearchService, dataQuery)
         {
-            _searchService = searchService;
+            _listEntrySearchService = listEntrySearchService;
         }
 
         protected override SearchCriteria BuildSearchCriteria(DataQuery dataQuery)
@@ -60,7 +65,7 @@
                 if (inCategoriesCount > 0 && categoryProductsTake > 0)
                 {
                     searchResult = SearchProductsInCategories(categoryIds, categoryProductsSkip, categoryProductsTake);
-                    result.AddRange(searchResult.Entries);
+                    result.AddRange(searchResult.ListEntries);
                 }
             }
 
@@ -97,7 +102,7 @@
             return inCategoriesCount + productCount;
         }
 
-        private Core.Models.SearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
+        private ListEntrySearchResult SearchProductsInCategories(string[] categoryIds, int skip, int take)
         {
             var searchCriteria = new SearchCriteria
             {
@@ -109,7 +114,7 @@
                 SearchInVariations = true
             };
 
-            var result = _searchService.Search(searchCriteria);
+            var result = _listEntrySearchService.Search(searchCriteria);
             return result;
         }
     }

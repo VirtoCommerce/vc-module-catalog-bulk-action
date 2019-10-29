@@ -7,14 +7,13 @@
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
     using VirtoCommerce.CatalogModule.Web.Converters;
     using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
-    using Property = VirtoCommerce.CatalogModule.Web.Model;
+    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
 
     public class PropertiesUpdateBulkAction : IBulkAction
     {
@@ -45,14 +44,14 @@
         {
             var itemService = _lazyServiceProvider.Resolve<IItemService>();
             var bulkPropertyUpdateManager = _lazyServiceProvider.Resolve<IBulkPropertyUpdateManager>();
-            var entries = entities.Cast<ListEntry>().ToArray();
+            var entries = entities.Cast<CatalogModule.ListEntry>().ToArray();
 
-            if (entries.Any(entry => !entry.Type.EqualsInvariant(ListEntryProduct.TypeName)))
+            if (entries.Any(entry => !entry.Type.EqualsInvariant(CatalogModule.ListEntryProduct.TypeName)))
             {
                 throw new ArgumentException($"{GetType().Name} could be applied to product entities only.");
             }
 
-            var productIds = entries.Where(entry => entry.Type.EqualsInvariant(ListEntryProduct.TypeName))
+            var productIds = entries.Where(entry => entry.Type.EqualsInvariant(CatalogModule.ListEntryProduct.TypeName))
                 .Select(entry => entry.Id).ToArray();
             var products = itemService.GetByIds(
                 productIds,
@@ -75,7 +74,7 @@
             return BulkActionResult.Success;
         }
 
-        private Property.Property CreateModel(Domain.Catalog.Model.Property property)
+        private CatalogModule.Property CreateModel(Property property)
         {
             // TechDebt: in the called code we try to get access to validation rules and if they are have a null reference we will get an error
             property.ValidationRules = new List<PropertyValidationRule>();

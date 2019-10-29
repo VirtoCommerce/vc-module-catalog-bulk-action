@@ -27,13 +27,10 @@
         {
             base.Initialize();
 
-            _container.RegisterType<ISearchService, SearchService>();
-            _container.RegisterType<IMover<Category>, CategoryMover>();
-            _container.RegisterType<IMover<CatalogProduct>, ProductMover>();
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IDataSourceFactory, DataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
-
+            
             // This registration is necessary to avoid problems with caching.
             // These problems might occur when we doing the bulk operation and after completion, we don't see any result.
             // We think it's because we using the cache decorators here:
@@ -67,8 +64,8 @@
                 actionFactory,
                 permissions);
 
-            var bulkActionDefinitionStorage = _container.Resolve<IBulkActionProviderStorage>();
-            bulkActionDefinitionStorage.Add(provider);
+            var actionProviderStorage = _container.Resolve<IBulkActionProviderStorage>();
+            actionProviderStorage.Add(provider);
         }
     }
 }

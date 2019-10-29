@@ -7,10 +7,13 @@
     using VirtoCommerce.BulkActionsModule.Core;
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Services;
+    using VirtoCommerce.CatalogModule.Web.Model;
+    using VirtoCommerce.CatalogModule.Web.Services;
+    using VirtoCommerce.Domain.Catalog.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
+
+    using Category = VirtoCommerce.Domain.Catalog.Model.Category;
 
     public class CategoryChangeBulkAction : IBulkAction
     {
@@ -27,7 +30,9 @@
         /// <param name="context">
         /// The context.
         /// </param>
-        public CategoryChangeBulkAction(ILazyServiceProvider lazyServiceProvider, CategoryChangeBulkActionContext context)
+        public CategoryChangeBulkAction(
+            ILazyServiceProvider lazyServiceProvider,
+            CategoryChangeBulkActionContext context)
         {
             _lazyLazyServiceProvider = lazyServiceProvider;
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -39,20 +44,20 @@
         {
             var entries = entities.Cast<ListEntry>().ToArray();
             var result = BulkActionResult.Success;
-            var operationContext = new MoveOperationContext
+            var operationContext = new MoveContext
             {
                 Catalog = _context.CatalogId,
                 Category = _context.CategoryId,
-                Entries = entries
+                ListEntries = entries
             };
 
-            var categoryMover = _lazyLazyServiceProvider.Resolve<CategoryMover>();
-            var productMover = _lazyLazyServiceProvider.Resolve<ProductMover>();
-            var categories = categoryMover.Prepare(operationContext);
-            var products = productMover.Prepare(operationContext);
+            var categoryMover = _lazyLazyServiceProvider.Resolve<ListEntryMover<Category>>();
+            var productMover = _lazyLazyServiceProvider.Resolve<ListEntryMover<CatalogProduct>>();
+            var categories = categoryMover.PrepareMove(operationContext);
+            var products = productMover.PrepareMove(operationContext);
 
-            categoryMover.Confirm(categories);
-            productMover.Confirm(products);
+            categoryMover.ConfirmMove(categories);
+            productMover.ConfirmMove(products);
 
             return result;
         }
