@@ -120,7 +120,9 @@
   <ItemGroup>
     <Compile Include="BulkActionFactoryTests.cs" />
     <Compile Include="CategoryChangeBulkActionTests.cs" />
+    <Compile Include="DataSourceFactoryTests.cs" />
     <Compile Include="MethodsInvocationTestData.cs" />
+    <Compile Include="PropertiesUpdateBulkActionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
