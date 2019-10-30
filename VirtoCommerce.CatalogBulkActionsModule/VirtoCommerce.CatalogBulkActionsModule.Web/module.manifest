@@ -5,7 +5,7 @@
     <platformVersion>2.13.44</platformVersion>
     <dependencies>
       <dependency id="VirtoCommerce.Core" version="2.25.21" />
-      <dependency id="VirtoCommerce.BulkActionsModule" version="1.0.2" />
+      <dependency id="VirtoCommerce.BulkActionsModule" version="1.0.7" />
       <dependency id="VirtoCommerce.Catalog" version="2.23.28" />
     </dependencies>
 
