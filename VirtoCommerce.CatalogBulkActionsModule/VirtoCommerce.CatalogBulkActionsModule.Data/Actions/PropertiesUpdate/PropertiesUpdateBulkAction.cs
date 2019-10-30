@@ -21,8 +21,6 @@
 
         private readonly ILazyServiceProvider _lazyServiceProvider;
 
-        private readonly Dictionary<string, string> _namesById = new Dictionary<string, string>();
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertiesUpdateBulkAction"/> class.
         /// </summary>
@@ -51,8 +49,8 @@
                 throw new ArgumentException($"{GetType().Name} could be applied to product entities only.");
             }
 
-            var productIds = entries.Where(entry => entry.Type.EqualsInvariant(CatalogModule.ListEntryProduct.TypeName))
-                .Select(entry => entry.Id).ToArray();
+            var productQuery = entries.Where(entry => entry.Type.EqualsInvariant(CatalogModule.ListEntryProduct.TypeName));
+            var productIds = productQuery.Select(entry => entry.Id).ToArray();
             var products = itemService.GetByIds(
                 productIds,
                 ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
@@ -76,53 +74,10 @@
 
         private CatalogModule.Property CreateModel(Property property)
         {
-            // TechDebt: in the called code we try to get access to validation rules and if they are have a null reference we will get an error
+            // note: in the called code we try to get access to validation rules and if they are have a null reference we will get an error
             property.ValidationRules = new List<PropertyValidationRule>();
 
-            var result = property.ToWebModel();
-            var catalogService = _lazyServiceProvider.Resolve<ICatalogService>();
-            var categoryService = _lazyServiceProvider.Resolve<ICategoryService>();
-
-            string path;
-
-            if (string.IsNullOrEmpty(property.CategoryId))
-            {
-                if (string.IsNullOrEmpty(property.CatalogId))
-                {
-                    path = "Native properties";
-                }
-                else
-                {
-                    if (_namesById.TryGetValue(property.CatalogId, out path))
-                    {
-                        // idle
-                    }
-                    else
-                    {
-                        var catalog = catalogService.GetById(property.CatalogId);
-                        path = $"{catalog?.Name} (Catalog)";
-                        _namesById.Add(property.CatalogId, path);
-                    }
-                }
-            }
-            else
-            {
-                if (_namesById.TryGetValue(property.CategoryId, out path))
-                {
-                    // idle
-                }
-                else
-                {
-                    var category = categoryService.GetById(property.CategoryId, CategoryResponseGroup.Info);
-                    path = $"{category?.Name} (Category)";
-                    _namesById.Add(property.CategoryId, path);
-                }
-            }
-
-            // TechDebt: verify this. For what we should use this path?
-            //result.Path = path;
-
-            return result;
+            return property.ToWebModel();
         }
     }
 }
