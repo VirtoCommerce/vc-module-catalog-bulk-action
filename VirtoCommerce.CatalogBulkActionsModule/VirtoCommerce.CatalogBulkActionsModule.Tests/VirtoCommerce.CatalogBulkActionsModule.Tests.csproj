@@ -118,8 +118,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseDataSourceTests.cs" />
     <Compile Include="BulkActionFactoryTests.cs" />
     <Compile Include="CategoryChangeBulkActionTests.cs" />
+    <Compile Include="ClassCtorTests.cs" />
     <Compile Include="DataSourceFactoryTests.cs" />
     <Compile Include="MethodsInvocationTestData.cs" />
     <Compile Include="PropertiesUpdateBulkActionTests.cs" />
