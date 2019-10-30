@@ -49,15 +49,15 @@ angular.module(moduleName, [])
             }
 
             //Register module in main menu
-            var menuItem = {
-                path: 'browse/virtoCommerce.catalogBulkActionsModule',
-                icon: 'fa fa-cube',
-                title: 'VirtoCommerce.CatalogBulkActionsModule',
-                priority: 100,
-                action: function () { $state.go('workspace.virtoCommerceCatalogBulkActionsModuleState'); },
-                permission: 'virtoCommerce.catalogBulkActionsModule.WebPermission'
-            };
-            mainMenuService.addMenuItem(menuItem);
+            //var menuItem = {
+            //    path: 'browse/virtoCommerce.catalogBulkActionsModule',
+            //    icon: 'fa fa-cube',
+            //    title: 'VirtoCommerce.CatalogBulkActionsModule',
+            //    priority: 100,
+            //    action: function () { $state.go('workspace.virtoCommerceCatalogBulkActionsModuleState'); },
+            //    permission: 'virtoCommerce.catalogBulkActionsModule.WebPermission'
+            //};
+            //mainMenuService.addMenuItem(menuItem);
 
             catalogBulkActionService.register({
                 name: 'CategoryChangeBulkAction',
