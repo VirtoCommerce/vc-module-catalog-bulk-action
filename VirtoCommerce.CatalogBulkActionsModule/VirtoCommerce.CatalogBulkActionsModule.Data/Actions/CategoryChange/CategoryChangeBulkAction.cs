@@ -19,7 +19,7 @@
     {
         private readonly CategoryChangeBulkActionContext _context;
 
-        private readonly ILazyServiceProvider _lazyLazyServiceProvider;
+        private readonly ILazyServiceProvider _lazyServiceProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CategoryChangeBulkAction"/> class.
@@ -34,7 +34,7 @@
             ILazyServiceProvider lazyServiceProvider,
             CategoryChangeBulkActionContext context)
         {
-            _lazyLazyServiceProvider = lazyServiceProvider;
+            _lazyServiceProvider = lazyServiceProvider;
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -43,23 +43,22 @@
         public BulkActionResult Execute(IEnumerable<IEntity> entities)
         {
             var entries = entities.Cast<ListEntry>().ToArray();
-            var result = BulkActionResult.Success;
-            var operationContext = new MoveContext
+            var moveInfo = new MoveInfo
             {
                 Catalog = _context.CatalogId,
                 Category = _context.CategoryId,
                 ListEntries = entries
             };
 
-            var categoryMover = _lazyLazyServiceProvider.Resolve<ListEntryMover<Category>>();
-            var productMover = _lazyLazyServiceProvider.Resolve<ListEntryMover<CatalogProduct>>();
-            var categories = categoryMover.PrepareMove(operationContext);
-            var products = productMover.PrepareMove(operationContext);
+            var categoryMover = _lazyServiceProvider.Resolve<ListEntryMover<Category>>();
+            var productMover = _lazyServiceProvider.Resolve<ListEntryMover<CatalogProduct>>();
+            var categories = categoryMover.PrepareMove(moveInfo);
+            var products = productMover.PrepareMove(moveInfo);
 
             categoryMover.ConfirmMove(categories);
             productMover.ConfirmMove(products);
 
-            return result;
+            return BulkActionResult.Success;
         }
 
         public object GetActionData()
@@ -71,7 +70,7 @@
         {
             var result = BulkActionResult.Success;
 
-            var catalogService = _lazyLazyServiceProvider.Resolve<ICatalogService>();
+            var catalogService = _lazyServiceProvider.Resolve<ICatalogService>();
             var dstCatalog = catalogService.GetById(_context.CatalogId);
             if (dstCatalog.IsVirtual)
             {
