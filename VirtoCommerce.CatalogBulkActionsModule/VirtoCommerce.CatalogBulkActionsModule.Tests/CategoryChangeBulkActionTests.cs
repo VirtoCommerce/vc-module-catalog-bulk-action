@@ -18,6 +18,41 @@
 
     public class CategoryChangeBulkActionTests
     {
+        private readonly CategoryChangeBulkActionContext _context;
+
+        private CategoryChangeBulkAction _bulkAction;
+
+        public CategoryChangeBulkActionTests()
+        {
+            _context = new CategoryChangeBulkActionContext { CatalogId = "catalog" };
+            var serviceProvider = new Mock<ILazyServiceProvider> { DefaultValueProvider = DefaultValueProvider.Mock };
+            _bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, _context);
+        }
+
+        [Fact]
+        public void Context_ShouldBe_NotNull()
+        {
+            // arrange
+
+            // act
+            var result = _bulkAction.Context;
+
+            // assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void Execute_Result_ShouldBe_Of_BulkActionResult_Type()
+        {
+            // arrange
+
+            // act
+            var result = _bulkAction.Execute(Enumerable.Empty<IEntity>());
+
+            // assert
+            result.Should().BeOfType(typeof(BulkActionResult));
+        }
+
         [Theory]
         [ClassData(typeof(MethodsInvocationTestData))]
         public void Execute_Should_Invoke_Mover_Method(Mock<ILazyServiceProvider> serviceProvider, Action assertAction)
@@ -35,45 +70,12 @@
         }
 
         [Fact]
-        public void Execute_Result_ShouldBe_Of_BulkActionResult_Type()
-        {
-            // arrange
-            var context = new CategoryChangeBulkActionContext();
-            var serviceProvider = new Mock<ILazyServiceProvider> { DefaultValueProvider = DefaultValueProvider.Mock };
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
-
-            // act
-            var result = bulkAction.Execute(Enumerable.Empty<IEntity>());
-
-            // assert
-            result.Should().BeOfType(typeof(BulkActionResult));
-        }
-
-        [Fact]
-        public void Validate_Result_ShouldBe_Of_BulkActionResult_Type()
-        {
-            // arrange
-            var context = new CategoryChangeBulkActionContext();
-            var serviceProvider = new Mock<ILazyServiceProvider> { DefaultValueProvider = DefaultValueProvider.Mock };
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
-
-            // act
-            var result = bulkAction.Validate();
-
-            // assert
-            result.Should().BeOfType(typeof(BulkActionResult));
-        }
-
-        [Fact]
         public void GetActionData_Should_Return_Null()
         {
             // arrange
-            var context = new CategoryChangeBulkActionContext();
-            var serviceProvider = new Mock<ILazyServiceProvider>();
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
 
             // act
-            var result = bulkAction.GetActionData();
+            var result = _bulkAction.GetActionData();
 
             // assert
             result.Should().BeNull();
@@ -83,39 +85,49 @@
         public void Validate_Result_Should_Contain_Errors()
         {
             // arrange
-            var context = new CategoryChangeBulkActionContext { CatalogId = "catalog" };
-            var fakeCatalog = Mock.Of<Catalog>(catalog => catalog.IsVirtual == true);
             var catalogService = new Mock<ICatalogService>();
             var serviceProvider = new Mock<ILazyServiceProvider>();
 
-            catalogService.Setup(t => t.GetById("catalog")).Returns(fakeCatalog);
+            catalogService.Setup(t => t.GetById("catalog"))
+                .Returns(Mock.Of<Catalog>(catalog => catalog.IsVirtual == true));
             serviceProvider.Setup(t => t.Resolve<ICatalogService>()).Returns(catalogService.Object);
 
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
+            _bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, _context);
 
             // act
-            var result = bulkAction.Validate();
+            var result = _bulkAction.Validate();
 
             // assert
             result.Errors.Should().HaveCount(1, "Because we can't move in virtual catalog'");
         }
 
         [Fact]
+        public void Validate_Result_ShouldBe_Of_BulkActionResult_Type()
+        {
+            // arrange
+
+            // act
+            var result = _bulkAction.Validate();
+
+            // assert
+            result.Should().BeOfType(typeof(BulkActionResult));
+        }
+
+        [Fact]
         public void Validate_ShouldReturn_False()
         {
             // arrange
-            var context = new CategoryChangeBulkActionContext { CatalogId = "catalog" };
-            var fakeCatalog = Mock.Of<Catalog>(catalog => catalog.IsVirtual == true);
             var catalogService = new Mock<ICatalogService>();
             var serviceProvider = new Mock<ILazyServiceProvider>();
 
-            catalogService.Setup(t => t.GetById("catalog")).Returns(fakeCatalog);
+            catalogService.Setup(t => t.GetById("catalog"))
+                .Returns(Mock.Of<Catalog>(catalog => catalog.IsVirtual == true));
             serviceProvider.Setup(t => t.Resolve<ICatalogService>()).Returns(catalogService.Object);
 
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
+            _bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, _context);
 
             // act
-            var result = bulkAction.Validate();
+            var result = _bulkAction.Validate();
 
             // assert
             result.Succeeded.Should().Be(false);
@@ -125,18 +137,17 @@
         public void Validate_ShouldReturn_True()
         {
             // arrange
-            var context = new CategoryChangeBulkActionContext { CatalogId = "catalog" };
-            var fakeCatalog = Mock.Of<Catalog>(catalog => catalog.IsVirtual == false);
             var catalogService = new Mock<ICatalogService>();
             var serviceProvider = new Mock<ILazyServiceProvider>();
 
-            catalogService.Setup(t => t.GetById("catalog")).Returns(fakeCatalog);
+            catalogService.Setup(t => t.GetById("catalog"))
+                .Returns(Mock.Of<Catalog>(catalog => catalog.IsVirtual == false));
             serviceProvider.Setup(t => t.Resolve<ICatalogService>()).Returns(catalogService.Object);
 
-            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
+            _bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, _context);
 
             // act
-            var result = bulkAction.Validate();
+            var result = _bulkAction.Validate();
 
             // assert
             result.Succeeded.Should().Be(true);
