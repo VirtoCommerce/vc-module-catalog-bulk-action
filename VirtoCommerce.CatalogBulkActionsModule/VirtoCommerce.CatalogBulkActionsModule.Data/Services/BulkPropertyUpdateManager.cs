@@ -53,11 +53,8 @@
                     ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
 
                 // using only product inherited properties from categories,
-                // own product props (only from PropertyValues) are not set via bulk update 
-                var newProperties = products
-                    .SelectMany(
-                        product => product.Properties.Where(
-                            property => property.IsInherited && property.Type != PropertyType.Category))
+                // own product props (only from PropertyValues) are not set via bulk update action 
+                var newProperties = products.SelectMany(CollectionSelector())
                     .Distinct(AnonymousComparer.Create<Property, string>(property => property.Id))
                     .Where(property => !propertyIds.Contains(property.Id)).ToArray();
 
@@ -117,6 +114,12 @@
             }
 
             return result;
+        }
+
+        private static Func<CatalogProduct, IEnumerable<Property>> CollectionSelector()
+        {
+            return product =>
+                product.Properties.Where(property => property.IsInherited && property.Type != PropertyType.Category);
         }
 
         private static object ConvertValue(PropertyValueType valueType, object value)
@@ -230,130 +233,130 @@
             // TechDebt: Should get all product inherited properties faster,
             // by getting all properties for category line entries (including outline) + all inherited product line entry properties
             var result = new List<Property>
+                         {
+                             new Property
                              {
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Name),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.LongText,
-                                         Required = true
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.StartDate),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.DateTime,
-                                         Required = true,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.EndDate),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.DateTime,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Priority),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Integer,
-                                         Required = true,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.EnableReview),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Boolean,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.IsActive),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Boolean,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.IsBuyable),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Boolean,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.TrackInventory),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Boolean,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.MinQuantity),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Integer,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.MaxQuantity),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Integer,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Vendor),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.ShortText,
-                                         Dictionary = true
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.WeightUnit),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.ShortText,
-                                         Dictionary = true
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Weight),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Number,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.MeasureUnit),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.ShortText,
-                                         Dictionary = true
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.PackageType),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.ShortText,
-                                         Dictionary = true
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Height),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Number,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Width),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Number,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.Length),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Number,
-                                     },
-                                 new Property
-                                     {
-                                         Name = nameof(CatalogProduct.TaxType),
-                                         Type = PropertyType.Product,
-                                         ValueType = PropertyValueType.Number,
-                                         Dictionary = true
-                                     },
-                             };
+                                 Name = nameof(CatalogProduct.Name),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.LongText,
+                                 Required = true
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.StartDate),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.DateTime,
+                                 Required = true,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.EndDate),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.DateTime,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Priority),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                                 Required = true,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.EnableReview),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.IsActive),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.IsBuyable),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.TrackInventory),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Boolean,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.MinQuantity),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.MaxQuantity),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Integer,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Vendor),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.WeightUnit),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Weight),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.MeasureUnit),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.PackageType),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.ShortText,
+                                 Dictionary = true
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Height),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Width),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.Length),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                             },
+                             new Property
+                             {
+                                 Name = nameof(CatalogProduct.TaxType),
+                                 Type = PropertyType.Product,
+                                 ValueType = PropertyValueType.Number,
+                                 Dictionary = true
+                             },
+                         };
 
             return result;
         }
