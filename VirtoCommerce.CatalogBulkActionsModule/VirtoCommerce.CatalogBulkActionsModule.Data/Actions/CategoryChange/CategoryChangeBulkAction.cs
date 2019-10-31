@@ -50,8 +50,11 @@
                 ListEntries = entries
             };
 
+            ValidateMoveInfo(moveInfo);
+
             var categoryMover = _lazyServiceProvider.Resolve<ListEntryMover<Category>>();
             var productMover = _lazyServiceProvider.Resolve<ListEntryMover<CatalogProduct>>();
+
             var categories = categoryMover.PrepareMove(moveInfo);
             var products = productMover.PrepareMove(moveInfo);
 
@@ -79,6 +82,28 @@
             }
 
             return result;
+        }
+
+        private static bool IsEqual(string a, string b)
+        {
+            if (a == b)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void ValidateMoveInfo(MoveInfo moveInfo)
+        {
+            var exception = new Exception("Cannot be moved to a subcategory or into the same category");
+            foreach (var entry in moveInfo.ListEntries)
+            {
+                if (IsEqual(moveInfo.Category, entry.Id))
+                {
+                    throw exception;
+                }
+            }
         }
     }
 }

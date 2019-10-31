@@ -1,6 +1,7 @@
 ﻿namespace VirtoCommerce.CatalogBulkActionsModule.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using FluentAssertions;
@@ -10,11 +11,13 @@
     using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
     using VirtoCommerce.CatalogBulkActionsModule.Core;
     using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
-    using VirtoCommerce.Domain.Catalog.Model;
+    using VirtoCommerce.CatalogModule.Web.Model;
     using VirtoCommerce.Domain.Catalog.Services;
     using VirtoCommerce.Platform.Core.Common;
 
     using Xunit;
+
+    using Catalog = VirtoCommerce.Domain.Catalog.Model.Catalog;
 
     public class CategoryChangeBulkActionTests
     {
@@ -151,6 +154,27 @@
 
             // assert
             result.Succeeded.Should().Be(true);
+        }
+
+        [Fact]
+        public void Execute_Should_Throw_Exception()
+        {
+            // arrange
+            var categoryId = "fakeId";
+            var entries = new List<ListEntry> { new ListEntry { Id = categoryId } };
+            var context = new CategoryChangeBulkActionContext { CategoryId = categoryId };
+            var serviceProvider = new Mock<ILazyServiceProvider>();
+            var bulkAction = new CategoryChangeBulkAction(serviceProvider.Object, context);
+
+            // act
+            var action = new Action(
+                () =>
+                {
+                    bulkAction.Execute(entries);
+                });
+
+            // assert
+            action.Should().Throw<Exception>();
         }
     }
 }
