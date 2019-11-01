@@ -135,7 +135,15 @@
                     result = Convert.ToString(value);
                     break;
                 case PropertyValueType.Number:
-                    result = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    try
+                    {
+                        result = Convert.ToDecimal(value, CultureInfo.InvariantCulture);
+                    }
+                    catch
+                    {
+                        result = Convert.ToString(value, CultureInfo.InstalledUICulture);
+                    }
+
                     break;
                 case PropertyValueType.DateTime:
                     result = Convert.ToDateTime(value, CultureInfo.InvariantCulture);
