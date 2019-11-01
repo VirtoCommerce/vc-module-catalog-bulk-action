@@ -106,7 +106,7 @@
             result.Skip = GetSkip();
             result.Take = GetTake();
             result.WithHidden = true;
-
+            result.ResponseGroup = result.ResponseGroup | VC.SearchResponseGroup.WithCategories;
             if (string.IsNullOrEmpty(result.Keyword))
             {
                 return result;
