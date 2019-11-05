@@ -56,10 +56,12 @@
             var dataSourceFactory = _container.Resolve<IDataSourceFactory>();
             var actionFactory = _container.Resolve<IBulkActionFactory>();
             var permissions = new[] { PredefinedPermissions.CategoryChange, PredefinedPermissions.PropertiesUpdate };
+            var applicableTypes = new[] { nameof(CatalogProduct) };
+
             var provider = new BulkActionProvider(
                 name,
                 contextTypeName,
-                new[] { nameof(CatalogProduct) },
+                applicableTypes,
                 dataSourceFactory,
                 actionFactory,
                 permissions);
