@@ -17,22 +17,15 @@
 
     public class BulkActionFactoryTests
     {
-        private readonly IBulkActionFactory _bulkActionFactory;
-
-        public BulkActionFactoryTests()
-        {
-            var lazyServiceProvider = new Mock<ILazyServiceProvider>();
-            _bulkActionFactory = new BulkActionFactory(lazyServiceProvider.Object);
-        }
-
         [Fact]
         public void Create_Result_CategoryChangeBulkAction()
         {
             // arrange
+            var factory = BuildFactory();
             var context = new CategoryChangeBulkActionContext();
 
             // act
-            var result = _bulkActionFactory.Create(context);
+            var result = factory.Create(context);
 
             // assert
             result.Should().BeOfType<CategoryChangeBulkAction>();
@@ -42,10 +35,11 @@
         public void Create_Result_PropertiesUpdateBulkAction()
         {
             // arrange
+            var factory = BuildFactory();
             var context = new PropertiesUpdateBulkActionContext();
 
             // act
-            var result = _bulkActionFactory.Create(context);
+            var result = factory.Create(context);
 
             // assert
             result.Should().BeOfType<PropertiesUpdateBulkAction>();
@@ -55,17 +49,24 @@
         public void Create_EmptyContext_ThrowArgumentException()
         {
             // arrange
+            var factory = BuildFactory();
             var context = new BaseBulkActionContext();
 
             // act
             var action = new Action(
                 () =>
                 {
-                    _bulkActionFactory.Create(context);
+                    factory.Create(context);
                 });
 
             // assert
             action.Should().Throw<ArgumentException>();
+        }
+
+        private IBulkActionFactory BuildFactory()
+        {
+            var lazyServiceProvider = new Mock<ILazyServiceProvider>();
+            return new BulkActionFactory(lazyServiceProvider.Object);
         }
     }
 }

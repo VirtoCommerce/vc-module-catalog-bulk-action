@@ -16,42 +16,32 @@
 
     public class BulkPropertyUpdateManagerTests
     {
-        private readonly PropertiesUpdateBulkActionContext _context;
-
-        private readonly Mock<IDataSource> _dataSource;
-
-        private readonly Mock<IDataSourceFactory> _dataSourceFactory;
-
-        private readonly Mock<IItemService> _itemService;
-
-        private readonly BulkPropertyUpdateManager _manager;
-
-        public BulkPropertyUpdateManagerTests()
-        {
-            _dataSourceFactory = new Mock<IDataSourceFactory>();
-            _itemService = new Mock<IItemService>();
-            _manager = new BulkPropertyUpdateManager(_dataSourceFactory.Object, _itemService.Object);
-            _context = new PropertiesUpdateBulkActionContext();
-            _dataSource = new Mock<IDataSource>();
-        }
-
         [Fact]
         public void GetProperties_DataSource_InvokeFetch()
         {
             // arrange
-            _dataSourceFactory.Setup(t => t.Create(_context)).Returns(_dataSource.Object);
+            var context = new PropertiesUpdateBulkActionContext();
+            var dataSource = new Mock<IDataSource>();
+            var dataSourceFactory = new Mock<IDataSourceFactory>();
+            var manager = BuildManager(dataSourceFactory);
+            dataSourceFactory.Setup(t => t.Create(context)).Returns(dataSource.Object);
 
             // act
-            _manager.GetProperties(_context);
+            manager.GetProperties(context);
 
             // assert
-            _dataSource.Verify(t => t.Fetch());
+            dataSource.Verify(t => t.Fetch());
         }
 
         [Fact]
         public void GetProperties_ItemService_InvokeGetByIds()
         {
             // arrange
+            var context = new PropertiesUpdateBulkActionContext();
+            var dataSourceFactory = new Mock<IDataSourceFactory>();
+            var itemService = new Mock<IItemService>();
+            var manager = BuildManager(dataSourceFactory, itemService);
+            var dataSource = new Mock<IDataSource>();
             var productId = "fakeProductId";
             var group = ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties;
             var productIds = new[] { productId };
@@ -60,16 +50,16 @@
                 t => t.Id == productId && t.Properties == properties,
                 MockBehavior.Loose);
             var products = new List<CatalogProduct> { product };
-            _dataSourceFactory.Setup(t => t.Create(_context)).Returns(_dataSource.Object);
-            _dataSource.SetupSequence(t => t.Fetch()).Returns(true).Returns(false);
-            _dataSource.Setup(t => t.Items).Returns(products);
-            _itemService.Setup(t => t.GetByIds(productIds, group, null)).Returns(products.ToArray());
+            dataSourceFactory.Setup(t => t.Create(context)).Returns(dataSource.Object);
+            dataSource.SetupSequence(t => t.Fetch()).Returns(true).Returns(false);
+            dataSource.Setup(t => t.Items).Returns(products);
+            itemService.Setup(t => t.GetByIds(productIds, group, null)).Returns(products.ToArray());
 
             // act
-            _manager.GetProperties(_context);
+            manager.GetProperties(context);
 
             // assert
-            _itemService.Verify(t => t.GetByIds(productIds, group, null));
+            itemService.Verify(t => t.GetByIds(productIds, group, null));
         }
 
         [Theory]
@@ -77,13 +67,40 @@
         public void GetProperties_Should_HaveCountGreaterThan(int count)
         {
             // arrange
-            _dataSourceFactory.Setup(t => t.Create(_context)).Returns(_dataSource.Object);
+            var context = new PropertiesUpdateBulkActionContext();
+            var dataSource = new Mock<IDataSource>();
+            var dataSourceFactory = new Mock<IDataSourceFactory>();
+            var manager = BuildManager(dataSourceFactory);
+            dataSourceFactory.Setup(t => t.Create(context)).Returns(dataSource.Object);
 
             // act
-            var result = _manager.GetProperties(_context);
+            var result = manager.GetProperties(context);
 
             // assert
             result.Should().HaveCountGreaterThan(count);
+        }
+
+        private IBulkPropertyUpdateManager BuildManager()
+        {
+            var dataSourceFactory = new Mock<IDataSourceFactory>();
+            var itemService = new Mock<IItemService>();
+            var manager = new BulkPropertyUpdateManager(dataSourceFactory.Object, itemService.Object);
+            return manager;
+        }
+
+        private IBulkPropertyUpdateManager BuildManager(IMock<IDataSourceFactory> dataSourceFactory)
+        {
+            var itemService = new Mock<IItemService>();
+            var manager = new BulkPropertyUpdateManager(dataSourceFactory.Object, itemService.Object);
+            return manager;
+        }
+
+        private IBulkPropertyUpdateManager BuildManager(
+            IMock<IDataSourceFactory> dataSourceFactory,
+            IMock<IItemService> itemService)
+        {
+            var manager = new BulkPropertyUpdateManager(dataSourceFactory.Object, itemService.Object);
+            return manager;
         }
     }
 }
