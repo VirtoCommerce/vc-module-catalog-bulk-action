@@ -19,7 +19,6 @@
     using Xunit;
 
     using Property = VirtoCommerce.Domain.Catalog.Model.Property;
-    using PropertyValidationRule = VirtoCommerce.Domain.Catalog.Model.PropertyValidationRule;
 
     public class PropertiesUpdateBulkActionTests
     {
@@ -44,7 +43,7 @@
         }
 
         [Fact]
-        public void Context_ShouldBe_NotNull()
+        public void Context_Result_NotBeNull()
         {
             // arrange
 
@@ -56,7 +55,7 @@
         }
 
         [Fact]
-        public void Execute_Should_Invoke_GetByIds_Method()
+        public void Execute_ItemService_InvokeGetByIds()
         {
             // arrange
             var itemService = new Mock<IItemService> { DefaultValueProvider = DefaultValueProvider.Mock };
@@ -75,7 +74,7 @@
         }
 
         [Fact]
-        public void Execute_ShouldThrow_ArgumentException()
+        public void Execute_UnknownTypeOfListEntry_ArgumentException()
         {
             // arrange
 
@@ -91,7 +90,7 @@
         }
 
         [Fact]
-        public void Execute_Should_Invoke_UpdateProperties_Method()
+        public void Execute_BulkPropertyUpdateManager_InvokeUpdateProperties()
         {
             // arrange
             _serviceProvider.Setup(t => t.Resolve<IItemService>()).Returns(Mock.Of<IItemService>());
@@ -105,7 +104,7 @@
         }
 
         [Fact]
-        public void Execute_Should_Resolve_IBulkPropertyUpdateManager()
+        public void Execute_ShouldResolve_IBulkPropertyUpdateManager()
         {
             // arrange
 
@@ -124,7 +123,7 @@
         }
 
         [Fact]
-        public void Execute_Should_Resolve_IItemService()
+        public void Execute_ShouldResolve_IItemService()
         {
             // arrange
 
@@ -143,7 +142,7 @@
         }
 
         [Fact]
-        public void GetActionData_Result_ShouldNotBe_Null()
+        public void GetActionData_Result_NotBeNull()
         {
             // arrange
 
@@ -155,7 +154,7 @@
         }
 
         [Fact]
-        public void GetActionData_Should_Invoke_Method()
+        public void GetActionData_BulkPropertyUpdateManager_InvokeGetProperties()
         {
             // arrange
 
@@ -167,7 +166,7 @@
         }
 
         [Fact]
-        public void GetActionData_Should_Resolve_IBulkPropertyUpdateManager()
+        public void GetActionData_ShouldResolve_IBulkPropertyUpdateManager()
         {
             // arrange
 
@@ -179,7 +178,7 @@
         }
 
         [Fact]
-        public void Validate_ShouldReturn_True()
+        public void Validate_Result_True()
         {
             // arrange
 
@@ -188,25 +187,6 @@
 
             // assert
             result.Succeeded.Should().Be(true);
-        }
-
-        [Fact]
-        public void GetActionData_ValidationRules_ShouldNot_Be_Null()
-        {
-            // arrange
-            var property = Mock.Of<Property>();
-            var properties = new List<Property>
-                             {
-                                 property
-                             };
-            _manager.Setup(t => t.GetProperties(It.IsAny<PropertiesUpdateBulkActionContext>()))
-                .Returns(properties.ToArray());
-
-            // act
-            _bulkAction.GetActionData();
-
-            // assert
-            property.ValidationRules.Should().NotBeNull();
         }
     }
 }

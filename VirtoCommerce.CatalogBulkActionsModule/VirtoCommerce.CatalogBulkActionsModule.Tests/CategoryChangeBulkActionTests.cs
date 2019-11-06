@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public void Context_ShouldBe_NotNull()
+        public void Context_Result_NotNull()
         {
             // arrange
 
@@ -45,7 +45,7 @@
         }
 
         [Fact]
-        public void Execute_Result_ShouldBe_Of_BulkActionResult_Type()
+        public void Execute_Result_BulkActionResult()
         {
             // arrange
 
@@ -58,7 +58,7 @@
 
         [Theory]
         [ClassData(typeof(MethodsInvocationTestData))]
-        public void Execute_Should_Invoke_Mover_Method(Mock<ILazyServiceProvider> serviceProvider, Action assertAction)
+        public void Execute_Should_InvokeMethods(Mock<ILazyServiceProvider> serviceProvider, Action assertAction)
         {
             // arrange
             var context = new CategoryChangeBulkActionContext();
@@ -73,7 +73,7 @@
         }
 
         [Fact]
-        public void GetActionData_Should_Return_Null()
+        public void GetActionData_Result_Null()
         {
             // arrange
 
@@ -84,8 +84,9 @@
             result.Should().BeNull();
         }
 
-        [Fact]
-        public void Validate_Result_Should_Contain_Errors()
+        [Theory]
+        [InlineData(1)]
+        public void Validate_Result_HaveErrorCount(int errorCount)
         {
             // arrange
             var catalogService = new Mock<ICatalogService>();
@@ -101,11 +102,11 @@
             var result = _bulkAction.Validate();
 
             // assert
-            result.Errors.Should().HaveCount(1, "Because we can't move in virtual catalog'");
+            result.Errors.Should().HaveCount(errorCount, "Because we can't move in virtual catalog'");
         }
 
         [Fact]
-        public void Validate_Result_ShouldBe_Of_BulkActionResult_Type()
+        public void Validate_Result_BulkActionResult()
         {
             // arrange
 
@@ -117,7 +118,7 @@
         }
 
         [Fact]
-        public void Validate_ShouldReturn_False()
+        public void Validate_Result_False()
         {
             // arrange
             var catalogService = new Mock<ICatalogService>();
@@ -137,7 +138,7 @@
         }
 
         [Fact]
-        public void Validate_ShouldReturn_True()
+        public void Validate_Result_True()
         {
             // arrange
             var catalogService = new Mock<ICatalogService>();
@@ -157,7 +158,7 @@
         }
 
         [Fact]
-        public void Execute_Should_Throw_Exception()
+        public void Execute_Should_ThrowException()
         {
             // arrange
             var categoryId = "fakeId";

@@ -17,8 +17,9 @@
 
     public class BaseDataSourceTests
     {
-        [Fact]
-        public void Fetch_Should_Contain_1_Item()
+        [Theory]
+        [InlineData(1)]
+        public void Fetch_Should_HaveCount(int count)
         {
             // arrange
             var entries = new List<ListEntry> { new ListEntry() };
@@ -30,11 +31,11 @@
             dataSource.Fetch();
 
             // assert
-            dataSource.Items.Should().HaveCount(1);
+            dataSource.Items.Should().HaveCount(count);
         }
 
         [Fact]
-        public void Fetch_Should_Invoke_Search()
+        public void Fetch_SearchService_InvokeSearch()
         {
             // arrange
             var entries = new List<ListEntry> { new ListEntry() };
@@ -52,7 +53,7 @@
         }
 
         [Fact]
-        public void Fetch_Should_Return_True()
+        public void Fetch_Return_ShouldBeTrue()
         {
             // arrange
             var entries = new List<ListEntry> { new ListEntry() };
@@ -68,7 +69,7 @@
         }
 
         [Fact]
-        public void Fetch_Should_Set_Items()
+        public void Fetch_Result_ShouldNotBeNull()
         {
             // arrange
             var dataQuery = Mock.Of<DataQuery>();
@@ -82,8 +83,9 @@
             dataSource.Items.Should().NotBeNull();
         }
 
-        [Fact]
-        public void GetTotalCount_Should_Be_Equal_0()
+        [Theory]
+        [InlineData(0)]
+        public void GetTotalCount_IfSearchCriteriaIsNull_ShouldBeEqual(int count)
         {
             // arrange
             var dataQuery = Mock.Of<DataQuery>();
@@ -94,11 +96,12 @@
             var result = dataSource.GetTotalCount();
 
             // assert
-            result.Should().Be(0);
+            result.Should().Be(count);
         }
 
-        [Fact]
-        public void GetTotalCount_Should_Be_Equal_1()
+        [Theory]
+        [InlineData(1)]
+        public void GetTotalCount_IfSearchCriteriaIsNotNull_ShouldBeEqual(int count)
         {
             // arrange
             var dataQuery = Mock.Of<DataQuery>(t => t.SearchCriteria == new SearchCriteria());
@@ -112,14 +115,15 @@
             var result = dataSource.GetTotalCount();
 
             // assert
-            result.Should().Be(1);
+            result.Should().Be(count);
         }
 
-        [Fact]
-        public void GetTotalCount_Should_Be_Equal_2()
+        [Theory]
+        [InlineData(1)]
+        public void GetTotalCount_IfListEntriesNotNull_ShouldBeEqual(int count)
         {
             // arrange
-            var dataQuery = Mock.Of<DataQuery>(t => t.ListEntries == new[] { new ListEntry(),  });
+            var dataQuery = Mock.Of<DataQuery>(t => t.ListEntries == new[] { new ListEntry(), });
             var searchService = new Mock<IListEntrySearchService>();
 
             var dataSource = new BaseDataSource(searchService.Object, dataQuery);
@@ -128,7 +132,7 @@
             var result = dataSource.GetTotalCount();
 
             // assert
-            result.Should().Be(1);
+            result.Should().Be(count);
         }
     }
 }

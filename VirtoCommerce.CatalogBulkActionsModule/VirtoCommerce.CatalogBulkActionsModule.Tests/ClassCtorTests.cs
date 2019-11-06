@@ -17,7 +17,7 @@
     public class ClassCtorTests
     {
         [Fact]
-        public void PropertiesUpdateBulkAction_ShouldThrow_ArgumentException()
+        public void PropertiesUpdateBulkAction_NullArgs_ThrowArgumentException()
         {
             // arrange
 
@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public void BaseDataSource_ShouldThrow_ArgumentException()
+        public void BaseDataSource_NullArgs_ThrowArgumentException()
         {
             // arrange
 
@@ -49,7 +49,7 @@
         }
 
         [Fact]
-        public void CategoryChangeBulkAction_ShouldThrow_ArgumentException()
+        public void CategoryChangeBulkAction_NullArgs_ThrowArgumentException()
         {
             // arrange
 

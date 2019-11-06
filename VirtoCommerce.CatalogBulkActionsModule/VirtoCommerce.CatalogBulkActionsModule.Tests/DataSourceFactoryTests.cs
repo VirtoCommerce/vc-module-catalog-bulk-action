@@ -27,7 +27,7 @@
         }
 
         [Fact]
-        public void Create_ShouldBeCreated_BaseDataSource()
+        public void Create_Result_BaseDataSource()
         {
             // arrange
             var dataQuery = new Mock<DataQuery> { DefaultValueProvider = DefaultValueProvider.Mock };
@@ -41,7 +41,7 @@
         }
 
         [Fact]
-        public void Create_ShouldBeCreated_ProductDataSource()
+        public void Create_Result_ProductDataSource()
         {
             // arrange
             var dataQuery = new Mock<DataQuery> { DefaultValueProvider = DefaultValueProvider.Mock };
@@ -55,7 +55,7 @@
         }
 
         [Fact]
-        public void Create_ShouldThrow_ArgumentException()
+        public void Create_EmptyContext_ThrowArgumentException()
         {
             // arrange
             var context = new BaseBulkActionContext();

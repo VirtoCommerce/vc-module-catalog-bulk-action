@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void Create_ShouldBeCreated_ChangeCategoryAction()
+        public void Create_Result_CategoryChangeBulkAction()
         {
             // arrange
             var context = new CategoryChangeBulkActionContext();
@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public void Create_ShouldBeCreated_UpdateAction()
+        public void Create_Result_PropertiesUpdateBulkAction()
         {
             // arrange
             var context = new PropertiesUpdateBulkActionContext();
@@ -52,7 +52,7 @@
         }
 
         [Fact]
-        public void Create_ShouldThrow_ArgumentException()
+        public void Create_EmptyContext_ThrowArgumentException()
         {
             // arrange
             var context = new BaseBulkActionContext();

@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public void GetProperties_Invoke_DataSource_Fetch_Method()
+        public void GetProperties_DataSource_InvokeFetch()
         {
             // arrange
             _dataSourceFactory.Setup(t => t.Create(_context)).Returns(_dataSource.Object);
@@ -49,7 +49,7 @@
         }
 
         [Fact]
-        public void GetProperties_Invoke_ItemService_GetByIds_Method()
+        public void GetProperties_ItemService_InvokeGetByIds()
         {
             // arrange
             var productId = "fakeProductId";
@@ -72,8 +72,9 @@
             _itemService.Verify(t => t.GetByIds(productIds, group, null));
         }
 
-        [Fact]
-        public void GetProperties_Result_Should_HaveCount_GreaterThan()
+        [Theory]
+        [InlineData(1)]
+        public void GetProperties_Should_HaveCountGreaterThan(int count)
         {
             // arrange
             _dataSourceFactory.Setup(t => t.Create(_context)).Returns(_dataSource.Object);
@@ -82,7 +83,7 @@
             var result = _manager.GetProperties(_context);
 
             // assert
-            result.Should().HaveCountGreaterThan(1);
+            result.Should().HaveCountGreaterThan(count);
         }
     }
 }
