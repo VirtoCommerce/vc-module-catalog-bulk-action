@@ -30,7 +30,7 @@
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IDataSourceFactory, DataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
-            
+
             // This registration is necessary to avoid problems with caching.
             // These problems might occur when we doing the bulk operation and after completion, we don't see any result.
             // We think it's because we using the cache decorators here:
