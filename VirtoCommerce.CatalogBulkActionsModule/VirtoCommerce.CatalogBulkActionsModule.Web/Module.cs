@@ -30,7 +30,7 @@
             _container.RegisterType<IBulkPropertyUpdateManager, BulkPropertyUpdateManager>();
             _container.RegisterType<IDataSourceFactory, DataSourceFactory>();
             _container.RegisterType<IBulkActionFactory, BulkActionFactory>();
-            
+
             // This registration is necessary to avoid problems with caching.
             // These problems might occur when we doing the bulk operation and after completion, we don't see any result.
             // We think it's because we using the cache decorators here:
@@ -56,10 +56,12 @@
             var dataSourceFactory = _container.Resolve<IDataSourceFactory>();
             var actionFactory = _container.Resolve<IBulkActionFactory>();
             var permissions = new[] { PredefinedPermissions.CategoryChange, PredefinedPermissions.PropertiesUpdate };
+            var applicableTypes = new[] { nameof(CatalogProduct) };
+
             var provider = new BulkActionProvider(
                 name,
                 contextTypeName,
-                new[] { nameof(CatalogProduct) },
+                applicableTypes,
                 dataSourceFactory,
                 actionFactory,
                 permissions);

@@ -53,7 +53,7 @@
                     ItemResponseGroup.ItemInfo | ItemResponseGroup.ItemProperties);
 
                 // using only product inherited properties from categories,
-                // own product props (only from PropertyValues) are not set via bulk update action 
+                // own product props (only from PropertyValues) are not set via bulk update action
                 var newProperties = products.SelectMany(CollectionSelector())
                     .Distinct(AnonymousComparer.Create<Property, string>(property => property.Id))
                     .Where(property => !propertyIds.Contains(property.Id)).ToArray();
