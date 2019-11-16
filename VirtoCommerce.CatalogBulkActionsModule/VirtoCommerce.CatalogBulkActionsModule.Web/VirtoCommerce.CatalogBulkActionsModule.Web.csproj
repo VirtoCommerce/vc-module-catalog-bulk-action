@@ -35,8 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\VirtoCommerce.CatalogBulkActionsModule.Web.xml</DocumentationFile>
-    <NoWarn>
-    </NoWarn>
+    <NoWarn>1573,1591,1712</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
