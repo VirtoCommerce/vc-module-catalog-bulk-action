@@ -28,7 +28,7 @@ angular.module('virtoCommerce.catalogModule')
 
             var registrationInfo = bulkActionServiceRegistrar.getByName(data.name);
             if (!registrationInfo) {
-                bladeNavigationService.setError(`Can't find controller for action ${data.name}`, blade);
+                bladeNavigationService.setError('Can\'t find controller for action ' + data.name, blade);
             } else {
                 newBlade.controller = registrationInfo.controller;
                 newBlade.template = registrationInfo.template;
@@ -43,8 +43,8 @@ angular.module('virtoCommerce.catalogModule')
 
 
         blade.initializeAction = function(action) {
-            action.title = `actions.types.${action.name}.title`;
-            action.subtitle = `actions.types.${action.name}.subtitle`;
+            action.title = 'actions.types.' + action.name + '.title';
+            action.subtitle = 'actions.types.' + action.name + '.subtitle';
             action.id = action.name;
             action.icon = 'fa fa-cogs';
             action.actionDataContext = {
