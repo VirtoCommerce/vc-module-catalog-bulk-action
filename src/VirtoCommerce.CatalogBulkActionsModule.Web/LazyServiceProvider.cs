@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Web
+using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Web
 {
     using Microsoft.Practices.Unity;
 

@@ -1,13 +1,13 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+using System;
+using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+using VirtoCommerce.BulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
+using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
 {
-    using System;
-
-    using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
-
     public class BulkActionFactory : IBulkActionFactory
     {
         private readonly ILazyServiceProvider _lazyLazyServiceProvider;

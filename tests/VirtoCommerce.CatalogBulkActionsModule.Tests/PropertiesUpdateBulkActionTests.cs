@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Tests
+using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Tests
 {
     using System;
     using System.Collections.Generic;

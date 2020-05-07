@@ -5,7 +5,15 @@ VisualStudioVersion = 16.0.29326.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2B63791D-E394-491A-9C6D-FED7B6EE6E0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogBulkActionsModule.Core", "src\VirtoCommerce.CatalogBulkActionsModule.Core\VirtoCommerce.CatalogBulkActionsModule.Core.csproj", "{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.CatalogBulkActionsModule.Core", "src\VirtoCommerce.CatalogBulkActionsModule.Core\VirtoCommerce.CatalogBulkActionsModule.Core.csproj", "{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.CatalogBulkActionsModule.Data", "src\VirtoCommerce.CatalogBulkActionsModule.Data\VirtoCommerce.CatalogBulkActionsModule.Data.csproj", "{AD85449C-34D5-4CFF-8B08-622433B0E3A0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.CatalogBulkActionsModule.Web", "src\VirtoCommerce.CatalogBulkActionsModule.Web\VirtoCommerce.CatalogBulkActionsModule.Web.csproj", "{219808C7-98FF-4C03-AB2A-EAB182BAE9D0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{47A19FB7-A8D7-47CA-8E78-661C0F4F0BBC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VirtoCommerce.CatalogBulkActionsModule.Tests", "tests\VirtoCommerce.CatalogBulkActionsModule.Tests\VirtoCommerce.CatalogBulkActionsModule.Tests.csproj", "{4DC46906-E1F3-4882-AD31-042EDB4F756B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,12 +25,27 @@ Global
 		{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD85449C-34D5-4CFF-8B08-622433B0E3A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD85449C-34D5-4CFF-8B08-622433B0E3A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD85449C-34D5-4CFF-8B08-622433B0E3A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD85449C-34D5-4CFF-8B08-622433B0E3A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{219808C7-98FF-4C03-AB2A-EAB182BAE9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{219808C7-98FF-4C03-AB2A-EAB182BAE9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{219808C7-98FF-4C03-AB2A-EAB182BAE9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{219808C7-98FF-4C03-AB2A-EAB182BAE9D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DC46906-E1F3-4882-AD31-042EDB4F756B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DC46906-E1F3-4882-AD31-042EDB4F756B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DC46906-E1F3-4882-AD31-042EDB4F756B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DC46906-E1F3-4882-AD31-042EDB4F756B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EA5ADCFB-BFBD-4131-8666-B4BA90F4DE58} = {2B63791D-E394-491A-9C6D-FED7B6EE6E0D}
+		{AD85449C-34D5-4CFF-8B08-622433B0E3A0} = {2B63791D-E394-491A-9C6D-FED7B6EE6E0D}
+		{219808C7-98FF-4C03-AB2A-EAB182BAE9D0} = {2B63791D-E394-491A-9C6D-FED7B6EE6E0D}
+		{4DC46906-E1F3-4882-AD31-042EDB4F756B} = {47A19FB7-A8D7-47CA-8E78-661C0F4F0BBC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EBF74110-EACF-4BD7-9276-81FA6134DE1C}

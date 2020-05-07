@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core
+namespace VirtoCommerce.CatalogBulkActionsModule.Core.Services
 {
     public interface ILazyServiceProvider
     {

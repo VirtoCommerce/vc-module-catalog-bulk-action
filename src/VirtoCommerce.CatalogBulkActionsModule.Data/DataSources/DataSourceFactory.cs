@@ -1,13 +1,11 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
+using System;
+using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+using VirtoCommerce.BulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+using VirtoCommerce.CatalogModule.Core.Search;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
 {
-    using System;
-
-    using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange;
-    using VirtoCommerce.CatalogBulkActionsModule.Data.Actions.PropertiesUpdate;
-    using VirtoCommerce.CatalogModule.Web.Services;
-
     public class DataSourceFactory : IDataSourceFactory
     {
         private readonly IListEntrySearchService _listEntrySearchService;

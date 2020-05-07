@@ -1,20 +1,16 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+using VirtoCommerce.BulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogModule.Core.Model;
+using VirtoCommerce.CatalogModule.Core.Services;
+using VirtoCommerce.Platform.Core.Common;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogBulkActionsModule.Core;
-    using VirtoCommerce.CatalogModule.Web.Model;
-    using VirtoCommerce.CatalogModule.Web.Services;
-    using VirtoCommerce.Domain.Catalog.Model;
-    using VirtoCommerce.Domain.Catalog.Services;
-    using VirtoCommerce.Platform.Core.Common;
-
-    using Category = VirtoCommerce.Domain.Catalog.Model.Category;
-
     public class CategoryChangeBulkAction : IBulkAction
     {
         private readonly CategoryChangeBulkActionContext _context;

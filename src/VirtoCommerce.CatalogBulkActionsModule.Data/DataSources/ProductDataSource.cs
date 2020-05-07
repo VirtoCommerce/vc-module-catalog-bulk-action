@@ -1,19 +1,13 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+using VirtoCommerce.CatalogModule.Core.Model.Search;
+using VirtoCommerce.CatalogModule.Core.Search;
+using VirtoCommerce.Platform.Core.Common;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogModule.Web.Model;
-    using VirtoCommerce.CatalogModule.Web.Services;
-    using VirtoCommerce.Domain.Catalog.Model;
-    using VirtoCommerce.Platform.Core.Common;
-
-    using ListEntryCategory = VirtoCommerce.CatalogModule.Web.Model.ListEntryCategory;
-    using ListEntryProduct = VirtoCommerce.CatalogModule.Web.Model.ListEntryProduct;
-    using SearchCriteria = VirtoCommerce.Domain.Catalog.Model.SearchCriteria;
-
     public class ProductDataSource : BaseDataSource
     {
         private readonly IListEntrySearchService _listEntrySearchService;

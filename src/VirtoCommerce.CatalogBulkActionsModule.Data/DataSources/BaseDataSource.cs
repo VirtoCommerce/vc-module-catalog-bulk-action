@@ -1,17 +1,13 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using VirtoCommerce.BulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
+using VirtoCommerce.CatalogModule.Core.Search;
+using VirtoCommerce.Platform.Core.Common;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.DataSources
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.CatalogBulkActionsModule.Core.Models;
-    using VirtoCommerce.CatalogModule.Web.Model;
-    using VirtoCommerce.CatalogModule.Web.Services;
-    using VirtoCommerce.Platform.Core.Common;
-
-    using VC = VirtoCommerce.Domain.Catalog.Model;
-
     public class BaseDataSource : IDataSource
     {
         private readonly DataQuery _dataQuery;

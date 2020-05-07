@@ -1,20 +1,20 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models
-{
-    using VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.CatalogModule.Core.Model;
+using VirtoCommerce.CatalogModule.Core.Model.ListEntry;
 
-    using VC = VirtoCommerce.Domain.Catalog.Model;
+namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models
+{
 
     public class DataQuery
     {
         /// <summary>
         /// Gets or sets the list entries.
         /// </summary>
-        public ListEntry[] ListEntries { get; set; }
+        public ProductListEntry[] ListEntries { get; set; }
 
         /// <summary>
         /// Gets or sets the search criteria.
         /// </summary>
-        public VC.SearchCriteria SearchCriteria { get; set; }
+        public SearchCriteria SearchCriteria { get; set; }
 
         /// <summary>
         /// Gets or sets the skip.

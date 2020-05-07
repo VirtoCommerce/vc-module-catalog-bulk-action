@@ -1,20 +1,16 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Reflection;
+using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
+using VirtoCommerce.BulkActionsModule.Core.Services;
+using VirtoCommerce.CatalogModule.Core.Model;
+using VirtoCommerce.CatalogModule.Core.Services;
+using VirtoCommerce.Platform.Core.Common;
+
+namespace VirtoCommerce.CatalogBulkActionsModule.Data.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Reflection;
-
-    using VirtoCommerce.BulkActionsModule.Core;
-    using VirtoCommerce.BulkActionsModule.Core.Models.BulkActions;
-    using VirtoCommerce.CatalogModule.Web.Converters;
-    using VirtoCommerce.Domain.Catalog.Model;
-    using VirtoCommerce.Domain.Catalog.Services;
-    using VirtoCommerce.Platform.Core.Common;
-
-    using CatalogModule = VirtoCommerce.CatalogModule.Web.Model;
-
     public class BulkPropertyUpdateManager : IBulkPropertyUpdateManager
     {
         private readonly IDataSourceFactory _dataSourceFactory;

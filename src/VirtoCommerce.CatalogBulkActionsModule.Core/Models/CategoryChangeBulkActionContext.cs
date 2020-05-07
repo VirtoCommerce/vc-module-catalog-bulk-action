@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.CatalogBulkActionsModule.Data.Actions.CategoryChange
+namespace VirtoCommerce.CatalogBulkActionsModule.Core.Models
 {
     public class CategoryChangeBulkActionContext : BaseBulkActionContext
     {
